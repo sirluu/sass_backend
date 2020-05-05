@@ -22,7 +22,7 @@ import jp.co.japantaxi.utils.ConvertDataUtil;
 import jp.co.japantaxi.utils.Utility;
 
 @RestController
-@RequestMapping("/account")
+@RequestMapping
 public class AccountController {
 
   static final Logger LOGGER = LoggerFactory.getLogger(AccountController.class);
@@ -47,8 +47,9 @@ public class AccountController {
 
   /**
    * @param parameterRequest
-   * @param batchStatus try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）] try catch: Sentry
-   *        連携しエラー通知を行う
+   * @param batchStatus
+   * try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）]
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public void getSFAccount(ParameterRequest parameterRequest, BatchStatus batchStatus) {
     try {
@@ -86,8 +87,9 @@ public class AccountController {
 
   /**
    * @param parameterRequest
-   * @param batchStatus try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）] try catch: Sentry
-   *        連携しエラー通知を行う
+   * @param batchStatus
+   * try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）]
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public void coreDateCreatAccount(ParameterRequest parameterRequest, BatchStatus batchStatus) {
     try {
@@ -134,8 +136,9 @@ public class AccountController {
 
   /**
    * @param parameterRequest
-   * @param batchStatus try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）] try catch: Sentry
-   *        連携しエラー通知を行う
+   * @param batchStatus
+   * try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）]
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public void getSFFareTable(ParameterRequest parameterRequest, BatchStatus batchStatus) {
     try {
@@ -171,8 +174,9 @@ public class AccountController {
 
   /**
    * @param parameterRequest
-   * @param batchStatus try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）] try catch: Sentry
-   *        連携しエラー通知を行う
+   * @param batchStatus
+   * try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）]
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public void coreDateCreatFareTable(ParameterRequest parameterRequest, BatchStatus batchStatus) {
     try {
@@ -217,11 +221,10 @@ public class AccountController {
     }
   }
 
-  // Begin FareTable object method
+  // Begin FareTable
   /**
-   * try catch: Sentry 連携しエラー通知を行う
-   * 
    * @param fareTableList
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public void insertFareTable(List<FareTable> fareTableList) {
     for (int i = 0; i < fareTableList.size(); i++) {
@@ -238,9 +241,8 @@ public class AccountController {
   }
 
   /**
-   * try catch: Sentry 連携しエラー通知を行う
-   * 
    * @param fareTableList
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public void updateFareTable(List<FareTable> fareTableList) {
     for (int i = 0; i < fareTableList.size(); i++) {
@@ -257,9 +259,8 @@ public class AccountController {
   }
 
   /**
-   * try catch: Sentry 連携しエラー通知を行う
-   * 
    * @param fareTableList
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public void insertFareTableSync(List<FareTable> fareTableList) {
     Worker worker = workerController.setWorker(Constant.FARETABLESYNC);
@@ -280,9 +281,8 @@ public class AccountController {
   }
 
   /**
-   * try catch: Sentry 連携しエラー通知を行う
-   * 
    * @param fareTableList
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public void updateFareTableSync(List<FareTable> fareTableList) {
     Worker worker = workerController.setWorker(Constant.FARETABLESYNC);
@@ -365,13 +365,12 @@ public class AccountController {
     }
     return listFareTableToUpdate;
   }
-  // End FareTable object method
+  // End FareTable
 
-  // Begin Account object method
+  // Begin Account
   /**
-   * try catch: Sentry 連携しエラー通知を行う
-   * 
    * @param accountList
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public void insertAccount(List<Account> accountList) {
     for (int i = 0; i < accountList.size(); i++) {
@@ -388,9 +387,8 @@ public class AccountController {
   }
 
   /**
-   * try catch: Sentry 連携しエラー通知を行う
-   * 
    * @param accountList
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public void updateAccount(List<Account> accountList) {
     for (int i = 0; i < accountList.size(); i++) {
@@ -407,9 +405,8 @@ public class AccountController {
   }
 
   /**
-   * try catch: Sentry 連携しエラー通知を行う
-   * 
    * @param accountList
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public void insertAccountSync(List<Account> accountList) {
     Worker worker = workerController.setWorker(Constant.ACCOUNTSYNC);
@@ -429,9 +426,8 @@ public class AccountController {
   }
 
   /**
-   * try catch: Sentry 連携しエラー通知を行う
-   * 
    * @param accountList
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public void updateAccountSync(List<Account> accountList) {
     Worker worker = workerController.setWorker(Constant.ACCOUNTSYNC);
@@ -513,5 +509,5 @@ public class AccountController {
     }
     return listAccountToUpdate;
   }
-  // End Account object method
+  // End Account
 }

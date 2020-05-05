@@ -2,6 +2,7 @@ package jp.co.japantaxi.config;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,7 +103,7 @@ public class CacheManagerConfig {
 
   @Cacheable(cacheNames = {"list"}, key = "#listid")
   public List<String> getListObjectId(String context) {
-    List<String> res = listStore.get(context.toLowerCase());
+    List<String> res = listStore.get(context.toLowerCase(Locale.ENGLISH));
     if (res != null) {
       return res;
     }
@@ -116,7 +117,7 @@ public class CacheManagerConfig {
 
   @Cacheable(cacheNames = {"error"}, key = "#erid")
   public Integer getErrorCode(String context) {
-    Integer res = errorStore.get(context.toLowerCase());
+    Integer res = errorStore.get(context.toLowerCase(Locale.ENGLISH));
     if (res != null) {
       return res;
     }
@@ -125,7 +126,7 @@ public class CacheManagerConfig {
 
   @Cacheable
   public void setErrorCode(String context, int code) {
-    errorStore.put(context.toLowerCase(), code);
+    errorStore.put(context.toLowerCase(Locale.ENGLISH), code);
   }
 
   public void clearMap(String context) {

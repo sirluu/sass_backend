@@ -80,10 +80,10 @@ public class SalesforceResponseController {
   }
 
   /**
-   * try catch: Sentry 連携しエラー通知を行う
-   * 
    * @param context
+   * @param batchStatus
    * @return JSONArray
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public JSONArray callSalesforce(String context, BatchStatus batchStatus) {
     JSONArray jsonArray = new JSONArray();
@@ -142,6 +142,7 @@ public class SalesforceResponseController {
    * @param context
    * @param batchStatus
    * @return List<Object>
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public List<Object> getListObjectFromSalesforce(String context, BatchStatus batchStatus) {
     List<Object> listObj = new ArrayList<>();
@@ -167,6 +168,12 @@ public class SalesforceResponseController {
     return listObj;
   }
 
+  /**
+   * @param context
+   * @param List<Object>
+   * @return List<String>
+   * try catch: Sentry 連携しエラー通知を行う
+   */
   public List<String> getListObjectIdFromSalesforce(String context, List<Object> listResponse) {
     List<String> resList = new ArrayList<>();
     if (!listResponse.isEmpty()) {
@@ -187,8 +194,9 @@ public class SalesforceResponseController {
 
   /**
    * @param batchStatus
-   * @return List<Object> try catch: API-GET[オブジェクト名（取得エラーになったオブジェクト名）] try catch: Sentry
-   *         連携しエラー通知を行う
+   * @return List<Account>
+   * try catch: API-GET[オブジェクト名（取得エラーになったオブジェクト名）]
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public List<Account> getListAccountFromSalesforce(BatchStatus batchStatus) {
     List<Account> resList = new ArrayList<>();
@@ -210,8 +218,9 @@ public class SalesforceResponseController {
 
   /**
    * @param batchStatus
-   * @return List<Object> try catch: API-GET[オブジェクト名（取得エラーになったオブジェクト名）] try catch: Sentry
-   *         連携しエラー通知を行う
+   * @return List<FareTable>
+   * try catch: API-GET[オブジェクト名（取得エラーになったオブジェクト名）]
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public List<FareTable> getListFareTableFromSalesforce(BatchStatus batchStatus) {
     List<FareTable> resList = new ArrayList<>();
@@ -233,8 +242,9 @@ public class SalesforceResponseController {
 
   /**
    * @param batchStatus
-   * @return List<Object> try catch: API-GET[オブジェクト名（取得エラーになったオブジェクト名）] try catch: Sentry
-   *         連携しエラー通知を行う
+   * @return List<BankMaster>
+   * try catch: API-GET[オブジェクト名（取得エラーになったオブジェクト名）]
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public List<BankMaster> getListBankMasterFromSalesforce(BatchStatus batchStatus) {
     List<BankMaster> resList = new ArrayList<>();
@@ -256,8 +266,9 @@ public class SalesforceResponseController {
 
   /**
    * @param batchStatus
-   * @return List<Object> try catch: API-GET[オブジェクト名（取得エラーになったオブジェクト名）] try catch: Sentry
-   *         連携しエラー通知を行う
+   * @return List<BankAccountInformation>
+   * try catch: API-GET[オブジェクト名（取得エラーになったオブジェクト名）]
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public List<BankAccountInformation> getListBankAccountInformationFromSalesforce(
       BatchStatus batchStatus) {
@@ -282,8 +293,9 @@ public class SalesforceResponseController {
 
   /**
    * @param batchStatus
-   * @return List<Object> try catch: API-GET[オブジェクト名（取得エラーになったオブジェクト名）] try catch: Sentry
-   *         連携しエラー通知を行う
+   * @return List<AppCompany>
+   * try catch: API-GET[オブジェクト名（取得エラーになったオブジェクト名）]
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public List<AppCompany> getListAppCompanyFromSalesforce(BatchStatus batchStatus) {
     List<AppCompany> resList = new ArrayList<>();
@@ -305,8 +317,9 @@ public class SalesforceResponseController {
 
   /**
    * @param batchStatus
-   * @return List<Object> try catch: API-GET[オブジェクト名（取得エラーになったオブジェクト名）] try catch: Sentry
-   *         連携しエラー通知を行う
+   * @return List<PaymentSystemLinkInfor>
+   * try catch: API-GET[オブジェクト名（取得エラーになったオブジェクト名）]
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public List<PaymentSystemLinkInfor> getListPaymentSystemLinkInforFromSalesforce(
       BatchStatus batchStatus) {

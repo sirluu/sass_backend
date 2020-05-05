@@ -17,10 +17,11 @@ import jp.co.japantaxi.model.ParameterRequest;
 import jp.co.japantaxi.model.Worker;
 import jp.co.japantaxi.utils.Constant;
 import jp.co.japantaxi.utils.ConvertDataUtil;
+import jp.co.japantaxi.utils.JsonMapper;
 import jp.co.japantaxi.utils.Utility;
 
 @RestController
-@RequestMapping("/appcompany")
+@RequestMapping
 public class AppCompanyController {
 
   static final Logger LOGGER = LoggerFactory.getLogger(AppCompanyController.class);
@@ -42,8 +43,9 @@ public class AppCompanyController {
 
   /**
    * @param parameterRequest
-   * @param batchStatus try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）] try catch: Sentry
-   *        連携しエラー通知を行う
+   * @param batchStatus
+   * try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）]
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public void getSFAppCompany(ParameterRequest parameterRequest, BatchStatus batchStatus) {
     try {
@@ -79,8 +81,9 @@ public class AppCompanyController {
 
   /**
    * @param parameterRequest
-   * @param batchStatus try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）] try catch: Sentry
-   *        連携しエラー通知を行う
+   * @param batchStatus
+   * try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）]
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public void coreDateCreatAppCompany(ParameterRequest parameterRequest, BatchStatus batchStatus) {
     try {
@@ -91,7 +94,9 @@ public class AppCompanyController {
 
       int size = objectSyncList.size();
       int offset = size / Constant.LIMIT;
-      ConvertDataUtil.getJSONObject(Constant.APPCOMPANY);
+      // ファイルを1回だけ読み取る
+      // Read the datasync file once only
+      JsonMapper.readDataSync(Constant.APPCOMPANY);
       List<AppCompany> syncList = new ArrayList<AppCompany>();
       for (int i = 0; i <= offset; i++) {
       	if (i < offset) {
@@ -125,11 +130,10 @@ public class AppCompanyController {
     }
   }
 
-  // Begin AppCompany object method
+  // Begin AppCompany
   /**
-   * try catch: Sentry 連携しエラー通知を行う
-   * 
    * @param appCompanies
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public void insertAppCompany(List<AppCompany> appCompanies) {
     for (int i = 0; i < appCompanies.size(); i++) {
@@ -146,9 +150,8 @@ public class AppCompanyController {
   }
 
   /**
-   * try catch: Sentry 連携しエラー通知を行う
-   * 
    * @param appCompanies
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public void updateAppCompany(List<AppCompany> appCompanies) {
     for (int i = 0; i < appCompanies.size(); i++) {
@@ -165,9 +168,8 @@ public class AppCompanyController {
   }
 
   /**
-   * try catch: Sentry 連携しエラー通知を行う
-   * 
    * @param appCompanies
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public void insertAppCompanySync(List<AppCompany> appCompanies) {
     Worker worker = workerController.setWorker(Constant.APPCOMPANYSYNC);
@@ -188,9 +190,8 @@ public class AppCompanyController {
   }
 
   /**
-   * try catch: Sentry 連携しエラー通知を行う
-   * 
    * @param appCompanies
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public void updateAppCompanySync(List<AppCompany> appCompanies) {
     Worker worker = workerController.setWorker(Constant.APPCOMPANYSYNC);
@@ -273,5 +274,5 @@ public class AppCompanyController {
     }
     return appCompaniesSyncToUpdate;
   }
-  // End AppCompany object method
+  // End AppCompany
 }

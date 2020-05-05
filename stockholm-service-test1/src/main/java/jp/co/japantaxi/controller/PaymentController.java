@@ -18,6 +18,7 @@ import jp.co.japantaxi.model.PaymentSystemLinkInfor;
 import jp.co.japantaxi.model.Worker;
 import jp.co.japantaxi.utils.Constant;
 import jp.co.japantaxi.utils.ConvertDataUtil;
+import jp.co.japantaxi.utils.JsonMapper;
 import jp.co.japantaxi.utils.Utility;
 
 @RestController
@@ -43,8 +44,9 @@ public class PaymentController {
 
   /**
    * @param parameterRequest
-   * @param batchStatus try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）] try catch: Sentry
-   *        連携しエラー通知を行う
+   * @param batchStatus
+   * try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）]
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public void getSFPaymentSystemLinkInfor(ParameterRequest parameterRequest,
       BatchStatus batchStatus) {
@@ -85,8 +87,9 @@ public class PaymentController {
 
   /**
    * @param parameterRequest
-   * @param batchStatus try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）] try catch: Sentry
-   *        連携しエラー通知を行う
+   * @param batchStatus
+   * try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）]
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public void coreDateCreatPaymentSystemLinkInfor(ParameterRequest parameterRequest,
       BatchStatus batchStatus) {
@@ -99,7 +102,9 @@ public class PaymentController {
 
       int size = objectSyncList.size();
       int offset = size / Constant.LIMIT;
-      ConvertDataUtil.getJSONObject(Constant.PAYMENTSYSTEMLINKINFOR);
+      // ファイルを1回だけ読み取る
+      // Read the datasync file once only
+      JsonMapper.readDataSync(Constant.PAYMENTSYSTEMLINKINFOR);
       List<PaymentSystemLinkInfor> syncList = new ArrayList<PaymentSystemLinkInfor>();
       for (int i = 0; i <= offset; i++) {
       	if (i < offset) {
@@ -133,11 +138,10 @@ public class PaymentController {
     }
   }
 
-  // Begin BankAccountInformation object method
+  // Begin BankAccountInformation
   /**
-   * try catch: Sentry 連携しエラー通知を行う
-   * 
    * @param linkInfors
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public void insertPaymentSystemLinkInfor(List<PaymentSystemLinkInfor> linkInfors) {
     for (int i = 0; i < linkInfors.size(); i++) {
@@ -154,9 +158,8 @@ public class PaymentController {
   }
 
   /**
-   * try catch: Sentry 連携しエラー通知を行う
-   * 
    * @param linkInfors
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public void updatePaymentSystemLinkInfor(List<PaymentSystemLinkInfor> linkInfors) {
     for (int i = 0; i < linkInfors.size(); i++) {
@@ -173,9 +176,8 @@ public class PaymentController {
   }
 
   /**
-   * try catch: Sentry 連携しエラー通知を行う
-   * 
    * @param linkInfors
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public void insertPaymentSystemLinkInforSync(List<PaymentSystemLinkInfor> linkInfors) {
     Worker worker = workerController.setWorker(Constant.PAYMENTSYSTEMLINKINFORSYNC);
@@ -195,9 +197,8 @@ public class PaymentController {
   }
 
   /**
-   * try catch: Sentry 連携しエラー通知を行う
-   * 
    * @param linkInfors
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public void updatePaymentSystemLinkInforSync(List<PaymentSystemLinkInfor> linkInfors) {
     Worker worker = workerController.setWorker(Constant.PAYMENTSYSTEMLINKINFORSYNC);
@@ -282,5 +283,5 @@ public class PaymentController {
     }
     return listPaymentSystemLinkInforToUpdate;
   }
-  // End PaymentSystemLinkInfor object method
+  // End PaymentSystemLinkInfor
 }

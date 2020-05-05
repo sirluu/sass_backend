@@ -1,6 +1,5 @@
 package jp.co.japantaxi.utils;
 
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Iterator;
@@ -320,7 +319,7 @@ public class ConvertDataUtil {
         .setSyncedtime(Timestamp.valueOf(LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId())));
 
     String key = null;
-    JSONObject dispatch = object.getJSONObject("dispatch");
+    JSONObject dispatch = JsonMapper.object.getJSONObject("dispatch");
     if (!dispatch.isEmpty()) {
       Iterator<?> keysItr = dispatch.keySet().iterator();
       while (keysItr.hasNext()) {
@@ -382,7 +381,7 @@ public class ConvertDataUtil {
         .setSyncedtime(Timestamp.valueOf(LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId())));
 
     String key = null;
-    JSONObject accounttype = object.getJSONObject("accounttype");
+    JSONObject accounttype = JsonMapper.object.getJSONObject("accounttype");
     if (!accounttype.isEmpty()) {
       Iterator<?> keysItr = accounttype.keySet().iterator();
       while (keysItr.hasNext()) {
@@ -497,13 +496,6 @@ public class ConvertDataUtil {
 	    linkInfor.setSyncedtime(Timestamp.valueOf(LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId())));
 
 	    return linkInfor;
-  }
-  
-  //JSON ressource 
-  public static JSONObject object =null;
-  //Get resource 1 time for all
-  public static void getJSONObject(String strObject) throws IOException {
-    object = JsonMapper.readDataSync(strObject);
   }
   
 }

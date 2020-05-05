@@ -633,7 +633,7 @@ public class ConvertDataUtilTest {
 		expected.setSyncedtime(Timestamp.valueOf(LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId())));
 		AppCompany actual = new AppCompany();
 		
-		ConvertDataUtil.getJSONObject(Constant.APPCOMPANY);
+		JsonMapper.readDataSync(Constant.APPCOMPANY);
 		Assert.assertNotEquals(actual, ConvertDataUtil.convertAppCompany2Sync(expected));
 	}
 	
@@ -701,7 +701,7 @@ public class ConvertDataUtilTest {
 		expected.setSfid("a04N000000KgpbjIAB");
 		expected.setSyncedtime(Timestamp.valueOf(LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId())));
 		BankAccountInformation actual = new BankAccountInformation();
-		ConvertDataUtil.getJSONObject(Constant.BANKACCOUNTINFORMATION);
+		JsonMapper.readDataSync(Constant.BANKACCOUNTINFORMATION);
 		Assert.assertNotEquals(actual, ConvertDataUtil.convertBankAccountInformation2Sync(expected));
 	}
 	
@@ -805,7 +805,7 @@ public class ConvertDataUtilTest {
 		expected.setAupaystoreid("teststring");
 		expected.setSyncedtime(Timestamp.valueOf(LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId())));
 		PaymentSystemLinkInfor actual = new PaymentSystemLinkInfor();
-		ConvertDataUtil.getJSONObject(Constant.PAYMENTSYSTEMLINKINFOR);
+		JsonMapper.readDataSync(Constant.PAYMENTSYSTEMLINKINFOR);
 		Assert.assertNotEquals(actual, ConvertDataUtil.convertPaymentSystemLinkInfor2Sync(expected));
 	}
 	

@@ -20,6 +20,8 @@ public class JsonMapper {
 
   static ObjectMapper mapper = new ObjectMapper();
 
+  static JSONObject object = new JSONObject();
+  
   public static ObjectMapper newMapper() {
     mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
     mapper.enable(SerializationFeature.INDENT_OUTPUT);
@@ -64,13 +66,14 @@ public class JsonMapper {
     return map;
   }
 
+  // ファイルを1回だけ読み取る
+  // Read the datasync file once only
   public static JSONObject readDataSync(String context) throws IOException {
 	InputStream is = JsonMapper.class.getResourceAsStream("/datasync.json");
 	BufferedReader buff = new BufferedReader(
 			new InputStreamReader(is, "UTF-8"));
 	String line = null;
 	StringBuilder sb = new StringBuilder();
-	JSONObject object = new JSONObject();
 	while ((line = buff.readLine()) != null) {
 		sb.append(line);
 	}

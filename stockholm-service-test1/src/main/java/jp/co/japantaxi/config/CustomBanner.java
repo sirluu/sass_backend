@@ -4,13 +4,11 @@ import java.io.PrintStream;
 import java.lang.management.ManagementFactory;
 import org.springframework.boot.Banner;
 import org.springframework.core.env.Environment;
-import jp.co.japantaxi.utils.Constant;
 
 public class CustomBanner implements Banner {
 
   @Override
   public void printBanner(Environment environment, Class<?> aClass, PrintStream printStream) {
-    System.setProperty(Constant.START_MODE, Constant.STARTMODE.OFF.value);
     printStream.println(" >>> PROCESS ID : " + ManagementFactory.getRuntimeMXBean().getName());
     printStream.println(
         "|=====================================================================================|");
@@ -26,6 +24,5 @@ public class CustomBanner implements Banner {
         "|                                                                                     |");
     printStream.println(
         "|=====================================================================================|");
-    printStream.println(" >>> START MODE : " + environment.getProperty(Constant.START_MODE));
   }
 }

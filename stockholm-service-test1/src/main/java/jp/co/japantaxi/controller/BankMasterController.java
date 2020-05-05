@@ -19,6 +19,7 @@ import jp.co.japantaxi.model.ParameterRequest;
 import jp.co.japantaxi.model.Worker;
 import jp.co.japantaxi.utils.Constant;
 import jp.co.japantaxi.utils.ConvertDataUtil;
+import jp.co.japantaxi.utils.JsonMapper;
 import jp.co.japantaxi.utils.Utility;
 
 @RestController
@@ -47,8 +48,9 @@ public class BankMasterController {
 
   /**
    * @param parameterRequest
-   * @param batchStatus try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）] try catch: Sentry
-   *        連携しエラー通知を行う
+   * @param batchStatus
+   * try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）]
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public void getSFBankMaster(ParameterRequest parameterRequest, BatchStatus batchStatus) {
     try {
@@ -84,8 +86,9 @@ public class BankMasterController {
 
   /**
    * @param parameterRequest
-   * @param batchStatus try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）] try catch: Sentry
-   *        連携しエラー通知を行う
+   * @param batchStatus
+   * try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）]
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public void coreDateCreatBankMaster(ParameterRequest parameterRequest, BatchStatus batchStatus) {
     try {
@@ -132,8 +135,9 @@ public class BankMasterController {
 
   /**
    * @param parameterRequest
-   * @param batchStatus try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）] try catch: Sentry
-   *        連携しエラー通知を行う
+   * @param batchStatus
+   * try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）]
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public void getSFBankAccountInformation(ParameterRequest parameterRequest,
       BatchStatus batchStatus) {
@@ -174,8 +178,9 @@ public class BankMasterController {
 
   /**
    * @param parameterRequest
-   * @param batchStatus try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）] try catch: Sentry
-   *        連携しエラー通知を行う
+   * @param batchStatus
+   * try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）]
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public void coreDateCreatBankAccountInformation(ParameterRequest parameterRequest, BatchStatus batchStatus) {
 	try {
@@ -187,7 +192,9 @@ public class BankMasterController {
 
 		int size = objectSyncList.size();
 		int offset = size / Constant.LIMIT;
-		ConvertDataUtil.getJSONObject(Constant.BANKACCOUNTINFORMATION);
+		// ファイルを1回だけ読み取る
+		// Read the datasync file once only
+		JsonMapper.readDataSync(Constant.BANKACCOUNTINFORMATION);
 		List<BankAccountInformation> syncList = new ArrayList<BankAccountInformation>();
 		for (int i = 0; i <= offset; i++) {
 			if (i < offset) {
@@ -221,11 +228,10 @@ public class BankMasterController {
 	}
   }
 
-  // Begin BankMaster object method
+  // Begin BankMaster
   /**
-   * try catch: Sentry 連携しエラー通知を行う
-   * 
    * @param bankMasterList
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public void insertBankMaster(List<BankMaster> bankMasterList) {
     for (int i = 0; i < bankMasterList.size(); i++) {
@@ -242,9 +248,8 @@ public class BankMasterController {
   }
 
   /**
-   * try catch: Sentry 連携しエラー通知を行う
-   * 
    * @param bankMasterList
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public void updateBankMaster(List<BankMaster> bankMasterList) {
     for (int i = 0; i < bankMasterList.size(); i++) {
@@ -261,9 +266,8 @@ public class BankMasterController {
   }
 
   /**
-   * try catch: Sentry 連携しエラー通知を行う
-   * 
    * @param bankMasterList
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public void insertBankMasterSync(List<BankMaster> bankMasterList) {
     Worker worker = workerController.setWorker(Constant.BANKMASTERSYNC);
@@ -284,9 +288,8 @@ public class BankMasterController {
   }
 
   /**
-   * try catch: Sentry 連携しエラー通知を行う
-   * 
    * @param bankMasterList
+   * try catch: Sentry 連携しエラー通知を行う
    */
   public void updateBankMasterSync(List<BankMaster> bankMasterList) {
     Worker worker = workerController.setWorker(Constant.BANKMASTERSYNC);
@@ -295,7 +298,7 @@ public class BankMasterController {
         bankMasterMapper
             .updateBankMasterSync(ConvertDataUtil.convertBankMaster2Sync(bankMasterList.get(i)));
         worker.setSfid(bankMasterList.get(i).getSfid());
-        // Syncテープルに更新場合：承認されたものは未承認変更。（Workerの「sycapproveflg」に「TRUE」→「FALSE」）
+        // Syncテープルに更新場合：承認されたものは未承認変更。（Workerの「syncapproveflg 」に「TRUE」→「FALSE」）
         worker.setSycapproveflg(false);
         workerController.updateWorker(worker);
       } catch (Exception e) {
@@ -369,9 +372,9 @@ public class BankMasterController {
     }
     return listBankMasterToUpdate;
   }
-  // End BankMaster object method
+  // End BankMaster
 
-  // Begin BankAccountInformation object method
+  // Begin BankAccountInformation
   public void insertBankAccountInformation(
       List<BankAccountInformation> bankAccountInformationList) {
     for (int i = 0; i < bankAccountInformationList.size(); i++) {
@@ -428,7 +431,7 @@ public class BankMasterController {
         bankAccountInforMapper.updateBankAccountInformationSync(
             ConvertDataUtil.convertBankAccountInformation2Sync(bankAccountInformationList.get(i)));
         worker.setSfid(bankAccountInformationList.get(i).getSfid());
-        // Syncテープルに更新場合：承認されたものは未承認変更。（Workerの「sycapproveflg」に「TRUE」→「FALSE」）
+        // Syncテープルに更新場合：承認されたものは未承認変更。（Workerの「syncapproveflg」に「TRUE」→「FALSE」）
         worker.setSycapproveflg(false);
         workerController.updateWorker(worker);
       } catch (Exception e) {
@@ -504,5 +507,5 @@ public class BankMasterController {
     }
     return listBankAccountInformationToUpdate;
   }
-  // End BankAccountInformation object method
+  // End BankAccountInformation
 }

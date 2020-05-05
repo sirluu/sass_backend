@@ -13,7 +13,7 @@ import jp.co.japantaxi.model.BatchStatus;
 import jp.co.japantaxi.utils.DateTimeUtil;
 
 @RestController
-@RequestMapping("/batch")
+@RequestMapping
 public class BatchController {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(BatchController.class);
