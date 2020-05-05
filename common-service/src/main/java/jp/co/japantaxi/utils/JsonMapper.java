@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -17,11 +19,10 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 public class JsonMapper {
-
+ 
+  static JSONObject object = new JSONObject();
   static ObjectMapper mapper = new ObjectMapper();
 
-  static JSONObject object = new JSONObject();
-  
   public static ObjectMapper newMapper() {
     mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
     mapper.enable(SerializationFeature.INDENT_OUTPUT);
@@ -66,9 +67,7 @@ public class JsonMapper {
     return map;
   }
 
-  // ファイルを1回だけ読み取る
-  // Read the datasync file once only
-  public static JSONObject readDataSync(String context) throws IOException {
+  public static void readDataSync(String context) throws IOException {
 	InputStream is = JsonMapper.class.getResourceAsStream("/datasync.json");
 	BufferedReader buff = new BufferedReader(
 			new InputStreamReader(is, "UTF-8"));
@@ -77,9 +76,9 @@ public class JsonMapper {
 	while ((line = buff.readLine()) != null) {
 		sb.append(line);
 	}
-	object = new JSONObject(sb.toString());
+	JSONObject jsonObject = new JSONObject(sb.toString());
+	object = jsonObject.getJSONObject(context.toLowerCase());
 	buff.close();
-    return object.getJSONObject(context.toLowerCase());
   }
   
 }

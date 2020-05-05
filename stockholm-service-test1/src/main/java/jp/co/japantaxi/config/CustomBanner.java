@@ -24,5 +24,6 @@ public class CustomBanner implements Banner {
         "|                                                                                     |");
     printStream.println(
         "|=====================================================================================|");
+    printStream.println(" >>> OS : " + ManagementFactory.getOperatingSystemMXBean().getName());
   }
 }
