@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="jp.co.japantaxi.mapper.stockholm.WorkerMapper">
+
+	<insert id="insertWorker"
+		parameterType="jp.co.japantaxi.model.Worker">
+		INSERT INTO worker
+		(sfid, tablename, sycapproveflg,
+		syncstatus, deleteflg, syncedtime)
+		VALUES(#{sfid}, #{tablename},
+		#{sycapproveflg}, #{syncstatus},
+		#{deleteflg}, #{syncedtime})
+	</insert>
+
+	<update id="updateWorker"
+		parameterType="jp.co.japantaxi.model.Worker">
+		UPDATE worker
+		SET tablename=#{tablename},
+		sycapproveflg=#{sycapproveflg},
+		syncstatus=#{syncstatus},
+		deleteflg=#{deleteflg},
+		syncedtime=#{syncedtime}
+		WHERE sfid=#{sfid}
+	</update>
+
+</mapper>

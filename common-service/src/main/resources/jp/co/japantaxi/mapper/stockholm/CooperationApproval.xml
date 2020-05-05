@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="jp.co.japantaxi.mapper.stockholm.CooperationApprovalMapper">
+	
+	<select id="getMerchantCoopApprovalInfoListByCompanyId"
+		parameterType="java.lang.String" resultMap="merchantCoopApprovalInfoList">
+		SELECT 
+			acc.sfid as accsfid,
+			acc.appcompanyid as appcompanyid,
+			acc.appcompany as appCompany,
+			acc.affiliationstorenamealphabetic as affiliationStoreNameAlphabetic,
+			acc.affiliationstorenamekana,
+			acc.affiliationstorenamekanji,
+			acc.website,
+			acc.keiri_no as keirino,
+			acc.corporate_number as corporatenumber,
+			acc.mertermno,
+			acc.iris_id as irisid,
+			concat('', acc.merchantinfo_isrepresentative) as merchantinfoisrepresentative,
+			acc.merchantinfo_inquiryname as merchantinfoinquiryname,
+			acc.merchantinfo_inquiryphone as merchantinfoinquiryphone,
+			acc.merchantinfo_warningemail as merchantinfowarningemail,
+			acc.merchantinfo_inquiryemail as merchantinfoinquiryemail,
+			acc.merchantinfo_errorinquiryname as merchantinfoerrorinquiryname,
+			acc.merchantinfo_errorinquiryphone as merchantinfoerrorinquiryphone,
+			acc.merchantinfo_errorinquiryemail merchantinfoerrorinquiryemail,
+			acc.merchantinfo_erroraccountbank as merchantinfoerroraccountbank,
+			acc.merchantinfo_erroraccountbranch as merchantinfoerroraccountbranch,
+			acc.merchantinfo_erroraccounttype as merchantinfoerroraccounttype,
+			acc.merchantinfo_erroraccountnumber as merchantinfoerroraccountnumber,
+			acc.merchantinfo_erroraccountname as merchantinfoerroraccountname,
+			acc.merchantinfo_erroraccountkana as merchantinfoerroraccountkana,
+			merchantinfo_serviceid as merchantinfoserviceid,
+			merchantinfo_paymentcontactname as merchantinfopaymentcontactname,
+			merchantinfo_remarks as merchantinforemarks,
+			merchantinfo_radename as merchantinforadename,
+			merchantinfo_postalcode as merchantinfopostalcode,
+			merchantinfo_prefecturecode as merchantinfoprefecturecode,
+			merchantinfo_address as merchantinfoaddress,
+			merchantinfo_addresskana as merchantinfoaddresskana,
+			merchantinfo_phonenumberhyphen as merchantinfophonenumberhyphen,
+			merchantinfo_contactname as merchantinfocontactname,
+			merchantinfo_contactemail as merchantinfocontactemail,
+			merchantcontrinfor_applicationcars as merchantcontrinforapplicationcars,
+			merchantcontrinfor_tabletmodel as merchantcontrinfortabletmodel,
+			merchantcontrinfor_applicationdate as merchantcontrinforapplicationdate,
+			merchantcontrinfor_isfacetofacesettlement as merchantcontrinforisfacetofacesettlement,
+			merchantcontrinfor_isregistry as merchantcontrinforisregistry,
+			merchantcontrinfor_licensename as merchantcontrinforlicensename,
+			merchantcontrinfor_licensenumber as merchantcontrinforlicensenumber,
+			merchantcontrinfor_licenseacquisitiondate as merchantcontrinforlicenseacquisitiondate,
+			merchantreprinfor_fullnamekanji as merchantreprinforfullnamekanji,
+			merchantreprinfor_fullnamekana as merchantreprinforfullnamekana,
+			merchantreprinfor_postalcode as merchantreprinforpostalcode,
+			merchantreprinfor_prefecturecode as merchantreprinforprefecturecode,
+			merchantreprinfor_address as merchantreprinforaddress,
+			merchantreprinfor_phone as merchantreprinforphone,
+			merchantreprinfor_birthday as merchantreprinforbirthday,
+			merchantreprinfor_sex as merchantreprinforsex,
+			merchantreprinfor_memo as merchantreprinformemo,
+			merchantstoreinfor_storenamekanji as merchantstoreinforstorenamekanji,
+			merchantstoreinfor_storenamehalfwidthkana as merchantstoreinforstorenamehalfwidthkana,
+			merchantstoreinfor_storenamealphabet as merchantstoreinforstorenamealphabet,
+			merchantstoreinfor_postalcode as merchantstoreinforpostalcode,
+			merchantstoreinfor_prefecturecode as merchantstoreinforprefecturecode,
+			merchantstoreinfor_address as merchantstoreinforaddress,
+			merchantstoreinfor_addresskana as merchantstoreinforaddresskana,
+			merchantstoreinfor_phone as merchantstoreinforphone,
+			merchantstoreinfor_memo as merchantstoreinformemo,
+			merchantdeliveryinfor_date as merchantdeliveryinfordate,
+			merchantdeliveryinfor_gakkencustomernumber as merchantdeliveryinforgakkencustomernumber,
+			merchantdeliveryinfor_name as merchantdeliveryinforname,
+			merchantdeliveryinfor_postalcode as merchantdeliveryinforpostalcode,
+			merchantdeliveryinfor_prefecturecode as merchantdeliveryinforprefecturecode,
+			merchantdeliveryinfor_address as merchantdeliveryinforaddress,
+			merchantdeliveryinfor_contactname as merchantdeliveryinforcontactname,
+			merchantdeliveryinfor_phone as merchantdeliveryinforphone,
+			merchantdeliveryinfor_memo as merchantdeliveryinformemo,
+			merchantpayinfo_name as merchantpayinfoname,
+			merchantpayinfo_postalcode as merchantpayinfopostalcode,
+			merchantpayinfo_address1 as merchantpayinfoaddress1,
+			merchantpayinfo_address2 as merchantpayinfoaddress2,
+			merchantpayinfo_contactname as merchantpayinfocontactname,
+			merchantoperinfor_startdate as merchantoperinforstartdate,
+			merchantoperinfor_acceptancedate as merchantoperinforacceptancedate,
+			merchantoperinfor_guaranteeenddate as merchantoperinforguaranteeenddate,
+			merchantoperinfor_contractenddate as merchantoperinforcontractenddate,
+			merchantoperinfor_memo as merchantoperinformemo,
+			thincacloudmertermno,
+			linkmertermno,
+			taxi.name as taxiname,
+			taxi.state__c as taxitaxistate, 
+			taxi.address as taxiaddress,
+			taxi.postalcode as taxipostalCode,
+			taxi.contactname as taxicontactName
+		FROM accountsync acc
+			LEFT JOIN taxicompanyrelatedcontactaddresssync taxi ON acc.sfid = taxi.account AND taxi.addresstype='配車手数料請求先'
+		WHERE
+			acc.appcompany=#{sfid,jdbcType=VARCHAR} ORDER BY acc.sfid LIMIT 10000
+	</select>
+	<resultMap type="jp.co.japantaxi.response.MerchantResponse$MerchantCoopApproval" id="merchantCoopApprovalInfoList" autoMapping="true">
+		<result property="affiliationStoreNameAlphabetic" column="affiliationStoreNameAlphabetic" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="affiliationStoreNameKana" column="affiliationstorenamekana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="netpayMerchantsAffiliationStoreNameKanji" column="affiliationStoreNameKanji" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="applicationFormAffiliationStoreNameKanji" column="affiliationStoreNameKanji" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="companiesAffiliationStoreNameKanji" column="affiliationStoreNameKanji" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="keiriNo" column="keirino" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="corporateNumber" column="corporatenumber" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="netpayMerchantsMerTermNo" column="mertermno" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="applicationFormMerTermNo" column="mertermno" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="irisId" column="irisid" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantInfoIsRepresentative" column="merchantinfoisrepresentative" typeHandler="jp.co.japantaxi.utils.EmptyIntegerIfNull"/>
+		<result property="merchantInfoInquiryName" column="merchantinfoinquiryname" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantInfoInquiryPhone" column="merchantinfoinquiryphone" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantInfoWarningEmail" column="merchantinfowarningemail" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantInfoInquiryEmail" column="merchantinfoinquiryemail" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantInfoErrorInquiryName" column="merchantinfoerrorinquiryname" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantInfoErrorInquiryPhone" column="merchantinfoerrorinquiryphone" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantInfoErrorInquiryEmail" column="merchantinfoerrorinquiryemail" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantInfoErrorAccountBank" column="merchantinfoerroraccountbank" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantInfoErrorAccountBranch" column="merchantinfoerroraccountbranch" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantInfoErrorAccountType" column="merchantinfoerroraccounttype" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantInfoErrorAccountNumber" column="merchantinfoerroraccountnumber" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantInfoErrorAccountName" column="merchantinfoerroraccountname" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantInfoErrorAccountKana" column="merchantinfoerroraccountkana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantInfoServiceId" column="merchantinfoserviceid" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantInfoPaymentContactName" column="merchantinfopaymentcontactname" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantInfoRemarks" column="merchantinforemarks" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantInforadeName" column="merchantinforadename" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantInfoPostalCode" column="merchantinfopostalcode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantInfoPrefectureCode" column="merchantinfoprefecturecode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantInfoAddress" column="merchantinfoaddress" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantInfoAddressKana" column="merchantinfoaddresskana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="applicationFormMerchantInfoPhoneNumberHyphen" column="merchantinfophonenumberhyphen" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="companiesMerchantInfoPhoneNumberHyphen" column="merchantinfophonenumberhyphen" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantInfoContactName" column="merchantinfocontactname" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="applicationFormMerchantInfoContactEmail" column="merchantinfocontactemail" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="companiesMerchantInfoContactEmail" column="merchantinfocontactemail" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantInfoMeterList" column="merchantinfometerlist" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantContrInforApplicationCars" column="merchantcontrinforapplicationcars" />
+		<result property="merchantContrInforTabletModel" column="merchantcontrinfortabletmodel" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantContrInforApplicationDate" column="merchantcontrinforapplicationdate" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantContrInforIsFacetofaceSettlement" column="merchantcontrinforisfacetofacesettlement"/>
+		<result property="merchantContrInforIsRegistry" column="merchantcontrinforisregistry"/>
+		<result property="merchantContrInforLicenseName" column="merchantcontrinforlicensename" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantContrInforLicenseNumber" column="merchantcontrinforlicensenumber" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantContrInforLicenseAcquisitionDate" column="merchantcontrinforlicenseacquisitiondate" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantReprInforFullNameKanji" column="merchantreprinforfullnamekanji" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantReprInforFullNameKana" column="merchantreprinforfullnamekana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantReprInforPostalCode" column="merchantreprinforpostalcode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantReprInforPrefectureCode" column="merchantreprinforprefecturecode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantReprInforAddress" column="merchantreprinforaddress" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantReprInforPhone" column="merchantreprinforphone" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantReprInforBirthday" column="merchantreprinforbirthday" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantReprInforSex" column="merchantreprinforsex" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantReprInforMemo" column="merchantreprinformemo" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantStoreInforStoreNameKanji" column="merchantstoreinforstorenamekanji" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantStoreInforStoreNameHalfwidthKana" column="merchantstoreinforstorenamehalfwidthkana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantStoreInforStoreNameAlphabet" column="merchantstoreinforstorenamealphabet" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantStoreInforPostalCode" column="merchantstoreinforpostalcode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantStoreInforPrefectureCode" column="merchantstoreinforprefecturecode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantStoreInforAddress" column="merchantstoreinforaddress" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantStoreInforAddressKana" column="merchantstoreinforaddresskana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantStoreInforPhone" column="merchantstoreinforphone" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantStoreInforMemo" column="merchantstoreinformemo" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantDeliveryInforDate" column="merchantdeliveryinfordate" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantDeliveryInforGakkenCustomerNumber" column="merchantdeliveryinforgakkencustomernumber" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantDeliveryInforName" column="merchantdeliveryinforname" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantDeliveryInforPostalCode" column="merchantdeliveryinforpostalcode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantDeliveryInforPrefectureCode" column="merchantdeliveryinforprefecturecode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantDeliveryInforAddress" column="merchantdeliveryinforaddress" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantDeliveryInforContactName" column="merchantdeliveryinforcontactname" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantDeliveryInforPhone" column="merchantdeliveryinforphone" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantDeliveryInforMemo" column="merchantdeliveryinformemo" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="netpayMerchantsMerchantPayInfoName" column="merchantpayinfoname" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="applicationFormMerchantPayInfoName" column="merchantpayinfoname" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="companiesMerchantPayInfoName" column="merchantpayinfoname" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="netpayMerchantsMerchantPayInfoPostalCode" column="merchantpayinfopostalcode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="applicationFormMerchantPayInfoPostalCode" column="merchantpayinfopostalcode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="companiesMerchantPayInfoPostalCode" column="merchantpayinfopostalcode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="netpayMerchantsMerchantPayInfoAddress1" column="merchantpayinfoaddress1" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="companiesMerchantPayInfoAddress1" column="merchantpayinfoaddress1" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="netpayMerchantsMerchantPayInfoAddress2" column="merchantpayinfoaddress2" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="applicationFormMerchantPayInfoAddress2" column="merchantpayinfoaddress2" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="companiesMerchantPayInfoAddress2" column="merchantpayinfoaddress2" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantPayInfoContactName" column="merchantpayinfocontactname" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantOperInforStartDate" column="merchantoperinforstartdate" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantOperInforAcceptanceDate" column="merchantoperinforacceptancedate" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantOperInforGuaranteeEndDate" column="merchantoperinforguaranteeenddate" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantOperInforContractEndDate" column="merchantoperinforcontractenddate" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="merchantOperInforMemo" column="merchantoperinformemo" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="thincacloudMertermno" column="thincacloudmertermno" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="linkMertermno" column="linkmertermno" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<result property="sfid" column="accsfid"/>
+		<association property="bankAccountInformationList" column="accsfid" javaType="java.util.ArrayList" select="jp.co.japantaxi.mapper.stockholm.CooperationApprovalMapper.getBankAccountInfoByAccountID"/>
+		<collection property="taxiCompanyRelatedContactAddress" ofType="jp.co.japantaxi.response.MerchantResponse$TaxiCompanyRContract">
+			<result property="name" column="taxiname"/>
+			<result property="state" column="taxiaddress"/>
+			<result property="address" column="taxiaddress"/>
+			<result property="postalCode" column="taxipostalCode"/>
+			<result property="contactName" column="taxicontactName"/>
+		</collection>
+	</resultMap>
+	<select id="getBankAccountInfoByAccountID" resultMap="bankaccountinfors">
+		SELECT
+			bank.sfid,
+			bm.name as bankname,
+			bm.banknamekana,
+			bm.bankcode,
+			bm.branchname,
+			bm.branchcode,
+			bm.branchnamekana,
+			bank.accountnumber,
+			bank.accountname,
+			bank.accountnamekana,
+			bank.accounttype as accounttype,
+			acc.mertermno as mertermno
+		FROM
+			bankaccountinformationsync bank
+			INNER JOIN bankmastersync bm ON bank.accountbank = bm.sfid
+			LEFT JOIN  accountsync acc ON bank.account = acc.sfid
+		WHERE account=#{accsfid}
+	</select>
+	<resultMap id="bankaccountinfors" type="jp.co.japantaxi.response.MerchantResponse$BankaccountinformationMapper" autoMapping="true">
+		<result property="mertermno" column="mertermno"/>
+		<result property="netpayMerchantsBankNameKana" column="banknamekana"/>
+		<result property="applicationFormPaymentBankNameKana" column="banknamekana"/>
+		<result property="companiesBankNameKana" column="banknamekana"/>
+		<result property="netpayMerchantsBankCode" column="bankcode"/>
+		<result property="applicationFormPaymentBankCode" column="bankcode"/>
+		<result property="companiesBankCode" column="bankcode"/>
+		<result property="netpayMerchantsBranchCode" column="branchcode"/>
+		<result property="applicationFormPaymentBranchCode" column="branchcode"/>
+		<result property="companiesBranchCode" column="branchcode"/>
+		<result property="netpayMerchantsBranchNameKana" column="branchnamekana"/>
+		<result property="applicationFormPaymentBranchNameKana" column="branchnamekana"/>
+		<result property="companiesBranchNameKana" column="branchnamekana"/>
+		<result property="netpayMerchantsAccountNumber" column="accountnumber" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="applicationFormPaymentAccountNumber" column="accountnumber" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="companiesAccountNumber" column="accountnumber" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="netpayMerchantsAccountNameKana" column="accountnamekana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="applicationFormPaymentAccountNameKana" column="accountnamekana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="companiesAccountNameKana" column="accountnamekana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="netpayMerchantsAccountType" column="accounttype" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="applicationFormPaymentAccountType" column="accounttype" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="companiesAccountType" column="accounttype" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+	</resultMap>
+</mapper>

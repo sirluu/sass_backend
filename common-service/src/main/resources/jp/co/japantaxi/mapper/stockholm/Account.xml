@@ -1,0 +1,1078 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="jp.co.japantaxi.mapper.stockholm.AccountMapper">
+	<select id="truncateAccount">
+		TRUNCATE TABLE account
+	</select>
+
+	<select id="getAccountById"
+		parameterType="jp.co.japantaxi.model.ParameterRequest"
+		resultType="jp.co.japantaxi.model.Account">
+		SELECT a.sfid, a.appcompany,
+		a.affiliationstorenamealphabetic,
+		a.affiliationstorenamekana,
+		a.affiliationstorenamekanji, a.website,
+		a.keiri_no, a.corporate_number,
+		a.mertermno, a.iris_id,
+		a.merchantinfo_isrepresentative,
+		a.merchantinfo_inquiryname,
+		a.merchantinfo_inquiryphone,
+		a.merchantinfo_warningemail,
+		a.merchantinfo_inquiryemail,
+		a.merchantinfo_errorinquiryname,
+		a.merchantinfo_errorinquiryphone,
+		a.merchantinfo_errorinquiryemail,
+		a.merchantinfo_erroraccountbank,
+		a.merchantinfo_erroraccountbranch,
+		a.merchantinfo_erroraccounttype,
+		a.merchantinfo_erroraccountnumber,
+		a.merchantinfo_erroraccountname,
+		a.merchantinfo_erroraccountkana,
+		a.merchantinfo_serviceid,
+		a.merchantinfo_paymentcontactname,
+		a.merchantinfo_remarks,
+		a.merchantinfo_radename, a.merchantinfo_postalcode,
+		a.merchantinfo_prefecturecode, a.merchantinfo_address,
+		a.merchantinfo_addresskana, a.merchantinfo_phonenumberhyphen,
+		a.merchantinfo_contactname, a.merchantinfo_contactemail,
+		a.merchantinfo_meterlist, a.merchantcontrinfor_applicationcars,
+		a.merchantcontrinfor_tabletmodel,
+		a.merchantcontrinfor_applicationdate,
+		a.merchantcontrinfor_isfacetofacesettlement,
+		a.merchantcontrinfor_isregistry, a.merchantcontrinfor_licensename,
+		a.merchantcontrinfor_licensenumber,
+		a.merchantcontrinfor_licenseacquisitiondate,
+		a.merchantreprinfor_fullnamekanji, a.merchantreprinfor_fullnamekana,
+		a.merchantreprinfor_postalcode, a.merchantreprinfor_prefecturecode,
+		a.merchantreprinfor_address, a.merchantreprinfor_phone,
+		a.merchantreprinfor_birthday, a.merchantreprinfor_sex,
+		a.merchantreprinfor_memo, a.merchantstoreinfor_storenamekanji,
+		a.merchantstoreinfor_storenamehalfwidthkana,
+		a.merchantstoreinfor_storenamealphabet,
+		a.merchantstoreinfor_postalcode,
+		a.merchantstoreinfor_prefecturecode,
+		a.merchantstoreinfor_address,
+		a.merchantstoreinfor_addresskana,
+		a.merchantstoreinfor_phone,
+		a.merchantstoreinfor_memo,
+		a.merchantdeliveryinfor_date,
+		a.merchantdeliveryinfor_gakkencustomernumber,
+		a.merchantdeliveryinfor_name, a.merchantdeliveryinfor_postalcode,
+		a.merchantdeliveryinfor_prefecturecode,
+		a.merchantdeliveryinfor_address,
+		a.merchantdeliveryinfor_contactname,
+		a.merchantdeliveryinfor_phone,
+		a.merchantdeliveryinfor_memo,
+		a.merchantpayinfo_netbankaccount,
+		a.merchantpayinfo_itabbankaccount,
+		a.merchantpayinfo_name,
+		a.merchantpayinfo_postalcode,
+		a.merchantpayinfo_address1,
+		a.merchantpayinfo_address2,
+		a.merchantpayinfo_contactname,
+		a.merchantoperinfor_startdate,
+		a.merchantoperinfor_acceptancedate,
+		a.merchantoperinfor_guaranteeenddate,
+		a.merchantoperinfor_contractenddate,
+		a.merchantoperinfor_memo,
+		a.thincacloudmertermno, a.linkmertermno,
+		a.invaliddate,
+		a.invalidreason, a.invaliddetailreason, a.lastmodifieddate,
+		a.appcompanyid, a.jpporganizationid
+		FROM account a WHERE a.sfid=#{id}
+	</select>
+
+	<select id="getListAccountFromStockholm"
+		parameterType="jp.co.japantaxi.model.ParameterRequest"
+		resultType="jp.co.japantaxi.model.Account">
+		SELECT a.sfid, a.appcompany,
+		a.affiliationstorenamealphabetic,
+		a.affiliationstorenamekana,
+		a.affiliationstorenamekanji, a.website,
+		a.keiri_no, a.corporate_number,
+		a.mertermno, a.iris_id,
+		a.merchantinfo_isrepresentative,
+		a.merchantinfo_inquiryname,
+		a.merchantinfo_inquiryphone,
+		a.merchantinfo_warningemail,
+		a.merchantinfo_inquiryemail,
+		a.merchantinfo_errorinquiryname,
+		a.merchantinfo_errorinquiryphone,
+		a.merchantinfo_errorinquiryemail,
+		a.merchantinfo_erroraccountbank,
+		a.merchantinfo_erroraccountbranch,
+		a.merchantinfo_erroraccounttype,
+		a.merchantinfo_erroraccountnumber,
+		a.merchantinfo_erroraccountname,
+		a.merchantinfo_erroraccountkana,
+		a.merchantinfo_serviceid,
+		a.merchantinfo_paymentcontactname,
+		a.merchantinfo_remarks,
+		a.merchantinfo_radename, a.merchantinfo_postalcode,
+		a.merchantinfo_prefecturecode, a.merchantinfo_address,
+		a.merchantinfo_addresskana, a.merchantinfo_phonenumberhyphen,
+		a.merchantinfo_contactname, a.merchantinfo_contactemail,
+		a.merchantinfo_meterlist, a.merchantcontrinfor_applicationcars,
+		a.merchantcontrinfor_tabletmodel,
+		a.merchantcontrinfor_applicationdate,
+		a.merchantcontrinfor_isfacetofacesettlement,
+		a.merchantcontrinfor_isregistry, a.merchantcontrinfor_licensename,
+		a.merchantcontrinfor_licensenumber,
+		a.merchantcontrinfor_licenseacquisitiondate,
+		a.merchantreprinfor_fullnamekanji, a.merchantreprinfor_fullnamekana,
+		a.merchantreprinfor_postalcode, a.merchantreprinfor_prefecturecode,
+		a.merchantreprinfor_address, a.merchantreprinfor_phone,
+		a.merchantreprinfor_birthday, a.merchantreprinfor_sex,
+		a.merchantreprinfor_memo, a.merchantstoreinfor_storenamekanji,
+		a.merchantstoreinfor_storenamehalfwidthkana,
+		a.merchantstoreinfor_storenamealphabet,
+		a.merchantstoreinfor_postalcode,
+		a.merchantstoreinfor_prefecturecode,
+		a.merchantstoreinfor_address,
+		a.merchantstoreinfor_addresskana,
+		a.merchantstoreinfor_phone,
+		a.merchantstoreinfor_memo,
+		a.merchantdeliveryinfor_date,
+		a.merchantdeliveryinfor_gakkencustomernumber,
+		a.merchantdeliveryinfor_name, a.merchantdeliveryinfor_postalcode,
+		a.merchantdeliveryinfor_prefecturecode,
+		a.merchantdeliveryinfor_address,
+		a.merchantdeliveryinfor_contactname,
+		a.merchantdeliveryinfor_phone,
+		a.merchantdeliveryinfor_memo,
+		a.merchantpayinfo_netbankaccount,
+		a.merchantpayinfo_itabbankaccount,
+		a.merchantpayinfo_name,
+		a.merchantpayinfo_postalcode,
+		a.merchantpayinfo_address1,
+		a.merchantpayinfo_address2,
+		a.merchantpayinfo_contactname,
+		a.merchantoperinfor_startdate,
+		a.merchantoperinfor_acceptancedate,
+		a.merchantoperinfor_guaranteeenddate,
+		a.merchantoperinfor_contractenddate,
+		a.merchantoperinfor_memo,
+		a.thincacloudmertermno, a.linkmertermno,
+		a.invaliddate,
+		a.invalidreason, a.invaliddetailreason, a.lastmodifieddate,
+		a.appcompanyid, a.jpporganizationid
+		FROM account a WHERE a.sfid IN (${ids}) ORDER BY a.sfid DESC
+	</select>
+
+	<select id="getListAccount2Sync"
+		parameterType="jp.co.japantaxi.model.ParameterRequest"
+		resultType="jp.co.japantaxi.model.Account">
+		SELECT a.sfid,
+		a.appcompany,
+		a.affiliationstorenamealphabetic,
+		a.affiliationstorenamekana,
+		a.affiliationstorenamekanji,
+		a.website,
+		a.keiri_no as keirino,
+		a.corporate_number as corporatenumber,
+		a.mertermno,
+		a.iris_id as irisid,
+		a.merchantinfo_isrepresentative as merchantinfoisrepresentative,
+		a.merchantinfo_inquiryname as merchantinfoinquiryname,
+		a.merchantinfo_inquiryphone as merchantinfoinquiryphone,
+		a.merchantinfo_warningemail as merchantinfowarningemail,
+		a.merchantinfo_inquiryemail as merchantinfoinquiryemail,
+		a.merchantinfo_errorinquiryname as merchantinfoerrorinquiryname,
+		a.merchantinfo_errorinquiryphone as merchantinfoerrorinquiryphone,
+		a.merchantinfo_errorinquiryemail as merchantinfoerrorinquiryemail,
+		a.merchantinfo_erroraccountbank as merchantinfoerroraccountbank,
+		a.merchantinfo_erroraccountbranch as merchantinfoerroraccountbranch,
+		a.merchantinfo_erroraccounttype as merchantinfoerroraccounttype,
+		a.merchantinfo_erroraccountnumber as merchantinfoerroraccountnumber,
+		a.merchantinfo_erroraccountname as merchantinfoerroraccountname,
+		a.merchantinfo_erroraccountkana as merchantinfoerroraccountkana,
+		a.merchantinfo_serviceid as merchantinfoserviceid,
+		a.merchantinfo_paymentcontactname as merchantinfopaymentcontactname,
+		a.merchantinfo_remarks as merchantinforemarks,
+		a.merchantinfo_radename as merchantinforadename,
+		a.merchantinfo_postalcode as merchantinfopostalcode,
+		a.merchantinfo_prefecturecode as merchantinfoprefecturecode,
+		a.merchantinfo_address as merchantinfoaddress,
+		a.merchantinfo_addresskana as merchantinfoaddresskana,
+		a.merchantinfo_phonenumberhyphen as merchantinfophonenumberhyphen,
+		a.merchantinfo_contactname as merchantinfocontactname,
+		a.merchantinfo_contactemail as merchantinfocontactemail,
+		a.merchantinfo_meterlist as merchantinfometerlist,
+		a.merchantcontrinfor_applicationcars as merchantcontrinforapplicationcars,
+		a.merchantcontrinfor_tabletmodel as merchantcontrinfortabletmodel,
+		a.merchantcontrinfor_applicationdate as merchantcontrinforapplicationdate,
+		a.merchantcontrinfor_isfacetofacesettlement as merchantcontrinforisfacetofacesettlement,
+		a.merchantcontrinfor_isregistry as merchantcontrinforisregistry,
+		a.merchantcontrinfor_licensename as merchantcontrinforlicensename,
+		a.merchantcontrinfor_licensenumber as merchantcontrinforlicensenumber,
+		a.merchantcontrinfor_licenseacquisitiondate as merchantcontrinforlicenseacquisitiondate,
+		a.merchantreprinfor_fullnamekanji as merchantreprinforfullnamekanji,
+		a.merchantreprinfor_fullnamekana as merchantreprinforfullnamekana,
+		a.merchantreprinfor_postalcode as merchantreprinforpostalcode,
+		a.merchantreprinfor_prefecturecode as merchantreprinforprefecturecode,
+		a.merchantreprinfor_address as merchantreprinforaddress,
+		a.merchantreprinfor_phone as merchantreprinforphone,
+		a.merchantreprinfor_birthday as merchantreprinforbirthday,
+		a.merchantreprinfor_sex as merchantreprinforsex,
+		a.merchantreprinfor_memo as merchantreprinformemo,
+		a.merchantstoreinfor_storenamekanji as merchantstoreinforstorenamekanji,
+		a.merchantstoreinfor_storenamehalfwidthkana as merchantstoreinforstorenamehalfwidthkana,
+		a.merchantstoreinfor_storenamealphabet as merchantstoreinforstorenamealphabet,
+		a.merchantstoreinfor_postalcode as merchantstoreinforpostalcode,
+		a.merchantstoreinfor_prefecturecode as merchantstoreinforprefecturecode,
+		a.merchantstoreinfor_address as merchantstoreinforaddress,
+		a.merchantstoreinfor_addresskana as merchantstoreinforaddresskana,
+		a.merchantstoreinfor_phone as merchantstoreinforphone,
+		a.merchantstoreinfor_memo as merchantstoreinformemo,
+		a.merchantdeliveryinfor_date as merchantdeliveryinfordate,
+		a.merchantdeliveryinfor_gakkencustomernumber as merchantdeliveryinforgakkencustomernumber,
+		a.merchantdeliveryinfor_name as merchantdeliveryinforname,
+		a.merchantdeliveryinfor_postalcode as merchantdeliveryinforpostalcode,
+		a.merchantdeliveryinfor_prefecturecode as merchantdeliveryinforprefecturecode,
+		a.merchantdeliveryinfor_address as merchantdeliveryinforaddress,
+		a.merchantdeliveryinfor_contactname as merchantdeliveryinforcontactname,
+		a.merchantdeliveryinfor_phone as merchantdeliveryinforphone,
+		a.merchantdeliveryinfor_memo as merchantdeliveryinformemo,
+		a.merchantpayinfo_netbankaccount as merchantpayinfonetbankaccount,
+		a.merchantpayinfo_itabbankaccount as merchantpayinfoitabbankaccount,
+		a.merchantpayinfo_name as merchantpayinfoname,
+		a.merchantpayinfo_postalcode as merchantpayinfopostalcode,
+		a.merchantpayinfo_address1 as merchantpayinfoaddress1,
+		a.merchantpayinfo_address2 as merchantpayinfoaddress2,
+		a.merchantpayinfo_contactname as merchantpayinfocontactname,
+		a.merchantoperinfor_startdate as merchantoperinforstartdate,
+		a.merchantoperinfor_acceptancedate as merchantoperinforacceptancedate,
+		a.merchantoperinfor_guaranteeenddate as merchantoperinforguaranteeenddate,
+		a.merchantoperinfor_contractenddate as merchantoperinforcontractenddate,
+		a.merchantoperinfor_memo as merchantoperinformemo,
+		a.thincacloudmertermno,
+		a.linkmertermno,
+		a.invaliddate,
+		a.invalidreason,
+		a.invaliddetailreason,
+		a.lastmodifieddate,
+		a.appcompanyid, a.jpporganizationid
+		FROM
+		account a WHERE (date_trunc('second',a.lastmodifieddate) >=
+		${startTime})
+		ORDER BY a.sfid DESC
+	</select>
+
+	<select id="getListAccountIdFromStockholm"
+		parameterType="jp.co.japantaxi.model.ParameterRequest"
+		resultType="java.lang.String">
+		SELECT a.sfid FROM account a WHERE a.sfid IN (${ids}) ORDER BY a.sfid DESC
+	</select>
+	
+	<select id="getListAccountSyncIdFromStockholm" resultType="java.lang.String">
+		SELECT a.sfid FROM accountsync a
+	</select>
+
+	<insert id="insertAccount"
+		parameterType="jp.co.japantaxi.model.Account">
+		INSERT INTO account
+		(sfid, appcompany,
+		affiliationstorenamealphabetic, affiliationstorenamekana,
+		affiliationstorenamekanji, website, keiri_no, corporate_number,
+		mertermno, iris_id, merchantinfo_isrepresentative,
+		merchantinfo_inquiryname, merchantinfo_inquiryphone,
+		merchantinfo_warningemail, merchantinfo_inquiryemail,
+		merchantinfo_errorinquiryname, merchantinfo_errorinquiryphone,
+		merchantinfo_errorinquiryemail, merchantinfo_erroraccountbank,
+		merchantinfo_erroraccountbranch, merchantinfo_erroraccounttype,
+		merchantinfo_erroraccountnumber, merchantinfo_erroraccountname,
+		merchantinfo_erroraccountkana, merchantinfo_serviceid,
+		merchantinfo_paymentcontactname, merchantinfo_remarks,
+		merchantinfo_radename, merchantinfo_postalcode,
+		merchantinfo_prefecturecode, merchantinfo_address,
+		merchantinfo_addresskana, merchantinfo_phonenumberhyphen,
+		merchantinfo_contactname, merchantinfo_contactemail,
+		merchantinfo_meterlist, merchantcontrinfor_applicationcars,
+		merchantcontrinfor_tabletmodel, merchantcontrinfor_applicationdate,
+		merchantcontrinfor_isfacetofacesettlement,
+		merchantcontrinfor_isregistry, merchantcontrinfor_licensename,
+		merchantcontrinfor_licensenumber,
+		merchantcontrinfor_licenseacquisitiondate,
+		merchantreprinfor_fullnamekanji, merchantreprinfor_fullnamekana,
+		merchantreprinfor_postalcode, merchantreprinfor_prefecturecode,
+		merchantreprinfor_address, merchantreprinfor_phone,
+		merchantreprinfor_birthday, merchantreprinfor_sex,
+		merchantreprinfor_memo, merchantstoreinfor_storenamekanji,
+		merchantstoreinfor_storenamehalfwidthkana,
+		merchantstoreinfor_storenamealphabet, merchantstoreinfor_postalcode,
+		merchantstoreinfor_prefecturecode, merchantstoreinfor_address,
+		merchantstoreinfor_addresskana, merchantstoreinfor_phone,
+		merchantstoreinfor_memo, merchantdeliveryinfor_date,
+		merchantdeliveryinfor_gakkencustomernumber,
+		merchantdeliveryinfor_name, merchantdeliveryinfor_postalcode,
+		merchantdeliveryinfor_prefecturecode, merchantdeliveryinfor_address,
+		merchantdeliveryinfor_contactname, merchantdeliveryinfor_phone,
+		merchantdeliveryinfor_memo, merchantpayinfo_netbankaccount, merchantpayinfo_itabbankaccount,
+		merchantpayinfo_name, merchantpayinfo_postalcode, merchantpayinfo_address1,
+		merchantpayinfo_address2, merchantpayinfo_contactname,
+		merchantoperinfor_startdate, merchantoperinfor_acceptancedate,
+		merchantoperinfor_guaranteeenddate, merchantoperinfor_contractenddate,
+		merchantoperinfor_memo, thincacloudmertermno, linkmertermno,
+		invaliddate, invalidreason, invaliddetailreason, lastmodifieddate, appcompanyid, jpporganizationid)
+		VALUES(#{sfid},
+		#{appcompany}, #{affiliationstorenamealphabetic},
+		#{affiliationstorenamekana}, #{affiliationstorenamekanji}, #{website},
+		#{keirino}, #{corporatenumber}, #{mertermno}, #{irisid},
+		${merchantinfoisrepresentative==true?"'1'":"'0'"},
+		#{merchantinfoinquiryname},
+		#{merchantinfoinquiryphone},
+		#{merchantinfowarningemail},
+		#{merchantinfoinquiryemail},
+		#{merchantinfoerrorinquiryname},
+		#{merchantinfoerrorinquiryphone},
+		#{merchantinfoerrorinquiryemail},
+		#{merchantinfoerroraccountbank},
+		#{merchantinfoerroraccountbranch},
+		#{merchantinfoerroraccounttype},
+		#{merchantinfoerroraccountnumber},
+		#{merchantinfoerroraccountname},
+		#{merchantinfoerroraccountkana},
+		#{merchantinfoserviceid},
+		#{merchantinfopaymentcontactname},
+		#{merchantinforemarks},
+		#{merchantinforadename},
+		#{merchantinfopostalcode},
+		#{merchantinfoprefecturecode},
+		#{merchantinfoaddress},
+		#{merchantinfoaddresskana},
+		#{merchantinfophonenumberhyphen},
+		#{merchantinfocontactname},
+		#{merchantinfocontactemail},
+		#{merchantinfometerlist},
+		#{merchantcontrinforapplicationcars},
+		#{merchantcontrinfortabletmodel},
+		#{merchantcontrinforapplicationdate},
+		${merchantcontrinforisfacetofacesettlement==true?"'1'":"'0'"},
+		${merchantcontrinforisregistry==true?"'1'":"'0'"},
+		#{merchantcontrinforlicensename},
+		#{merchantcontrinforlicensenumber},
+		#{merchantcontrinforlicenseacquisitiondate},
+		#{merchantreprinforfullnamekanji}, #{merchantreprinforfullnamekana},
+		#{merchantreprinforpostalcode}, #{merchantreprinforprefecturecode},
+		#{merchantreprinforaddress}, #{merchantreprinforphone},
+		#{merchantreprinforbirthday}, #{merchantreprinforsex},
+		#{merchantreprinformemo}, #{merchantstoreinforstorenamekanji},
+		#{merchantstoreinforstorenamehalfwidthkana},
+		#{merchantstoreinforstorenamealphabet},
+		#{merchantstoreinforpostalcode}, #{merchantstoreinforprefecturecode},
+		#{merchantstoreinforaddress}, #{merchantstoreinforaddresskana},
+		#{merchantstoreinforphone}, #{merchantstoreinformemo},
+		#{merchantdeliveryinfordate},
+		#{merchantdeliveryinforgakkencustomernumber},
+		#{merchantdeliveryinforname}, #{merchantdeliveryinforpostalcode},
+		#{merchantdeliveryinforprefecturecode},
+		#{merchantdeliveryinforaddress}, #{merchantdeliveryinforcontactname},
+		#{merchantdeliveryinforphone}, #{merchantdeliveryinformemo},
+		#{merchantpayinfonetbankaccount}, #{merchantpayinfoitabbankaccount},
+		#{merchantpayinfoname}, #{merchantpayinfopostalcode},
+		#{merchantpayinfoaddress1}, #{merchantpayinfoaddress2},
+		#{merchantpayinfocontactname}, #{merchantoperinforstartdate},
+		#{merchantoperinforacceptancedate},
+		#{merchantoperinforguaranteeenddate},
+		#{merchantoperinforcontractenddate}, #{merchantoperinformemo},
+		#{thincacloudmertermno}, #{linkmertermno}, #{invaliddate},
+		#{invalidreason}, #{invaliddetailreason}, #{lastmodifieddate},
+		#{appcompanyid}, #{jpporganizationid})
+	</insert>
+
+	<update id="updateAccount"
+		parameterType="jp.co.japantaxi.model.Account">
+		UPDATE account
+		SET appcompany=#{appcompany},
+		affiliationstorenamealphabetic=#{affiliationstorenamealphabetic},
+		affiliationstorenamekana=#{affiliationstorenamekana},
+		affiliationstorenamekanji=#{affiliationstorenamekanji},
+		website=#{website}, keiri_no=#{keirino},
+		corporate_number=#{corporatenumber}, mertermno=#{mertermno},
+		iris_id=#{irisid},
+		merchantinfo_isrepresentative=${merchantinfoisrepresentative==true?"'1'":"'0'"},
+		merchantinfo_inquiryname=#{merchantinfoinquiryname},
+		merchantinfo_inquiryphone=#{merchantinfoinquiryphone},
+		merchantinfo_warningemail=#{merchantinfowarningemail},
+		merchantinfo_inquiryemail=#{merchantinfoinquiryemail},
+		merchantinfo_errorinquiryname=#{merchantinfoerrorinquiryname},
+		merchantinfo_errorinquiryphone=#{merchantinfoerrorinquiryphone},
+		merchantinfo_errorinquiryemail=#{merchantinfoerrorinquiryemail},
+		merchantinfo_erroraccountbank=#{merchantinfoerroraccountbank},
+		merchantinfo_erroraccountbranch=#{merchantinfoerroraccountbranch},
+		merchantinfo_erroraccounttype=#{merchantinfoerroraccounttype},
+		merchantinfo_erroraccountnumber=#{merchantinfoerroraccountnumber},
+		merchantinfo_erroraccountname=#{merchantinfoerroraccountname},
+		merchantinfo_erroraccountkana=#{merchantinfoerroraccountkana},
+		merchantinfo_serviceid=#{merchantinfoserviceid},
+		merchantinfo_paymentcontactname=#{merchantinfopaymentcontactname},
+		merchantinfo_remarks=#{merchantinforemarks},
+		merchantinfo_radename=#{merchantinforadename},
+		merchantinfo_postalcode=#{merchantinfopostalcode},
+		merchantinfo_prefecturecode=#{merchantinfoprefecturecode},
+		merchantinfo_address=#{merchantinfoaddress},
+		merchantinfo_addresskana=#{merchantinfoaddresskana},
+		merchantinfo_phonenumberhyphen=#{merchantinfophonenumberhyphen},
+		merchantinfo_contactname=#{merchantinfocontactname},
+		merchantinfo_contactemail=#{merchantinfocontactemail},
+		merchantinfo_meterlist=#{merchantinfometerlist},
+		merchantcontrinfor_applicationcars=#{merchantcontrinforapplicationcars},
+		merchantcontrinfor_tabletmodel=#{merchantcontrinfortabletmodel},
+		merchantcontrinfor_applicationdate=#{merchantcontrinforapplicationdate},
+		merchantcontrinfor_isfacetofacesettlement=${merchantcontrinforisfacetofacesettlement==true?"'1'":"'0'"},
+		merchantcontrinfor_isregistry=${merchantcontrinforisregistry==true?"'1'":"'0'"},
+		merchantcontrinfor_licensename=#{merchantcontrinforlicensename},
+		merchantcontrinfor_licensenumber=#{merchantcontrinforlicensenumber},
+		merchantcontrinfor_licenseacquisitiondate=#{merchantcontrinforlicenseacquisitiondate},
+		merchantreprinfor_fullnamekanji=#{merchantreprinforfullnamekanji},
+		merchantreprinfor_fullnamekana=#{merchantreprinforfullnamekana},
+		merchantreprinfor_postalcode=#{merchantreprinforpostalcode},
+		merchantreprinfor_prefecturecode=#{merchantreprinforprefecturecode},
+		merchantreprinfor_address=#{merchantreprinforaddress},
+		merchantreprinfor_phone=#{merchantreprinforphone},
+		merchantreprinfor_birthday=#{merchantreprinforbirthday},
+		merchantreprinfor_sex=#{merchantreprinforsex},
+		merchantreprinfor_memo=#{merchantreprinformemo},
+		merchantstoreinfor_storenamekanji=#{merchantstoreinforstorenamekanji},
+		merchantstoreinfor_storenamehalfwidthkana=#{merchantstoreinforstorenamehalfwidthkana},
+		merchantstoreinfor_storenamealphabet=#{merchantstoreinforstorenamealphabet},
+		merchantstoreinfor_postalcode=#{merchantstoreinforpostalcode},
+		merchantstoreinfor_prefecturecode=#{merchantstoreinforprefecturecode},
+		merchantstoreinfor_address=#{merchantstoreinforaddress},
+		merchantstoreinfor_addresskana=#{merchantstoreinforaddresskana},
+		merchantstoreinfor_phone=#{merchantstoreinforphone},
+		merchantstoreinfor_memo=#{merchantstoreinformemo},
+		merchantdeliveryinfor_date=#{merchantdeliveryinfordate},
+		merchantdeliveryinfor_gakkencustomernumber=#{merchantdeliveryinforgakkencustomernumber},
+		merchantdeliveryinfor_name=#{merchantdeliveryinforname},
+		merchantdeliveryinfor_postalcode=#{merchantdeliveryinforpostalcode},
+		merchantdeliveryinfor_prefecturecode=#{merchantdeliveryinforprefecturecode},
+		merchantdeliveryinfor_address=#{merchantdeliveryinforaddress},
+		merchantdeliveryinfor_contactname=#{merchantdeliveryinforcontactname},
+		merchantdeliveryinfor_phone=#{merchantdeliveryinforphone},
+		merchantdeliveryinfor_memo=#{merchantdeliveryinformemo},
+		merchantpayinfo_netbankaccount=#{merchantpayinfonetbankaccount},
+		merchantpayinfo_itabbankaccount=#{merchantpayinfoitabbankaccount},
+		merchantpayinfo_name=#{merchantpayinfoname},
+		merchantpayinfo_postalcode=#{merchantpayinfopostalcode},
+		merchantpayinfo_address1=#{merchantpayinfoaddress1},
+		merchantpayinfo_address2=#{merchantpayinfoaddress2},
+		merchantpayinfo_contactname=#{merchantpayinfocontactname},
+		merchantoperinfor_startdate=#{merchantoperinforstartdate},
+		merchantoperinfor_acceptancedate=#{merchantoperinforacceptancedate},
+		merchantoperinfor_guaranteeenddate=#{merchantoperinforguaranteeenddate},
+		merchantoperinfor_contractenddate=#{merchantoperinforcontractenddate},
+		merchantoperinfor_memo=#{merchantoperinformemo},
+		thincacloudmertermno=#{thincacloudmertermno},
+		linkmertermno=#{linkmertermno}, invaliddate=#{invaliddate},
+		invalidreason=#{invalidreason},
+		invaliddetailreason=#{invaliddetailreason},
+		lastmodifieddate=#{lastmodifieddate},
+		appcompanyid=#{appcompanyid},
+		jpporganizationid=#{jpporganizationid}
+		WHERE sfid=#{sfid}
+	</update>
+
+	<insert id="insertAccountSync"
+		parameterType="jp.co.japantaxi.model.Account">
+		INSERT INTO accountsync
+		(sfid, appcompany,
+		affiliationstorenamealphabetic, affiliationstorenamekana,
+		affiliationstorenamekanji, website, keiri_no, corporate_number,
+		mertermno, iris_id, merchantinfo_isrepresentative,
+		merchantinfo_inquiryname, merchantinfo_inquiryphone,
+		merchantinfo_warningemail, merchantinfo_inquiryemail,
+		merchantinfo_errorinquiryname, merchantinfo_errorinquiryphone,
+		merchantinfo_errorinquiryemail, merchantinfo_erroraccountbank,
+		merchantinfo_erroraccountbranch, merchantinfo_erroraccounttype,
+		merchantinfo_erroraccountnumber, merchantinfo_erroraccountname,
+		merchantinfo_erroraccountkana, merchantinfo_serviceid,
+		merchantinfo_paymentcontactname, merchantinfo_remarks,
+		merchantinfo_radename, merchantinfo_postalcode,
+		merchantinfo_prefecturecode, merchantinfo_address,
+		merchantinfo_addresskana, merchantinfo_phonenumberhyphen,
+		merchantinfo_contactname, merchantinfo_contactemail,
+		merchantinfo_meterlist, merchantcontrinfor_applicationcars,
+		merchantcontrinfor_tabletmodel, merchantcontrinfor_applicationdate,
+		merchantcontrinfor_isfacetofacesettlement,
+		merchantcontrinfor_isregistry, merchantcontrinfor_licensename,
+		merchantcontrinfor_licensenumber,
+		merchantcontrinfor_licenseacquisitiondate,
+		merchantreprinfor_fullnamekanji, merchantreprinfor_fullnamekana,
+		merchantreprinfor_postalcode, merchantreprinfor_prefecturecode,
+		merchantreprinfor_address, merchantreprinfor_phone,
+		merchantreprinfor_birthday, merchantreprinfor_sex,
+		merchantreprinfor_memo, merchantstoreinfor_storenamekanji,
+		merchantstoreinfor_storenamehalfwidthkana,
+		merchantstoreinfor_storenamealphabet, merchantstoreinfor_postalcode,
+		merchantstoreinfor_prefecturecode, merchantstoreinfor_address,
+		merchantstoreinfor_addresskana, merchantstoreinfor_phone,
+		merchantstoreinfor_memo, merchantdeliveryinfor_date,
+		merchantdeliveryinfor_gakkencustomernumber,
+		merchantdeliveryinfor_name, merchantdeliveryinfor_postalcode,
+		merchantdeliveryinfor_prefecturecode, merchantdeliveryinfor_address,
+		merchantdeliveryinfor_contactname, merchantdeliveryinfor_phone,
+		merchantdeliveryinfor_memo, merchantpayinfo_netbankaccount, merchantpayinfo_itabbankaccount,
+		merchantpayinfo_name, merchantpayinfo_postalcode, merchantpayinfo_address1,
+		merchantpayinfo_address2, merchantpayinfo_contactname,
+		merchantoperinfor_startdate, merchantoperinfor_acceptancedate,
+		merchantoperinfor_guaranteeenddate, merchantoperinfor_contractenddate,
+		merchantoperinfor_memo, thincacloudmertermno, linkmertermno,
+		invaliddate, invalidreason, invaliddetailreason, syncedtime, appcompanyid, jpporganizationid)
+		VALUES(#{sfid},
+		#{appcompany}, #{affiliationstorenamealphabetic},
+		#{affiliationstorenamekana}, #{affiliationstorenamekanji}, #{website},
+		#{keirino}, #{corporatenumber}, #{mertermno}, #{irisid},
+		${merchantinfoisrepresentative==true?"'1'":"'0'"},
+		#{merchantinfoinquiryname},
+		#{merchantinfoinquiryphone},
+		#{merchantinfowarningemail},
+		#{merchantinfoinquiryemail},
+		#{merchantinfoerrorinquiryname},
+		#{merchantinfoerrorinquiryphone},
+		#{merchantinfoerrorinquiryemail},
+		#{merchantinfoerroraccountbank},
+		#{merchantinfoerroraccountbranch},
+		#{merchantinfoerroraccounttype},
+		#{merchantinfoerroraccountnumber},
+		#{merchantinfoerroraccountname},
+		#{merchantinfoerroraccountkana},
+		#{merchantinfoserviceid},
+		#{merchantinfopaymentcontactname},
+		#{merchantinforemarks},
+		#{merchantinforadename},
+		#{merchantinfopostalcode},
+		#{merchantinfoprefecturecode},
+		#{merchantinfoaddress},
+		#{merchantinfoaddresskana},
+		#{merchantinfophonenumberhyphen},
+		#{merchantinfocontactname},
+		#{merchantinfocontactemail},
+		#{merchantinfometerlist},
+		#{merchantcontrinforapplicationcars},
+		#{merchantcontrinfortabletmodel},
+		#{merchantcontrinforapplicationdate},
+		${merchantcontrinforisfacetofacesettlement==true?"'1'":"'0'"},
+		${merchantcontrinforisregistry==true?"'1'":"'0'"},
+		#{merchantcontrinforlicensename},
+		#{merchantcontrinforlicensenumber},
+		#{merchantcontrinforlicenseacquisitiondate},
+		#{merchantreprinforfullnamekanji}, #{merchantreprinforfullnamekana},
+		#{merchantreprinforpostalcode}, #{merchantreprinforprefecturecode},
+		#{merchantreprinforaddress}, #{merchantreprinforphone},
+		#{merchantreprinforbirthday}, #{merchantreprinforsex},
+		#{merchantreprinformemo}, #{merchantstoreinforstorenamekanji},
+		#{merchantstoreinforstorenamehalfwidthkana},
+		#{merchantstoreinforstorenamealphabet},
+		#{merchantstoreinforpostalcode}, #{merchantstoreinforprefecturecode},
+		#{merchantstoreinforaddress}, #{merchantstoreinforaddresskana},
+		#{merchantstoreinforphone}, #{merchantstoreinformemo},
+		#{merchantdeliveryinfordate},
+		#{merchantdeliveryinforgakkencustomernumber},
+		#{merchantdeliveryinforname}, #{merchantdeliveryinforpostalcode},
+		#{merchantdeliveryinforprefecturecode},
+		#{merchantdeliveryinforaddress}, #{merchantdeliveryinforcontactname},
+		#{merchantdeliveryinforphone}, #{merchantdeliveryinformemo},
+		#{merchantpayinfonetbankaccount}, #{merchantpayinfoitabbankaccount},
+		#{merchantpayinfoname}, #{merchantpayinfopostalcode},
+		#{merchantpayinfoaddress1}, #{merchantpayinfoaddress2},
+		#{merchantpayinfocontactname}, #{merchantoperinforstartdate},
+		#{merchantoperinforacceptancedate},
+		#{merchantoperinforguaranteeenddate},
+		#{merchantoperinforcontractenddate}, #{merchantoperinformemo},
+		#{thincacloudmertermno}, #{linkmertermno}, #{invaliddate},
+		#{invalidreason}, #{invaliddetailreason}, #{syncedtime},
+		#{appcompanyid}, #{jpporganizationid})
+	</insert>
+
+	<update id="updateAccountSync"
+		parameterType="jp.co.japantaxi.model.Account">
+		UPDATE accountsync
+		SET appcompany=#{appcompany},
+		affiliationstorenamealphabetic=#{affiliationstorenamealphabetic},
+		affiliationstorenamekana=#{affiliationstorenamekana},
+		affiliationstorenamekanji=#{affiliationstorenamekanji},
+		website=#{website}, keiri_no=#{keirino},
+		corporate_number=#{corporatenumber}, mertermno=#{mertermno},
+		iris_id=#{irisid},
+		merchantinfo_isrepresentative=${merchantinfoisrepresentative==true?"'1'":"'0'"},
+		merchantinfo_inquiryname=#{merchantinfoinquiryname},
+		merchantinfo_inquiryphone=#{merchantinfoinquiryphone},
+		merchantinfo_warningemail=#{merchantinfowarningemail},
+		merchantinfo_inquiryemail=#{merchantinfoinquiryemail},
+		merchantinfo_errorinquiryname=#{merchantinfoerrorinquiryname},
+		merchantinfo_errorinquiryphone=#{merchantinfoerrorinquiryphone},
+		merchantinfo_errorinquiryemail=#{merchantinfoerrorinquiryemail},
+		merchantinfo_erroraccountbank=#{merchantinfoerroraccountbank},
+		merchantinfo_erroraccountbranch=#{merchantinfoerroraccountbranch},
+		merchantinfo_erroraccounttype=#{merchantinfoerroraccounttype},
+		merchantinfo_erroraccountnumber=#{merchantinfoerroraccountnumber},
+		merchantinfo_erroraccountname=#{merchantinfoerroraccountname},
+		merchantinfo_erroraccountkana=#{merchantinfoerroraccountkana},
+		merchantinfo_serviceid=#{merchantinfoserviceid},
+		merchantinfo_paymentcontactname=#{merchantinfopaymentcontactname},
+		merchantinfo_remarks=#{merchantinforemarks},
+		merchantinfo_radename=#{merchantinforadename},
+		merchantinfo_postalcode=#{merchantinfopostalcode},
+		merchantinfo_prefecturecode=#{merchantinfoprefecturecode},
+		merchantinfo_address=#{merchantinfoaddress},
+		merchantinfo_addresskana=#{merchantinfoaddresskana},
+		merchantinfo_phonenumberhyphen=#{merchantinfophonenumberhyphen},
+		merchantinfo_contactname=#{merchantinfocontactname},
+		merchantinfo_contactemail=#{merchantinfocontactemail},
+		merchantinfo_meterlist=#{merchantinfometerlist},
+		merchantcontrinfor_applicationcars=#{merchantcontrinforapplicationcars},
+		merchantcontrinfor_tabletmodel=#{merchantcontrinfortabletmodel},
+		merchantcontrinfor_applicationdate=#{merchantcontrinforapplicationdate},
+		merchantcontrinfor_isfacetofacesettlement=${merchantcontrinforisfacetofacesettlement==true?"'1'":"'0'"},
+		merchantcontrinfor_isregistry=${merchantcontrinforisregistry==true?"'1'":"'0'"},
+		merchantcontrinfor_licensename=#{merchantcontrinforlicensename},
+		merchantcontrinfor_licensenumber=#{merchantcontrinforlicensenumber},
+		merchantcontrinfor_licenseacquisitiondate=#{merchantcontrinforlicenseacquisitiondate},
+		merchantreprinfor_fullnamekanji=#{merchantreprinforfullnamekanji},
+		merchantreprinfor_fullnamekana=#{merchantreprinforfullnamekana},
+		merchantreprinfor_postalcode=#{merchantreprinforpostalcode},
+		merchantreprinfor_prefecturecode=#{merchantreprinforprefecturecode},
+		merchantreprinfor_address=#{merchantreprinforaddress},
+		merchantreprinfor_phone=#{merchantreprinforphone},
+		merchantreprinfor_birthday=#{merchantreprinforbirthday},
+		merchantreprinfor_sex=#{merchantreprinforsex},
+		merchantreprinfor_memo=#{merchantreprinformemo},
+		merchantstoreinfor_storenamekanji=#{merchantstoreinforstorenamekanji},
+		merchantstoreinfor_storenamehalfwidthkana=#{merchantstoreinforstorenamehalfwidthkana},
+		merchantstoreinfor_storenamealphabet=#{merchantstoreinforstorenamealphabet},
+		merchantstoreinfor_postalcode=#{merchantstoreinforpostalcode},
+		merchantstoreinfor_prefecturecode=#{merchantstoreinforprefecturecode},
+		merchantstoreinfor_address=#{merchantstoreinforaddress},
+		merchantstoreinfor_addresskana=#{merchantstoreinforaddresskana},
+		merchantstoreinfor_phone=#{merchantstoreinforphone},
+		merchantstoreinfor_memo=#{merchantstoreinformemo},
+		merchantdeliveryinfor_date=#{merchantdeliveryinfordate},
+		merchantdeliveryinfor_gakkencustomernumber=#{merchantdeliveryinforgakkencustomernumber},
+		merchantdeliveryinfor_name=#{merchantdeliveryinforname},
+		merchantdeliveryinfor_postalcode=#{merchantdeliveryinforpostalcode},
+		merchantdeliveryinfor_prefecturecode=#{merchantdeliveryinforprefecturecode},
+		merchantdeliveryinfor_address=#{merchantdeliveryinforaddress},
+		merchantdeliveryinfor_contactname=#{merchantdeliveryinforcontactname},
+		merchantdeliveryinfor_phone=#{merchantdeliveryinforphone},
+		merchantdeliveryinfor_memo=#{merchantdeliveryinformemo},
+		merchantpayinfo_netbankaccount=#{merchantpayinfonetbankaccount},
+		merchantpayinfo_itabbankaccount=#{merchantpayinfoitabbankaccount},
+		merchantpayinfo_name=#{merchantpayinfoname},
+		merchantpayinfo_postalcode=#{merchantpayinfopostalcode},
+		merchantpayinfo_address1=#{merchantpayinfoaddress1},
+		merchantpayinfo_address2=#{merchantpayinfoaddress2},
+		merchantpayinfo_contactname=#{merchantpayinfocontactname},
+		merchantoperinfor_startdate=#{merchantoperinforstartdate},
+		merchantoperinfor_acceptancedate=#{merchantoperinforacceptancedate},
+		merchantoperinfor_guaranteeenddate=#{merchantoperinforguaranteeenddate},
+		merchantoperinfor_contractenddate=#{merchantoperinforcontractenddate},
+		merchantoperinfor_memo=#{merchantoperinformemo},
+		thincacloudmertermno=#{thincacloudmertermno},
+		linkmertermno=#{linkmertermno}, invaliddate=#{invaliddate},
+		invalidreason=#{invalidreason},
+		invaliddetailreason=#{invaliddetailreason}, syncedtime=#{syncedtime},
+		appcompanyid=#{appcompanyid},
+		jpporganizationid=#{jpporganizationid}
+		WHERE sfid=#{sfid}
+	</update>
+	<!-- Singapore -->
+	<select id="getAccountByAppCompany"
+		parameterType="java.lang.String"
+		resultMap="merchantCoopApprovalInfoList">
+		SELECT a.sfid,
+		a.sfid as accountSfid,
+		a.appcompany,
+		a.affiliationstorenamealphabetic,
+		a.affiliationstorenamekana,
+		a.affiliationstorenamekanji as affiliationstorenamekanji,
+		a.website,
+		a.keiri_no as keirino,
+		a.corporate_number as corporatenumber,
+		a.mertermno,
+		a.iris_id as irisid,
+		a.merchantinfo_isrepresentative as merchantinfoisrepresentative,
+		a.merchantinfo_inquiryname as merchantinfoinquiryname,
+		a.merchantinfo_inquiryphone as merchantinfoinquiryphone,
+		a.merchantinfo_warningemail as merchantinfowarningemail,
+		a.merchantinfo_inquiryemail as merchantinfoinquiryemail,
+		a.merchantinfo_errorinquiryname as merchantinfoerrorinquiryname,
+		a.merchantinfo_errorinquiryphone as merchantinfoerrorinquiryphone,
+		a.merchantinfo_errorinquiryemail as merchantinfoerrorinquiryemail,
+		a.merchantinfo_erroraccountbank as merchantinfoerroraccountbank,
+		a.merchantinfo_erroraccountbranch as merchantinfoerroraccountbranch,
+		a.merchantinfo_erroraccounttype as merchantinfoerroraccounttype,
+		a.merchantinfo_erroraccountnumber as merchantinfoerroraccountnumber,
+		a.merchantinfo_erroraccountname as merchantinfoerroraccountname,
+		a.merchantinfo_erroraccountkana as merchantinfoerroraccountkana,
+		a.merchantinfo_serviceid as merchantinfoserviceid,
+		a.merchantinfo_paymentcontactname as merchantinfopaymentcontactname,
+		a.merchantinfo_remarks as merchantinforemarks,
+		a.merchantinfo_radename as merchantinforadename,
+		a.merchantinfo_postalcode as merchantinfopostalcode,
+		a.merchantinfo_prefecturecode as merchantinfoprefecturecode,
+		a.merchantinfo_address as merchantinfoaddress,
+		a.merchantinfo_addresskana as merchantinfoaddresskana,
+		a.merchantinfo_phonenumberhyphen as merchantinfophonenumberhyphen,
+		a.merchantinfo_contactname as merchantinfocontactname,
+		a.merchantinfo_contactemail as merchantinfocontactemail,
+		a.merchantinfo_meterlist as merchantinfometerlist,
+		a.merchantcontrinfor_applicationcars as merchantcontrinforapplicationcars,
+		a.merchantcontrinfor_tabletmodel as merchantcontrinfortabletmodel,
+		a.merchantcontrinfor_applicationdate as merchantcontrinforapplicationdate,
+		a.merchantcontrinfor_isfacetofacesettlement as merchantcontrinforisfacetofacesettlement,
+		a.merchantcontrinfor_isregistry as merchantcontrinforisregistry,
+		a.merchantcontrinfor_licensename as merchantcontrinforlicensename,
+		a.merchantcontrinfor_licensenumber as merchantcontrinforlicensenumber,
+		a.merchantcontrinfor_licenseacquisitiondate as merchantcontrinforlicenseacquisitiondate,
+		a.merchantreprinfor_fullnamekanji as merchantreprinforfullnamekanji,
+		a.merchantreprinfor_fullnamekana as merchantreprinforfullnamekana,
+		a.merchantreprinfor_postalcode as merchantreprinforpostalcode,
+		a.merchantreprinfor_prefecturecode as merchantreprinforprefecturecode,
+		a.merchantreprinfor_address as merchantreprinforaddress,
+		a.merchantreprinfor_phone as merchantreprinforphone,
+		a.merchantreprinfor_birthday as merchantreprinforbirthday,
+		a.merchantreprinfor_sex as merchantreprinforsex,
+		a.merchantreprinfor_memo as merchantreprinformemo,
+		a.merchantstoreinfor_storenamekanji as merchantstoreinforstorenamekanji,
+		a.merchantstoreinfor_storenamehalfwidthkana as merchantstoreinforstorenamehalfwidthkana,
+		a.merchantstoreinfor_storenamealphabet as merchantstoreinforstorenamealphabet,
+		a.merchantstoreinfor_postalcode as merchantstoreinforpostalcode,
+		a.merchantstoreinfor_prefecturecode as merchantstoreinforprefecturecode,
+		a.merchantstoreinfor_address as merchantstoreinforaddress,
+		a.merchantstoreinfor_addresskana as merchantstoreinforaddresskana,
+		a.merchantstoreinfor_phone as merchantstoreinforphone,
+		a.merchantstoreinfor_memo as merchantstoreinformemo,
+		a.merchantdeliveryinfor_date as merchantdeliveryinfordate,
+		a.merchantdeliveryinfor_gakkencustomernumber as merchantdeliveryinforgakkencustomernumber,
+		a.merchantdeliveryinfor_name as merchantdeliveryinforname,
+		a.merchantdeliveryinfor_postalcode as merchantdeliveryinforpostalcode,
+		a.merchantdeliveryinfor_prefecturecode as merchantdeliveryinforprefecturecode,
+		a.merchantdeliveryinfor_address as merchantdeliveryinforaddress,
+		a.merchantdeliveryinfor_contactname as merchantdeliveryinforcontactname,
+		a.merchantdeliveryinfor_phone as merchantdeliveryinforphone,
+		a.merchantdeliveryinfor_memo as merchantdeliveryinformemo,
+		a.merchantpayinfo_name as merchantpayinfoname,
+		a.merchantpayinfo_postalcode as merchantpayinfopostalcode,
+		a.merchantpayinfo_address1 as merchantpayinfoaddress1,
+		a.merchantpayinfo_address2 as merchantpayinfoaddress2,
+		a.merchantpayinfo_contactname as merchantpayinfocontactname,
+		a.merchantoperinfor_startdate as merchantoperinforstartdate,
+		a.merchantoperinfor_acceptancedate as merchantoperinforacceptancedate,
+		a.merchantoperinfor_guaranteeenddate as merchantoperinforguaranteeenddate,
+		a.merchantoperinfor_contractenddate as merchantoperinforcontractenddate,
+		a.merchantoperinfor_memo as merchantoperinformemo,
+		a.thincacloudmertermno,
+		a.linkmertermno,
+		a.invaliddate,
+		a.invalidreason,
+		a.invaliddetailreason,
+		a.appcompanyid as appcompanyid,
+		a.jpporganizationid
+		FROM
+			accountsync a
+		WHERE
+		a.appcompany=#{appCompany,jdbcType=VARCHAR} AND appcompanyid is not null ORDER BY sfid DESC
+	</select>
+	<resultMap type="jp.co.japantaxi.model.AccountSync" id="merchantCoopApprovalInfoList">
+		<result property="appcompanyid" column="appcompanyid"/>
+		<association property="bankaccountinfo" column="accountSfid" javaType="ArrayList" select="jp.co.japantaxi.mapper.stockholm.AccountMapper.getListBankAccountInfoByAccountId"/>
+	</resultMap>
+	<select id="getListBankAccountInfoByAccountId" resultMap="ListBankAccountInfoByAccount">
+		SELECT 
+			bank.account,
+			bm.banknamekana as bankNameKana,
+			bm.bankcode as bankCode,
+			bm.branchnamekana AS branchNameKana,
+			bm.branchcode as branchCode,
+			bank.accountname as accountName,
+			bank.accountnumber AS accountNumber,
+			bank.accountnamekana AS accountNameKana,
+			bank.accountcategory as accountCategory,
+			bank.accounttype as accountType
+		FROM bankaccountinformationsync bank
+			INNER JOIN bankmastersync bm ON bank.accountbank = bm.sfid
+			LEFT JOIN  accountsync acc ON bank.account = acc.sfid
+		WHERE bank.account=#{accountSfid}
+	</select>
+	<resultMap type="jp.co.japantaxi.response.MerchantResponse$BankAccountFielsBKMapper" id="ListBankAccountInfoByAccount" autoMapping="true">
+		<result property="bankNameKana" column="accsfid"/>
+		<result property="bankCode" column="bankCode"/>
+		<result property="bankNameKana" column="bankNameKana"/>
+		<result property="branchNameKana" column="branchNameKana"/>
+		<result property="branchCode" column="branchCode"/>
+		<result property="accountName" column="accountName"/>
+		<result property="accountNumber" column="accountNumber"/>
+		<result property="accountNameKana" column="accountNameKana"/>
+		<result property="accountCategory" column="accountCategory"/>
+		<result property="accountType" column="accountType"/>
+		<result property="merTermNo" column="merTermNo"/>
+	</resultMap>
+	<select id="getMerchantInfoList" resultMap="merchantInfoList" parameterType="String">
+		SELECT sfid,
+			mertermno as merTermNo,
+			affiliationstorenamekanji as affiliationStoreNameKanji,
+			appcompanyid as appCompanyId,
+			affiliationstorenamekana as affiliationStoreNameKana,
+			merchantinfo_radename as merchantInfoRadeName,
+			merchantinfo_contactname as merchantInfoContactName
+			FROM account acc
+		<if test='appCompanyId != null and appCompanyId != ""'>
+			WHERE acc.appcompany=#{appCompanyId,jdbcType=VARCHAR}
+		</if>
+		ORDER BY merTermNo ASC
+	</select>
+	<resultMap type="jp.co.japantaxi.response.MerchantResponse$MerchantObjectList" id="merchantInfoList" autoMapping="true">
+		<result property="sfid" column="sfid"/>
+		<result property="appCompanyId" column="appCompanyId" />
+		<result property="merTermNo" column="merTermNo" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="affiliationStoreNameKanji" column="affiliationStoreNameKanji" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="affiliationStoreNameKana" column="affiliationStoreNameKana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantInfoRadeName" column="merchantInfoRadeName" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantInfoContactName" column="merchantInfoContactName" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+	</resultMap>
+	<resultMap id="merchantInfoMap" type="jp.co.japantaxi.response.MerchantResponse$MerchantDetail" autoMapping="true">
+		<result property="sfid" column="accsfid"/>
+		<result property="keiriNo" column="keiri_no"/>
+		<result property="corporateNumber" column="corporate_number"/>
+		<result property="irisId" column="iris_id"/>
+		<result property="affiliationStoreNameAlphabetic" column="affiliationStoreNameAlphabetic"/>
+		<result property="merchantInfoIsRepresentative" column="merchantinfo_isrepresentative" />
+		<result property="merchantInfoInquiryName" column="merchantinfo_inquiryname" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantInfoInquiryPhone" column="merchantinfo_inquiryphone" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantInfoWarningEmail" column="merchantinfo_warningemail" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantInfoInquiryEmail" column="merchantinfo_inquiryemail" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantInfoErrorInquiryName" column="merchantinfo_errorinquiryname" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantInfoErrorInquiryPhone" column="merchantinfo_errorinquiryphone" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantInfoErrorInquiryEmail" column="merchantinfo_errorinquiryemail" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantInfoErrorAccountBank" column="merchantinfo_erroraccountbank" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantInfoErrorAccountBranch" column="merchantinfo_erroraccountbranch" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantInfoErrorAccountType" column="merchantinfo_erroraccounttype"/>
+		<result property="merchantInfoErrorAccountNumber" column="merchantinfo_erroraccountnumber" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantInfoErrorAccountName" column="merchantinfo_erroraccountname" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantInfoErrorAccountKana" column="merchantinfo_erroraccountkana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantInfoServiceId" column="merchantinfo_serviceid" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantInfoPaymentContactName" column="merchantinfo_paymentcontactname" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantInfoRemarks" column="merchantinforemarks" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantInforadeName" column="merchantinforadename" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantInfoPostalCode" column="merchantinfo_postalcode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantInfoPrefectureCode" column="merchantinfo_prefecturecode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantInfoAddress" column="merchantinfo_address" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantInfoAddressKana" column="merchantinfo_addresskana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantInfoPhoneNumberHyphen" column="merchantinfo_phonenumberhyphen" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantInfoContactName" column="merchantinfo_contactname" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantInfoContactEmail" column="merchantinfo_contactemail" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantInfoMeterList" column="merchantinfo_meterlist" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantContrInforApplicationCars" column="merchantcontrinfor_applicationcars"/>
+		<result property="merchantContrInforTabletModel" column="merchantcontrinfor_tabletmodel" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantContrInforApplicationDate" column="merchantcontrinfor_applicationdate"/>
+		<result property="merchantContrInforIsFacetofaceSettlement" column="merchantcontrinfor_isfacetofacesettlement"/>
+		<result property="merchantContrInforIsRegistry" column="merchantcontrinfor_isregistry"/>
+		<result property="merchantContrInforLicenseName" column="merchantcontrinfor_licensename"/>
+		<result property="merchantContrInforLicenseNumber" column="merchantcontrinfor_licensenumber"/>
+		<result property="merchantContrInforLicenseAcquisitionDate" column="merchantcontrinfor_licenseacquisitiondate"/>
+		<result property="merchantReprInforFullNameKanji" column="merchantreprinfor_fullnamekanji"/>
+		<result property="merchantReprInforFullNameKana" column="merchantreprinfor_fullnamekana"/>
+		<result property="merchantReprInforPostalCode" column="merchantreprinfor_postalcode"/>
+		<result property="merchantReprInforPrefectureCode" column="merchantreprinfor_prefecturecode"/>
+		<result property="merchantReprInforAddress" column="merchantreprinfor_address" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantReprInforPhone" column="merchantreprinfor_phone" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantReprInforBirthday" column="merchantreprinfor_birthday"/>
+		<result property="merchantReprInforSex" column="merchantreprinfor_sex" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantReprInforMemo" column="merchantreprinfor_memo" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantStoreInforStoreNameKanji" column="merchantstoreinfor_storenamekanji"/>
+		<result property="merchantStoreInforStoreNameHalfwidthKana" column="merchantstoreinfor_storenamehalfwidthkana"/>
+		<result property="merchantStoreInforStoreNameAlphabet" column="merchantstoreinfor_storenamealphabet"/>
+		<result property="merchantStoreInforPostalCode" column="merchantstoreinfor_postalcode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantStoreInforPrefectureCode" column="merchantstoreinfor_prefecturecode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantStoreInforAddress" column="merchantstoreinfor_address" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantStoreInforAddressKana" column="merchantstoreinfor_addresskana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantStoreInforPhone" column="merchantstoreinfor_phone" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantStoreInforMemo" column="merchantstoreinfor_memo" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantDeliveryInforDate" column="merchantdeliveryinfor_date" />
+		<result property="merchantDeliveryInforGakkenCustomerNumber" column="merchantdeliveryinfor_gakkencustomernumber" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantDeliveryInforName" column="merchantdeliveryinfor_name" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantDeliveryInforPostalCode" column="merchantdeliveryinfor_postalcode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantDeliveryInforPrefectureCode" column="merchantdeliveryinfor_prefecturecode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantDeliveryInforAddress" column="merchantdeliveryinfor_address" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantDeliveryInforContactName" column="merchantdeliveryinfor_contactname" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantDeliveryInforPhone" column="merchantdeliveryinfor_phone" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantDeliveryInforMemo" column="merchantdeliveryinfor_memo" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantPayInfoName" column="merchantpayinfo_name" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantPayInfoPostalCode" column="merchantpayinfo_postalcode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantPayInfoAddress1" column="merchantpayinfo_address1" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantPayInfoAddress2" column="merchantpayinfo_address2" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantPayInfoContactName" column="merchantpayinfo_contactname" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="merchantOperInforStartDate" column="merchantoperinfor_startdate" />
+		<result property="merchantOperInforAcceptanceDate" column="merchantoperinfor_acceptancedate"/>
+		<result property="merchantOperInforGuaranteeEndDate" column="merchantoperinfor_guaranteeenddate"/>
+		<result property="merchantOperInforContractEndDate" column="merchantoperinfor_contractenddate"/>
+		<result property="merchantOperInforMemo" column="merchantoperinfor_memo" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="thincacloudMertermno" column="thincacloudmertermno" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="linkMertermno" column="linkmertermno" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="appCompanyId" column="appcompanyid"/>
+		<result property="jppOrganizationId" column="jpporganizationid" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<association property="baInfoList" column="accsfid" javaType="ArrayList" select="jp.co.japantaxi.mapper.stockholm.AccountMapper.getBankAccountInfoByAccountID"/>
+		<association property="taxiCompanyRelatedContactAddressList" column="accsfid" javaType="ArrayList" select="jp.co.japantaxi.mapper.stockholm.AccountMapper.getTArelatedcontactaddrAccountID"/>
+	</resultMap>
+	<resultMap id="contractinfors" type="java.util.HashMap"></resultMap>
+	<resultMap id="bankaccountinfors" type="java.util.HashMap" autoMapping="false">
+		<result property="sfid" column="sfid"/>
+		<result property="bankNameKana" column="banknamekana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="bankCode" column="bankcode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="branchCode" column="branchcode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="branchNameKana" column="branchnamekana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="accountNumber" column="accountnumber" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="accountNameKana" column="accountnamekana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="accountType" column="accounttype" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+	</resultMap>
+	<resultMap id="tarelatedcontactaddr" type="java.util.HashMap">
+		<result property="name" column="name" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="state" column="state__c" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="address" column="address" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="postalCode" column="postalcode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="telephone" column="telephone" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="contactName" column="contactname" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+	</resultMap>
+	<select id="getTArelatedcontactaddrAccountID" resultMap="tarelatedcontactaddr">
+		SELECT
+			taxicom.name,
+			taxicom.state__c,
+			taxicom.address,
+			taxicom.postalcode,
+			taxicom.contactname,
+			taxicom.sfid
+		FROM taxicompanyrelatedcontactaddress taxicom
+		WHERE taxicom.account = #{accsfid} ORDER BY taxicom.name ASC
+	</select>
+	<select id="getBankAccountInfoByAccountID" resultMap="bankaccountinfors">
+		SELECT
+			bank.sfid,
+			bm.bankname,
+			bm.branchnamekana,
+			bank.accountname,
+			bm.banknamekana,
+			bm.bankcode,
+			bm.branchcode,
+			bank.accountnumber,
+			bank.accountnamekana,
+			bank.accounttype
+		FROM
+			bankaccountinformation bank
+		INNER JOIN bankmaster bm ON bank.accountbank = bm.sfid
+		WHERE account = #{accsfid} ORDER BY accountCategory ASC
+	</select>
+	<select id="getMerchantInfoBySFID"
+		parameterType="java.lang.String"
+		resultMap="merchantInfoMap">
+		SELECT
+			acc.sfid as accsfid,
+			acc.affiliationstorenamealphabetic as affiliationStoreNameAlphabetic,
+			acc.affiliationstorenamekana,
+			acc.affiliationstorenamekanji,
+			acc.website,
+			acc.keiri_no,
+			acc.corporate_number,
+			acc.mertermno,
+			acc.iris_id,
+			acc.merchantinfo_isrepresentative,
+			acc.merchantinfo_inquiryname,
+			acc.merchantinfo_inquiryphone,
+			acc.merchantinfo_warningemail,
+			acc.merchantinfo_inquiryemail,
+			acc.merchantinfo_errorinquiryname,
+			acc.merchantinfo_errorinquiryphone,
+			acc.merchantinfo_errorinquiryemail,
+			acc.merchantinfo_erroraccountbank,
+			acc.merchantinfo_erroraccountbranch,
+			acc.merchantinfo_erroraccounttype,
+			acc.merchantinfo_erroraccountnumber,
+			acc.merchantinfo_erroraccountname,
+			acc.merchantinfo_erroraccountkana,
+			acc.merchantinfo_serviceid,
+			acc.merchantinfo_paymentcontactname,
+			acc.merchantinfo_remarks as merchantinforemarks,
+			acc.merchantinfo_radename as merchantinforadename,
+			acc.merchantinfo_postalcode,
+			acc.merchantinfo_prefecturecode,
+			acc.merchantinfo_address,
+			acc.merchantinfo_addresskana,
+			acc.merchantinfo_phonenumberhyphen,
+			acc.merchantinfo_contactname,
+			acc.merchantinfo_contactemail,
+			acc.merchantinfo_meterlist,
+			acc.merchantcontrinfor_applicationcars,
+			acc.merchantcontrinfor_tabletmodel,
+			COALESCE(to_char(acc.merchantcontrinfor_applicationdate, 'YYYY/MM/DD HH24:MI:SS'), '') AS merchantcontrinfor_applicationdate,
+			acc.merchantcontrinfor_isfacetofacesettlement,
+			acc.merchantcontrinfor_isregistry,
+			acc.merchantcontrinfor_licensename,
+			acc.merchantcontrinfor_licensenumber,
+			COALESCE(to_char(acc.merchantcontrinfor_licenseacquisitiondate, 'YYYY/MM/DD'), '') AS merchantcontrinfor_licenseacquisitiondate,
+			acc.merchantreprinfor_fullnamekanji,
+			acc.merchantreprinfor_fullnamekana,
+			acc.merchantreprinfor_postalcode,
+			acc.merchantreprinfor_prefecturecode,
+			acc.merchantreprinfor_address,
+			acc.merchantreprinfor_phone,
+			to_char(acc.merchantreprinfor_birthday, '‎YYYY/MM/DD') as merchantreprinfor_birthday,
+			acc.merchantreprinfor_sex,
+			acc.merchantreprinfor_memo,
+			acc.merchantstoreinfor_storenamekanji,
+			acc.merchantstoreinfor_storenamehalfwidthkana,
+			acc.merchantstoreinfor_storenamealphabet,
+			acc.merchantstoreinfor_postalcode,
+			acc.merchantstoreinfor_prefecturecode,
+			acc.merchantstoreinfor_address,
+			acc.merchantstoreinfor_addresskana,
+			acc.merchantstoreinfor_phone,
+			acc.merchantstoreinfor_memo,
+			to_char(acc.merchantdeliveryinfor_date, '‎YYYY/MM/DD HH24:MI:SS') as merchantdeliveryinfor_date,
+			acc.merchantdeliveryinfor_gakkencustomernumber,
+			acc.merchantdeliveryinfor_name,
+			acc.merchantdeliveryinfor_postalcode,
+			acc.merchantdeliveryinfor_prefecturecode,
+			acc.merchantdeliveryinfor_address,
+			acc.merchantdeliveryinfor_contactname,
+			acc.merchantdeliveryinfor_phone,
+			acc.merchantdeliveryinfor_memo,
+			acc.merchantpayinfo_name,
+			acc.merchantpayinfo_postalcode,
+			acc.merchantpayinfo_address1,
+			acc.merchantpayinfo_address2,
+			acc.merchantpayinfo_contactname,
+			to_char(acc.merchantoperinfor_startdate, '‎YYYY/MM/DD') as merchantoperinfor_startdate,
+			to_char(acc.merchantoperinfor_acceptancedate, '‎YYYY/MM/DD') as merchantoperinfor_acceptancedate,
+			to_char(acc.merchantoperinfor_guaranteeenddate, '‎YYYY/MM/DD') as merchantoperinfor_guaranteeenddate,
+			to_char(acc.merchantoperinfor_contractenddate, '‎YYYY/MM/DD') as merchantoperinfor_contractenddate,
+			acc.merchantoperinfor_memo,
+			acc.thincacloudmertermno,
+			acc.linkmertermno,
+			acc.appcompanyid,
+			acc.jpporganizationid
+			<!-- 
+			payment.sfid as paysfid,
+			payment.linepaychannnelid,
+			payment.linepaychannelsecret,
+			payment.aupaystoreid,
+			payment.merchantid,
+			payment.serviceid,
+			payment.hashkey,
+			payment.encryptiv,
+			payment.encryptkey,
+			payment.basicauthid,
+			payment.basicauthpassword,
+			payment.cardtype,
+			payment.paymentrouteid
+			 -->
+		FROM account acc
+		<!--
+		LEFT JOIN paymentsystemlinkinfor payment ON acc.sfid = payment.internetpaymerstore
+		 -->
+		WHERE
+		 	acc.sfid =#{sfid,jdbcType=VARCHAR}
+	</select>
+	<!-- End Singapore -->
+</mapper>

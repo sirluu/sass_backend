@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="jp.co.japantaxi.mapper.stockholm.BankMasterMapper">
+
+	<select id="truncateBankMaster">
+		TRUNCATE TABLE bankmaster
+	</select>
+
+	<select id="getBankMasterById"
+		parameterType="jp.co.japantaxi.model.ParameterRequest"
+		resultType="jp.co.japantaxi.model.BankMaster">
+		SELECT b.sfid, b.name, b.bankname, b.banknamekana, b.bankcode,
+		b.branchcode, b.branchname,
+		b.branchnamekana, b.lastmodifieddate
+		FROM bankmaster b
+		WHERE b.sfid=#{id}
+	</select>
+
+	<select id="getListBankMasterFromStockholm"
+		parameterType="jp.co.japantaxi.model.ParameterRequest"
+		resultType="jp.co.japantaxi.model.BankMaster">
+		SELECT b.sfid, b.name, b.bankname, b.banknamekana, b.bankcode,
+		b.branchcode, b.branchname,
+		b.branchnamekana, b.lastmodifieddate
+		FROM bankmaster b
+		WHERE b.sfid IN (${ids})
+		ORDER BY b.sfid DESC
+	</select>
+
+	<select id="getListBankMaster2Sync"
+		parameterType="jp.co.japantaxi.model.ParameterRequest"
+		resultType="jp.co.japantaxi.model.BankMaster">
+		SELECT b.sfid, b.name, b.bankname, b.banknamekana, b.bankcode,
+		b.branchcode, b.branchname,
+		b.branchnamekana, b.lastmodifieddate
+		FROM bankmaster b
+		WHERE(date_trunc('second',b.lastmodifieddate) >=${startTime})
+		ORDER BY b.sfid DESC
+	</select>
+
+	<select id="getListBankMasterIdFromStockholm"
+		parameterType="jp.co.japantaxi.model.ParameterRequest"
+		resultType="java.lang.String">
+		SELECT b.sfid FROM bankmaster b
+		WHERE b.sfid IN (${ids})
+		ORDER BY b.sfid DESC
+	</select>
+	
+	<select id="getListBankMasterSyncIdFromStockholm" resultType="java.lang.String">
+		SELECT b.sfid FROM bankmastersync b
+	</select>
+
+	<insert id="insertBankMaster"
+		parameterType="jp.co.japantaxi.model.BankMaster">
+		INSERT INTO bankmaster
+		(sfid, name, bankname, banknamekana,
+		bankcode, branchcode,  branchname, branchnamekana, lastmodifieddate)
+		VALUES
+		(#{sfid}, #{name}, #{bankname},
+		#{banknamekana}, #{bankcode}, #{branchcode}, #{branchname},
+		#{branchnamekana}, #{lastmodifieddate})
+	</insert>
+
+	<update id="updateBankMaster"
+		parameterType="jp.co.japantaxi.model.BankMaster">
+		UPDATE bankmaster
+		SET name=#{name}, bankname=#{bankname},
+		banknamekana=#{banknamekana},
+		bankcode=#{bankcode},
+		branchcode=#{branchcode},
+		branchname=#{branchname},
+		branchnamekana=#{branchnamekana},
+		lastmodifieddate=#{lastmodifieddate}
+		WHERE sfid=#{sfid}
+	</update>
+
+	<insert id="insertBankMasterSync"
+		parameterType="jp.co.japantaxi.model.BankMaster">
+		INSERT INTO bankmastersync
+		(sfid, name, banknamekana,
+		bankcode, branchcode, branchname, branchnamekana, syncedtime)
+		VALUES
+		(#{sfid}, #{name},
+		#{banknamekana}, #{bankcode}, #{branchcode}, #{branchname},
+		#{branchnamekana}, #{syncedtime})
+	</insert>
+
+	<update id="updateBankMasterSync"
+		parameterType="jp.co.japantaxi.model.BankMaster">
+		UPDATE bankmastersync
+		SET
+		name=#{name},
+		banknamekana=#{banknamekana},
+		bankcode=#{bankcode},
+		branchcode=#{branchcode},
+		branchname=#{branchname},
+		branchnamekana=#{branchnamekana},
+		syncedtime=#{syncedtime}
+		WHERE sfid=#{sfid}
+	</update>
+
+</mapper>
