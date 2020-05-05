@@ -1,0 +1,47 @@
+<configuration>
+	<property name="log_path" value="./var/lib/docker/volumes/data" />
+	<property name="log_name" value="stockholm_logs" />
+	<!-- For console -->
+	<appender name="ConsoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<charset>UTF-8</charset>
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%level] [%thread] [%logger] [tr=%mdc{TRACE_ID:-0}] %msg %n</Pattern>
+		</encoder>
+	</appender>
+
+	<!-- For file with daily rollover -->
+	<appender name="ServerFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<encoder>
+			<charset>UTF-8</charset>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%level] [%thread] [%logger] [tr=%X{TRACE_ID:-0}] %msg %n</pattern>
+		</encoder>
+
+		<file>${log_path}/${log_name}.log</file>
+
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- daily rollover with gz -->
+			<fileNamePattern>${log_path}/${log_name}.%d{yyyy-MM-dd}.gz</fileNamePattern>
+			<!-- keep 30 days' max -->
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+	</appender>
+
+	<!-- For sentry -->
+	<appender name="SentryAppender" class="io.sentry.logback.SentryAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>ERROR</level>
+		</filter>
+	</appender>
+
+	<!-- console only if local active -->
+	<root level="INFO">
+		<appender-ref ref="ConsoleAppender" />
+	</root>
+	<!-- file,sentry only if test or online active -->
+	<root level="INFO">
+		<appender-ref ref="ServerFileAppender" />
+		<appender-ref ref="SentryAppender" />
+	</root>
+
+</configuration>
