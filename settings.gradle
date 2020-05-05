@@ -1,0 +1,4 @@
+rootProject.name = 'jtx-services'
+include "common-service"
+include "stockholm-service-test1"
+include "stockholm-service-test2"
