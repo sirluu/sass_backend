@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+    stockholm-service-test2:
+        restart: always
+        build:
+            context: ./
+            dockerfile: Dockerfile
+        image: stockholm-service-test2
+        ports:
+        - 8082:5555
+        volumes:
+          - ./data2/:/var/lib/docker/volumes/data2
+
+volumes:
+  data2:
+    external: true

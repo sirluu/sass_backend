@@ -1,0 +1,46 @@
+buildscript {
+    ext { springBootVersion = '2.1.0.RELEASE' }
+    repositories { mavenCentral() }
+    dependencies { classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}") }
+}
+plugins {
+	id "io.spring.dependency-management" version "1.0.8.RELEASE"
+	id "org.sonarqube" version "2.7.1"
+}
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+jar {
+    baseName = 'stockholm-service-test2'
+    version = '1.0-SNAPSHOT'
+}
+sourceCompatibility = 1.8
+
+repositories { mavenCentral() }
+
+dependencies {
+    compile project(':common-service')
+}
+
+dependencyManagement {
+    imports { mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}") }
+}
+
+task profileSetup {
+	delete 'build'
+	doLast {
+		copy {
+			from('src/main/resources') {
+				include "*-${environment}.*"
+			}
+			into('build/resources/main')
+			into ('src/main/resources')
+
+			rename { String fileName ->
+				fileName.replace('-' + environment, '')
+			}
+		}
+	}
+}
