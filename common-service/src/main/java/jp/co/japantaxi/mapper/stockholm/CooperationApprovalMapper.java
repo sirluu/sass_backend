@@ -6,15 +6,12 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
-import jp.co.japantaxi.response.MerchantResponse.BankaccountinformationMapper;
 import jp.co.japantaxi.response.MerchantResponse.MerchantCoopApproval;
 
 public interface CooperationApprovalMapper {
 	
 	List<MerchantCoopApproval> getMerchantCoopApprovalInfoListByCompanyId(@Param("sfid") String sfid);
-	
-	BankaccountinformationMapper getBankAccountInfoByAccountID(@Param("accsfid") String accsfid, @Param("limit") int limit);
-	
+
 	@Select("SELECT\r\n" + 
 			"	acc.affiliationstorenamekanji as name,\r\n" + 
 			"	acc.merchantinfo_contactemail as email,\r\n" + 

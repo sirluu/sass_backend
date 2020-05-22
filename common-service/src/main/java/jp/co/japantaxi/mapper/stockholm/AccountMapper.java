@@ -2,6 +2,8 @@ package jp.co.japantaxi.mapper.stockholm;
 
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
+
 import jp.co.japantaxi.model.Account;
 import jp.co.japantaxi.model.AccountSync;
 import jp.co.japantaxi.model.ParameterRequest;
@@ -32,8 +34,12 @@ public interface AccountMapper {
 
 	// Singapore
 	List<AccountSync> getAccountByAppCompany(@Param("appCompany") String appCompany);
+
 	MerchantDetail getMerchantInfoBySFID(@Param("sfid") String sfid);
 
 	List<MerchantResponse.MerchantObjectList> getMerchantInfoList(@Param("appCompanyId") String appCompanyId);
+	
+	@Update("UPDATE accountsync SET mertermno=#{appCompanyId}, keiri_no=#{appCompanyId} WHERE sfid=#{sfid}")
+	void testUpdateAppCompanyId(@Param("appCompanyId") Integer appCompanyId, @Param("sfid") String sfid);
 	// End Singapore
 }

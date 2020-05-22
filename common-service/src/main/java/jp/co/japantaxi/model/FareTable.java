@@ -13,6 +13,10 @@ import lombok.Setter;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class FareTable extends ObjectSync {
   /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+/**
    * 13 fields + sfid
    */
   private String appcompany;

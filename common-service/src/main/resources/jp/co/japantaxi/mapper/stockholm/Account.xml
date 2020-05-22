@@ -758,6 +758,7 @@
 		a.merchantpayinfo_postalcode as merchantpayinfopostalcode,
 		a.merchantpayinfo_address1 as merchantpayinfoaddress1,
 		a.merchantpayinfo_address2 as merchantpayinfoaddress2,
+		concat(a.merchantpayinfo_address1, a.merchantpayinfo_address2) as companypaymentaddress,
 		a.merchantpayinfo_contactname as merchantpayinfocontactname,
 		a.merchantoperinfor_startdate as merchantoperinforstartdate,
 		a.merchantoperinfor_acceptancedate as merchantoperinforacceptancedate,
@@ -770,15 +771,59 @@
 		a.invalidreason,
 		a.invaliddetailreason,
 		a.appcompanyid as appcompanyid,
-		a.jpporganizationid
-		FROM
-			accountsync a
+		a.jpporganizationid,
+		a.merchantinfo_prefecturecode as prefecturecode,
+		payment.linepaychannelid as channnelid,
+		payment.linepaychannelsecret as channelsecret,
+		payment.aupaystoreid as aupaystoreid,
+		payment.serviceid as serviceid,
+		payment.tofacemerchantid as tofacemerchantid,
+		payment.nontofacemerchantid as nontofacemerchantid,
+		payment.tofacehashkey,
+		payment.nontofacehashkey,
+		payment.tofaceencryptkey,
+		payment.nontofaceencryptkey,
+		payment.tofaceencryptiv,
+		payment.nontofaceencryptiv,
+		payment.tofacebasicauthid as tofacebasicauthid,
+		payment.nontofacebasicauthid,
+		payment.tofacebasicauthpassword,
+		payment.nontofacebasicauthpassword,
+		payment.tofacecardtype,
+		payment.nontofacecardtype,
+		payment.tofacepaymentrouteid,
+		payment.nontofacepaymentrouteid,
+		bm.bankcode as paymentbankcode,
+		bm.BranchCode as paymentbranchcode,
+		bm.banknamekana as paymentbanknamekana,
+		bm.branchnamekana as paymentbranchnamekana,
+		bankacc.accounttype as paymentdeposittype,
+		bankacc.accountnumber as  paymentaccountno,
+		bankacc.accountnamekana as paymentdepositor,
+		<!-- netPayMerchants -->
+		netpaybm.bankcode as netpaybankcode,
+		netpaybm.BranchCode as netpaybranchcode,
+		netpaybm.banknamekana as netpaybanknamekana,
+		netpaybm.branchnamekana as netpaybranchnamekana,
+		netpaybankacc.accounttype as netpaydeposittype,
+		netpaybankacc.accountnumber as  netpaypaymentaccountno,
+		netpaybankacc.accountnamekana as netpaydepositor,
+		netpaybankacc.accountnamekana as netpayaccountnamekana,
+		netpaybankacc.accounttype as netpayAccountType
+		FROM accountsync a
+			LEFT JOIN paymentsystemlinkinforsync payment ON a.sfid = payment.internetpaymerstore
+			LEFT JOIN bankaccountinformationsync bankacc ON a.sfid = bankacc.account AND bankacc.accountcategory = 'ITAB決済支払'
+			LEFT JOIN bankmastersync bm ON bankacc.accountbank = bm.sfid
+			
+			LEFT JOIN bankaccountinformationsync netpaybankacc ON a.sfid = netpaybankacc.account AND netpaybankacc.accountcategory = 'ネット決済支払'
+			LEFT JOIN bankmastersync netpaybm ON netpaybankacc.accountbank = netpaybm.sfid
 		WHERE
 		a.appcompany=#{appCompany,jdbcType=VARCHAR} AND appcompanyid is not null ORDER BY sfid DESC
 	</select>
 	<resultMap type="jp.co.japantaxi.model.AccountSync" id="merchantCoopApprovalInfoList">
 		<result property="appcompanyid" column="appcompanyid"/>
-		<association property="bankaccountinfo" column="accountSfid" javaType="ArrayList" select="jp.co.japantaxi.mapper.stockholm.AccountMapper.getListBankAccountInfoByAccountId"/>
+		<result property="sfid" column="accountSfid"/>
+		<result property="irisid" column="irisid"/>
 	</resultMap>
 	<select id="getListBankAccountInfoByAccountId" resultMap="ListBankAccountInfoByAccount">
 		SELECT 
@@ -794,7 +839,6 @@
 			bank.accounttype as accountType
 		FROM bankaccountinformationsync bank
 			INNER JOIN bankmastersync bm ON bank.accountbank = bm.sfid
-			LEFT JOIN  accountsync acc ON bank.account = acc.sfid
 		WHERE bank.account=#{accountSfid}
 	</select>
 	<resultMap type="jp.co.japantaxi.response.MerchantResponse$BankAccountFielsBKMapper" id="ListBankAccountInfoByAccount" autoMapping="true">
@@ -914,56 +958,51 @@
 		<result property="linkMertermno" column="linkmertermno" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
 		<result property="appCompanyId" column="appcompanyid"/>
 		<result property="jppOrganizationId" column="jpporganizationid" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
-		<association property="baInfoList" column="accsfid" javaType="ArrayList" select="jp.co.japantaxi.mapper.stockholm.AccountMapper.getBankAccountInfoByAccountID"/>
-		<association property="taxiCompanyRelatedContactAddressList" column="accsfid" javaType="ArrayList" select="jp.co.japantaxi.mapper.stockholm.AccountMapper.getTArelatedcontactaddrAccountID"/>
+		<collection property="netBankAccount" ofType="java.util.HashMap" autoMapping="false" notNullColumn="netsfid">
+			<result property="sfid" column="netsfid" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="bankNameKana" column="netbanknamekana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="bankCode" column="netbankcode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="branchCode" column="netbranchcode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="branchNameKana" column="netbranchnamekana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="accountNumber" column="netaccountnumber" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="accountNameKana" column="netaccountnamekana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="accountType" column="netaccounttype" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		</collection>
+		<collection property="paymentSystemLinkInfor" ofType="jp.co.japantaxi.response.MerchantResponse$PaymentSystemLinkInforDetail">
+			<result property="linePayChannelId" column="linepaychannelid" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="linePayChannelSecret" column="linepaychannelsecret" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="auPayStoreId" column="aupaystoreid" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="serviceId" column="serviceid" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="toFaceMerchantId" column="tofacemerchantid" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="nonToFaceMerchantId" column="nontofacemerchantid" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="toFaceHashKey" column="tofacehashkey" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="nonToFaceHashKey" column="nontofacehashkey" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="toFaceEncryptKey" column="tofaceencryptkey" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="nonToFaceEncryptKey" column="nontofaceencryptkey" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="toFaceEncryptIv" column="tofaceencryptiv" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="nonToFaceEncryptIv" column="nontofaceencryptiv" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="toFaceBasicAuthId" column="tofacebasicauthid" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="nonToFaceBasicAuthId" column="nontofacebasicauthid" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="toFaceBasicAuthPassword" column="tofacebasicauthpassword" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="nonToFaceBasicAuthPassword" column="nontofacebasicauthpassword" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="toFaceCardType" column="tofacecardtype" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="nonToFaceCardType" column="nontofacecardtype" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="toFacePaymentRouteId" column="tofacepaymentrouteid"/>
+			<result property="nonToFacePaymentRouteId" column="nontofacepaymentrouteid"/>
+			<result property="sfid" column="paymentsfid"/>
+		</collection>
+		<collection property="itabBankAccount" ofType="java.util.HashMap" autoMapping="false" notNullColumn="itabsfid">
+			<result property="sfid" column="itabsfid" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="bankNameKana" column="itabbanknamekana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="bankCode" column="itabbankcode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="branchCode" column="itabbranchcode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="branchNameKana" column="itabbranchnamekana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="accountNumber" column="itabaccountnumber" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="accountNameKana" column="itabaccountnamekana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="accountType" column="itabaccounttype" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		</collection>
 	</resultMap>
 	<resultMap id="contractinfors" type="java.util.HashMap"></resultMap>
-	<resultMap id="bankaccountinfors" type="java.util.HashMap" autoMapping="false">
-		<result property="sfid" column="sfid"/>
-		<result property="bankNameKana" column="banknamekana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
-		<result property="bankCode" column="bankcode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
-		<result property="branchCode" column="branchcode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
-		<result property="branchNameKana" column="branchnamekana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
-		<result property="accountNumber" column="accountnumber" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
-		<result property="accountNameKana" column="accountnamekana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
-		<result property="accountType" column="accounttype" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
-	</resultMap>
-	<resultMap id="tarelatedcontactaddr" type="java.util.HashMap">
-		<result property="name" column="name" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
-		<result property="state" column="state__c" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
-		<result property="address" column="address" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
-		<result property="postalCode" column="postalcode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
-		<result property="telephone" column="telephone" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
-		<result property="contactName" column="contactname" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
-	</resultMap>
-	<select id="getTArelatedcontactaddrAccountID" resultMap="tarelatedcontactaddr">
-		SELECT
-			taxicom.name,
-			taxicom.state__c,
-			taxicom.address,
-			taxicom.postalcode,
-			taxicom.contactname,
-			taxicom.sfid
-		FROM taxicompanyrelatedcontactaddress taxicom
-		WHERE taxicom.account = #{accsfid} ORDER BY taxicom.name ASC
-	</select>
-	<select id="getBankAccountInfoByAccountID" resultMap="bankaccountinfors">
-		SELECT
-			bank.sfid,
-			bm.bankname,
-			bm.branchnamekana,
-			bank.accountname,
-			bm.banknamekana,
-			bm.bankcode,
-			bm.branchcode,
-			bank.accountnumber,
-			bank.accountnamekana,
-			bank.accounttype
-		FROM
-			bankaccountinformation bank
-		INNER JOIN bankmaster bm ON bank.accountbank = bm.sfid
-		WHERE account = #{accsfid} ORDER BY accountCategory ASC
-	</select>
 	<select id="getMerchantInfoBySFID"
 		parameterType="java.lang.String"
 		resultMap="merchantInfoMap">
@@ -1051,28 +1090,56 @@
 			acc.thincacloudmertermno,
 			acc.linkmertermno,
 			acc.appcompanyid,
-			acc.jpporganizationid
-			<!-- 
-			payment.sfid as paysfid,
-			payment.linepaychannnelid,
+			acc.jpporganizationid,
+			netBankAccount.sfid as netsfid,
+			bmNetBankAccount.bankname as netbankname,
+			bmNetBankAccount.branchnamekana as netbranchnamekana,
+			netBankAccount.accountname as netaccountname,
+			bmNetBankAccount.banknamekana as netbanknamekana,
+			bmNetBankAccount.bankcode as netbankcode,
+			bmNetBankAccount.branchcode as netbranchcode,
+			netBankAccount.accountnumber as netaccountnumber,
+			netBankAccount.accountnamekana as netaccountnamekana,
+			netBankAccount.accounttype as netaccounttype,
+			itabBankAccount.sfid as itabsfid,
+			bmItabBankAccount.bankname as itab,
+			bmItabBankAccount.branchnamekana  as itabbranchnamekana,
+			itabBankAccount.accountname  as itabaccountname,
+			bmItabBankAccount.banknamekana  as itabbanknamekana,
+			bmItabBankAccount.bankcode  as itabbankcode,
+			bmItabBankAccount.branchcode as itabbranchcode,
+			itabBankAccount.accountnumber  as itabaccountnumber,
+			itabBankAccount.accountnamekana  as itabaccountnamekana,
+			itabBankAccount.accounttype  as itabaccounttype,
+			payment.linepaychannelid as linepaychannelid,
 			payment.linepaychannelsecret,
 			payment.aupaystoreid,
-			payment.merchantid,
 			payment.serviceid,
-			payment.hashkey,
-			payment.encryptiv,
-			payment.encryptkey,
-			payment.basicauthid,
-			payment.basicauthpassword,
-			payment.cardtype,
-			payment.paymentrouteid
-			 -->
+			payment.tofacemerchantid,
+			payment.nontofacemerchantid,
+			payment.tofacehashkey,
+			payment.nontofacehashkey,
+			payment.tofaceencryptkey,
+			payment.nontofaceencryptkey,
+			payment.tofaceencryptiv,
+			payment.nontofaceencryptiv,
+			payment.tofacebasicauthid,
+			payment.nontofacebasicauthid,
+			payment.tofacebasicauthpassword,
+			payment.nontofacebasicauthpassword,
+			payment.tofacecardtype,
+			payment.nontofacecardtype,
+			payment.tofacepaymentrouteid,
+			payment.nontofacepaymentrouteid,
+			payment.sfid as paymentsfid
 		FROM account acc
-		<!--
+		LEFT JOIN bankaccountinformation netBankAccount ON acc.sfid = netBankAccount.account AND netBankAccount.accountcategory = 'ネット決済支払'
+		LEFT JOIN bankaccountinformation itabBankAccount ON acc.sfid = itabBankAccount.account AND itabBankAccount.accountcategory = 'ITAB決済支払'
+		LEFT JOIN bankmaster bmNetBankAccount ON netBankAccount.accountbank = bmNetBankAccount.sfid
+		LEFT JOIN bankmaster bmItabBankAccount ON itabBankAccount.accountbank = bmItabBankAccount.sfid
 		LEFT JOIN paymentsystemlinkinfor payment ON acc.sfid = payment.internetpaymerstore
-		 -->
 		WHERE
-		 	acc.sfid =#{sfid,jdbcType=VARCHAR}
+		 	acc.sfid=#{sfid,jdbcType=VARCHAR}
 	</select>
 	<!-- End Singapore -->
 </mapper>

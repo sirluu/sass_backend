@@ -7,6 +7,10 @@ import lombok.Setter;
 @Setter
 public class Worker extends ObjectSync {
   /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+/**
    * 4 fields + sfid + syncedtime
    */
   private String tablename;

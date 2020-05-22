@@ -27,7 +27,6 @@
 		b.invaliddate,
 		b.invalidreason, b.lastmodifieddate
 		FROM bankaccountinformation b
-		WHERE b.sfid IN (${ids})
 		ORDER BY b.sfid DESC
 	</select>
 
@@ -98,11 +97,7 @@
 	<update id="updateBankAccountInformationSync"
 		parameterType="jp.co.japantaxi.model.BankAccountInformation">
 		UPDATE bankaccountinformationsync
-		SET account=#{account}, appcompany=#{appcompany}, accountcategory=#{accountcategory},
-		accountbank=#{accountbank}, accountnumber=#{accountnumber},
-		accountname=#{accountname}, accountnamekana=#{accountnamekana},
-		accounttype=#{accounttype}, invaliddate=#{invaliddate},
-		invalidreason=#{invalidreason}, syncedtime=#{syncedtime}
+		SET account=#{account}, appcompany=#{appcompany}
 		WHERE sfid=#{sfid}
 	</update>
 	<!-- Singapore -->

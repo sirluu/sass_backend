@@ -7,6 +7,7 @@ import jp.co.japantaxi.model.AppCompany;
 import jp.co.japantaxi.model.ParameterRequest;
 import jp.co.japantaxi.response.AppCompanyCoopApprovalBrooklyn;
 import jp.co.japantaxi.response.AppCompanyResponse;
+import jp.co.japantaxi.response.AppCompanyResponse.AppCompanyList;
 
 public interface AppCompanyMapper {
 
@@ -31,12 +32,12 @@ public interface AppCompanyMapper {
   void truncateAppCompany();
 
   // Singapore
-  List<AppCompany> getListAppCompanys(@Param("sfids") List<String> sfids);
+  List<AppCompanyList> getListAppCompanys(@Param("sfids") List<String> sfids);
 
   AppCompanyResponse getAppCompanyDetailByCompanyId(@Param("sfid") String sfid);
  
   AppCompanyCoopApprovalBrooklyn getAppCompanyCoopApprovalInfoByCompanyId(@Param("sfid") String sfid);
 
-  AppCompanyResponse.AppCompanyCoopApproval getAppCompanyCoopApprovalByDetailCompanyId(@Param("sfid") String sfid); 
+  AppCompanyResponse.AppCompanyCoopApproval getAppCompanyCoopApprovalByDetailBySfid(@Param("sfid") String sfid); 
   // End Singapore
 }

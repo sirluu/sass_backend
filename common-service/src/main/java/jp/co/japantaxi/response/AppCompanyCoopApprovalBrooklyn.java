@@ -63,7 +63,7 @@ public class AppCompanyCoopApprovalBrooklyn {
 	private Integer payableCommission;
 	// Map select multi table.
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	private Map<?, ?> faretables;
+	private FareTableCoopApproval faretables;
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private Map<String, Object> account;
 	
@@ -85,4 +85,26 @@ public class AppCompanyCoopApprovalBrooklyn {
 	private Integer isEnabledDriverContract;
 	private Integer useAsDefaultDriverContract;
 	private Integer onlyUseWhenNecessaryDriverContract;
+	// update 05/04/2020
+	private String paymentMethodEN;
+	private String salesPrefectureEN;
+	private String destinationAddress;
+	private String destinationPostalCode;
+	private String destinationContactName;
+	private String destinationCompanyName;
+	
+	@Getter
+	@Setter
+	public static class FareTableCoopApproval {
+		private Integer pickupFare;
+		private Integer firstSquareDistance;
+		private Integer firstSquareFare;
+		private Integer additionalDistance;
+		private Integer additionalFare;
+		private Integer reservationFee;
+		private Integer pickupFeeExistence;
+		private String pickupFeeDescription;
+		private Integer bookingFeeExistence;
+		private String bookingFeeDescription;
+	}
 }

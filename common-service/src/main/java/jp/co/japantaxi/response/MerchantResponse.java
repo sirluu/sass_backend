@@ -1,7 +1,8 @@
 package jp.co.japantaxi.response;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -125,14 +126,39 @@ public class MerchantResponse implements Serializable{
 		private String linkMertermno;
 		public int appCompanyId;
 		public String jppOrganizationId;
-//		@JsonInclude(JsonInclude.Include.NON_NULL)
-//		private Object paymentsystemlinkinfor;
 		@JsonInclude(JsonInclude.Include.NON_NULL)
-		private List<Object> baInfoList;
+		private Map<String, Object> netBankAccount;
 		@JsonInclude(JsonInclude.Include.NON_NULL)
-		private List<Object> taxiCompanyRelatedContactAddressList;						
+		private Map<String, Object> itabBankAccount;
+		@JsonInclude(JsonInclude.Include.NON_NULL)
+		private PaymentSystemLinkInforDetail paymentSystemLinkInfor;
 	}
 	
+	@Getter
+	@Setter
+	public static class PaymentSystemLinkInforDetail {
+		private String linePayChannelId;
+		private String linePayChannelSecret;
+		private String auPayStoreId;
+		private String serviceId;
+		private String toFaceMerchantId;
+		private String nonToFaceMerchantId;
+		private String toFaceHashKey;
+		private String nonToFaceHashKey;
+		private String toFaceEncryptKey;
+		private String nonToFaceEncryptKey;
+		private String toFaceEncryptIv;
+		private String nonToFaceEncryptIv;
+		private String toFaceBasicAuthId;
+		private String nonToFaceBasicAuthId;
+		private String toFaceBasicAuthPassword;
+		private String nonToFaceBasicAuthPassword;
+		private String toFaceCardType;
+		private String nonToFaceCardType;
+		private Integer toFacePaymentRouteId;
+		private Integer nonToFacePaymentRouteId;
+		private String sfid;
+	}
 	@Getter
 	@Setter
 	public static class MerchantCoopApproval{
@@ -148,7 +174,6 @@ public class MerchantResponse implements Serializable{
 		private String netpayMerchantsAffiliationStoreNameKanji;
 		private String applicationFormAffiliationStoreNameKanji;
 		private String companiesAffiliationStoreNameKanji;
-//		private String website;
 		private String keiriNo;
 		private String corporateNumber;
 		private String netpayMerchantsMerTermNo;
@@ -184,12 +209,12 @@ public class MerchantResponse implements Serializable{
 		private String merchantInfoMeterList;
 		private Integer merchantContrInforApplicationCars;
 		private String merchantContrInforTabletModel;
-		private String merchantContrInforApplicationDate;
+		private String merchantContrInforApplicationDate = "";
 		private Integer merchantContrInforIsFacetofaceSettlement;
 		private Integer merchantContrInforIsRegistry;
 		private String merchantContrInforLicenseName;
 		private String merchantContrInforLicenseNumber;
-		private String merchantContrInforLicenseAcquisitionDate;
+		private String merchantContrInforLicenseAcquisitionDate = "";
 		private String merchantReprInforFullNameKanji;
 		private String merchantReprInforFullNameKana;
 		private String merchantReprInforPostalCode;
@@ -224,11 +249,9 @@ public class MerchantResponse implements Serializable{
 		private String applicationFormMerchantPayInfoPostalCode;
 		private String companiesMerchantPayInfoPostalCode;
 		private String netpayMerchantsMerchantPayInfoAddress1;
-//		private String applicationformmerchantpayinfoaddress1;
 		private String companiesMerchantPayInfoAddress1;
 		private String netpayMerchantsMerchantPayInfoAddress2;
 		private String applicationFormMerchantPayInfoAddress2;
-		private String companiesMerchantPayInfoAddress2;
 		private String merchantPayInfoContactName;
 		private String merchantOperInforStartDate; // string ‎yyyy/MM/dd
 		private String merchantOperInforAcceptanceDate; // string ‎yyyy/MM/dd
@@ -238,62 +261,44 @@ public class MerchantResponse implements Serializable{
 		private String thincacloudMertermno;
 		private String linkMertermno;
 		private String sfid;
-		/* MAP */
-//		private Map<?, ?> paymentsystemlinkinfor;
-		private List<BankaccountinformationMapper> bankAccountInformationList;
-		private TaxiCompanyRContract taxiCompanyRelatedContactAddress;
+
+		private NetBankAccount netBankAccount;
+		private ItabBankAccount itabBankAccount;
+		private PaymentSystemLinkInforSync paymentSystemLinkInfor;
 	}
 	
 	@Getter
 	@Setter
 	@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-	public static class BankaccountinformationMapper {
-		public Integer companyid;
-		public String netpayMerchantsBankNameKana;
+	public static class ItabBankAccount {
 		public String applicationFormPaymentBankNameKana;
 		public String companiesBankNameKana;
-//		public String bankaccountbankcode;
-//		public String bankaccount2bankcode;
-		public String netpayMerchantsBankCode;
 		public String applicationFormPaymentBankCode;
 		public String companiesBankCode;
-//		public String bankaccountbranchcode;
-//		public String bankaccount2branchcode;
-		public String netpayMerchantsBranchCode;
 		public String applicationFormPaymentBranchCode;
 		public String companiesBranchCode;
-		public String netpayMerchantsBranchNameKana;
 		public String applicationFormPaymentBranchNameKana;
 		public String companiesBranchNameKana;
-//		public String bankaccountaccountnumber;
-//		public String bankaccount2accountnumber;
-		public String netpayMerchantsAccountNumber;
 		public String applicationFormPaymentAccountNumber;
 		public String companiesAccountNumber;
-//		public String bankaccountaccountname;
-//		public String bankaccount2accountname;
-//		public String bankaccountaccountnamekana;
-//		public String bankaccount2accountnamekana;
-		public String netpayMerchantsAccountNameKana;
 		public String applicationFormPaymentAccountNameKana;
 		public String companiesAccountNameKana;
-//		public String bankaccountaccounttype;
-//		public String bankaccount2accounttype;
-		public String netpayMerchantsAccountType;
 		public String applicationFormPaymentAccountType;
 		public String companiesAccountType;
-		@JsonInclude(JsonInclude.Include.NON_NULL)
-		public String mertermno;
 	}
+	
+	
 	@Getter
 	@Setter
 	@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-	public static class TaxiCompanyRContract {
-		public String name;
-		public String state;
-		public String address;
-		public String postalCode;
-		public String contactName;
+	public static class NetBankAccount {
+		public String netpayMerchantsBankNameKana;
+		public String netpayMerchantsBankCode;
+		public String netpayMerchantsBranchCode;
+		public String netpayMerchantsBranchNameKana;
+		public String netpayMerchantsAccountNumber;
+		public String netpayMerchantsAccountNameKana;
+		public String netpayMerchantsAccountType;
 	}
 	
 	@Getter
@@ -323,5 +328,40 @@ public class MerchantResponse implements Serializable{
 		private String accountType;
 		private String invalidDate;
 		private String invalidReason;
+	}
+	
+	@Getter
+	@Setter
+	public static class MerchantCoopApprovalInfoListResponse {
+		private Object paymentSystemLinkInfor;
+		private Object merchant;
+		
+		private Object netBankAccount;
+		private Object itabBankAccount;
+	}
+	
+	@Getter
+	@Setter
+	public static class PaymentSystemLinkInforSync {
+		private String linePayChannelId;
+		private String linePayChannelSecret;
+		private String auPayStoreId;
+		private String serviceId;
+		private String toFaceMerchantId;
+		private String nonToFaceMerchantId;
+		private String toFaceHashKey;
+		private String nonToFaceHashKey;
+		private String toFaceEncryptKey;
+		private String nonToFaceEncryptKey;
+		private String toFaceEncryptIv;
+		private String nonToFaceEncryptIv;
+		private String toFaceBasicAuthId;
+		private String nonToFaceBasicAuthId;
+		private String toFaceBasicAuthPassword;
+		private String nonToFaceBasicAuthPassword;
+		private String toFaceCardType;
+		private String nonToFaceCardType;
+		private Integer toFacePaymentRouteId;
+		private Integer nonToFacePaymentRouteId;
 	}
 }

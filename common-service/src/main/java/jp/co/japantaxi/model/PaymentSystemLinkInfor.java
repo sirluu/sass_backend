@@ -13,6 +13,10 @@ import lombok.Setter;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class PaymentSystemLinkInfor extends ObjectSync {
   /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+/**
    * 14 fields + sfid
    */
   private String internetpaymerstore;

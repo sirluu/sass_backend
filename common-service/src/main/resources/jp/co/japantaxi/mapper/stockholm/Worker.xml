@@ -16,9 +16,12 @@
 	<update id="updateWorker"
 		parameterType="jp.co.japantaxi.model.Worker">
 		UPDATE worker
-		SET tablename=#{tablename},
-		sycapproveflg=#{sycapproveflg},
+		SET
 		syncstatus=#{syncstatus},
+		<if test='tablename != null'>
+			tablename=#{tablename},
+		</if>
+		sycapproveflg=#{sycapproveflg},
 		deleteflg=#{deleteflg},
 		syncedtime=#{syncedtime}
 		WHERE sfid=#{sfid}
