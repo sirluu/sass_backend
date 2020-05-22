@@ -196,7 +196,7 @@ public class ConvertDataUtil {
     appCompany.setBankaccount2(jsonObject.get("bankAccount2").toString().replace("{}", "").trim());
     appCompany.setCarimagecolor(jsonObject.get("carImageColor").toString().replace("{}", "").trim());
     appCompany.setCarimagename(jsonObject.get("carImageName").toString().replace("{}", "").trim());
-	appCompany.setCars(Utility.parseInt(jsonObject.get("cars").toString().replace("{}", "").trim()));
+    appCompany.setCars(Utility.parseInt(jsonObject.get("cars").toString().replace("{}", "").trim()));
 		appCompany.setClosingtimeto(DateTimeUtil.getTimestampFromString(
 				jsonObject.get("closingTimeTo").toString().replace("{}", "").trim(), DateTimeUtil.TIME_FM_S));
 		appCompany.setClosingtimefrom(DateTimeUtil.getTimestampFromString(

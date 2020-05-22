@@ -19,7 +19,7 @@ public class CacheManagerConfig {
 
   private static Logger LOGGER = LoggerFactory.getLogger(CacheManagerConfig.class);
 
-  private static Map<String, String> store = new HashMap<>();
+  public static Map<String, String> store = new HashMap<>();
 
   private static Map<String, Integer> errorStore = new HashMap<>();
 

@@ -71,15 +71,12 @@
 	<update id="updateBankAccountInformation"
 		parameterType="jp.co.japantaxi.model.BankAccountInformation">
 		UPDATE bankaccountinformation
-		SET account=#{account}, appcompany=#{appcompany},
-		accountcategory=#{accountcategory},
-		accountbank=#{accountbank},
-		accountnumber=#{accountnumber},
-		accountname=#{accountname},
-		accountnamekana=#{accountnamekana},
-		accounttype=#{accounttype},
-		invaliddate=#{invaliddate},
-		invalidreason=#{invalidreason},
+		SET account=#{account}, appcompany=#{appcompany}, 
+		accountcategory=#{accountcategory}, accountbank=#{accountbank}, 
+		accountnumber=#{accountnumber}, accountname=#{accountname}, 
+		accountnamekana=#{accountnamekana}, accounttype=#{accounttype}, 
+		invaliddate=#{invaliddate}, 
+		invalidreason=#{invalidreason}, 
 		lastmodifieddate=#{lastmodifieddate}
 		WHERE sfid=#{sfid}
 	</update>
@@ -97,7 +94,13 @@
 	<update id="updateBankAccountInformationSync"
 		parameterType="jp.co.japantaxi.model.BankAccountInformation">
 		UPDATE bankaccountinformationsync
-		SET account=#{account}, appcompany=#{appcompany}
+		SET account=#{account}, appcompany=#{appcompany}, 
+		accountcategory=#{accountcategory}, accountbank=#{accountbank}, 
+		accountnumber=#{accountnumber}, accountname=#{accountname}, 
+		accountnamekana=#{accountnamekana}, accounttype=#{accounttype}, 
+		invaliddate=#{invaliddate}, 
+		invalidreason=#{invalidreason}, 
+		syncedtime=#{syncedtime}
 		WHERE sfid=#{sfid}
 	</update>
 	<!-- Singapore -->
