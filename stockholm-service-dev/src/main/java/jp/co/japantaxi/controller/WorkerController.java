@@ -148,8 +148,6 @@ public class WorkerController {
       }
     } catch (Exception e) {
       LOGGER.info("Valid account login to salesforce success");
-      CacheManagerConfig.store.put("token", accessToken.get("access_token").asText());
-      CacheManagerConfig.store.put("uri", accessToken.get("instance_url").asText() + "/services/apexrest/stockholm/");
     }
     String stMode = "";
     try {

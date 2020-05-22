@@ -112,7 +112,7 @@ public class SalesforceResponseController {
 	  StringBuilder sb = new StringBuilder();
       sb.append(batchStatus.getStatusinfo());
       sb.append("\n");
-      sb.append(Constant.API_GET + context + "ErrorCode: " + e.getRawStatusCode());
+      sb.append(Constant.API_GET + context);
       batchStatus.setStatusinfo(sb.toString());
       batchController.updateBatchStatus(batchStatus, false, false, true, false);
       return null;
