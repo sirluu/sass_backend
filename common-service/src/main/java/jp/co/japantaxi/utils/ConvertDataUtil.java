@@ -194,23 +194,9 @@ public class ConvertDataUtil {
         jsonObject.get("bookingFeeDescription").toString().replace("{}", "").trim());
     appCompany.setBankaccount(jsonObject.get("bankAccount").toString().replace("{}", "").trim());
     appCompany.setBankaccount2(jsonObject.get("bankAccount2").toString().replace("{}", "").trim());
-    appCompany.setCarimagecolor1(jsonObject.get("carIColor1").toString().replace("{}", "").trim());
-    appCompany.setCarimagecolor2(jsonObject.get("carIColor2").toString().replace("{}", "").trim());
-    appCompany.setCarimagecolor3(jsonObject.get("carIColor3").toString().replace("{}", "").trim());
-    appCompany.setCarimagecolor4(jsonObject.get("carIColor4").toString().replace("{}", "").trim());
-    appCompany.setCarimagecolor5(jsonObject.get("carIColor5").toString().replace("{}", "").trim());
-    appCompany.setCarimagecolor6(jsonObject.get("carIColor6").toString().replace("{}", "").trim());
-    appCompany.setCarimagecolor7(jsonObject.get("carIColor7").toString().replace("{}", "").trim());
-    appCompany.setCarimagecolor8(jsonObject.get("carIColor8").toString().replace("{}", "").trim());
-    appCompany.setCarimagename1(jsonObject.get("carIName1").toString().replace("{}", "").trim());
-    appCompany.setCarimagename2(jsonObject.get("carIName2").toString().replace("{}", "").trim());
-    appCompany.setCarimagename3(jsonObject.get("carIName3").toString().replace("{}", "").trim());
-    appCompany.setCarimagename4(jsonObject.get("carIName4").toString().replace("{}", "").trim());
-    appCompany.setCarimagename5(jsonObject.get("carIName5").toString().replace("{}", "").trim());
-    appCompany.setCarimagename6(jsonObject.get("carIName6").toString().replace("{}", "").trim());
-    appCompany.setCarimagename7(jsonObject.get("carIName7").toString().replace("{}", "").trim());
-    appCompany.setCarimagename8(jsonObject.get("carIName8").toString().replace("{}", "").trim());
-    appCompany.setCars(Utility.parseInt(jsonObject.get("cars").toString().replace("{}", "").trim()));
+    appCompany.setCarimagecolor(jsonObject.get("carImageColor").toString().replace("{}", "").trim());
+    appCompany.setCarimagename(jsonObject.get("carImageName").toString().replace("{}", "").trim());
+	appCompany.setCars(Utility.parseInt(jsonObject.get("cars").toString().replace("{}", "").trim()));
 		appCompany.setClosingtimeto(DateTimeUtil.getTimestampFromString(
 				jsonObject.get("closingTimeTo").toString().replace("{}", "").trim(), DateTimeUtil.TIME_FM_S));
 		appCompany.setClosingtimefrom(DateTimeUtil.getTimestampFromString(
