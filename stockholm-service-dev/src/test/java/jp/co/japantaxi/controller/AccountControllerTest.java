@@ -90,7 +90,7 @@ public class AccountControllerTest {
 	public void test_getListAccountFromStockholm() {
 		List<String> list = new ArrayList<>();
 		Mockito.when(cacheManagerConfig.getListObjectId(Constant.ACCOUNT)).thenReturn(list);
-		Assert.assertEquals(accountController.getListAccountFromStockholm(), list);
+		Assert.assertEquals(accountController.getListAccountFromStockholm(Constant.ACCOUNT), list);
 	}
 
 	@Test
@@ -165,7 +165,7 @@ public class AccountControllerTest {
 		sfAccountList.add(account);
 		list.add(account);
 
-		Assert.assertEquals(list, accountController.getListAccountToUpdate(salesForceIds, stockholmIds, sfAccountList));
+		Assert.assertEquals(list, accountController.getListAccountToUpdate(list, sfAccountList));
 	}
 
 	@Test
@@ -216,7 +216,7 @@ public class AccountControllerTest {
 	public void test_getListFareTableFromStockholm() {
 		List<String> list = new ArrayList<>();
 		Mockito.when(cacheManagerConfig.getListObjectId("FareTable")).thenReturn(list);
-		Assert.assertEquals(accountController.getListFareTableFromStockholm(), list);
+		Assert.assertEquals(accountController.getListFareTableFromStockholm(Constant.FARETABLE), list);
 	}
 
 	@Test
@@ -293,7 +293,7 @@ public class AccountControllerTest {
 		list.add(fareTable);
 
 		Assert.assertEquals(list,
-				accountController.getListFareTableToUpdate(salesForceIds, stockholmIds, sfFareTableList));
+				accountController.getListFareTableToUpdate(list, sfFareTableList));
 	}
 
 	@Test

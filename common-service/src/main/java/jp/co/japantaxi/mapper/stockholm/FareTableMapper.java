@@ -10,6 +10,8 @@ public interface FareTableMapper {
 
   List<FareTable> getListFareTableFromStockholm(ParameterRequest ids);
 
+  List<FareTable> getListFareTableSyncFromStockholm(ParameterRequest ids);
+
   List<FareTable> getListFareTable2Sync(ParameterRequest startTime);
 
   List<String> getListFareTableIdFromStockholm(ParameterRequest ids);

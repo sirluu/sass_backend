@@ -54,7 +54,7 @@ public class Account extends ObjectSync{
   private String merchantinfometerlist;
   private Integer merchantcontrinforapplicationcars;
   private String merchantcontrinfortabletmodel;
-  private Date merchantcontrinforapplicationdate;
+  private Timestamp merchantcontrinforapplicationdate;
   private Boolean merchantcontrinforisfacetofacesettlement;
   private Boolean merchantcontrinforisregistry;
   private String merchantcontrinforlicensename;
@@ -78,7 +78,7 @@ public class Account extends ObjectSync{
   private String merchantstoreinforaddresskana;
   private String merchantstoreinforphone;
   private String merchantstoreinformemo;
-  private Date merchantdeliveryinfordate;
+  private Timestamp merchantdeliveryinfordate;
   private String merchantdeliveryinforgakkencustomernumber;
   private String merchantdeliveryinforname;
   private String merchantdeliveryinforpostalcode;

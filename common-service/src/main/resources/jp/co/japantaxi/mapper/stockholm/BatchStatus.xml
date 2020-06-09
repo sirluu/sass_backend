@@ -12,7 +12,8 @@
 		b.sfapicallcount, b.fromdatetime
 		FROM
 		batchstatus b
-		WHERE b.batchcode=#{batchcode}
+		WHERE
+		b.batchcode=#{batchcode}
 	</select>
 
 	<insert id="insertBatchStatus"
@@ -22,8 +23,10 @@
 		startupmode, processstartdate, processenddate, status,
 		statusinfo,
 		sfapicallcount, fromdatetime)
-		VALUES(#{batchcode}, #{batchname}, #{startupmode},
-		#{processstartdate}, #{processenddate}, #{status}, #{statusinfo},
+		VALUES(#{batchcode}, #{batchname},
+		#{startupmode},
+		#{processstartdate}, #{processenddate}, #{status},
+		#{statusinfo},
 		#{sfapicallcount}, #{fromdatetime})
 	</insert>
 

@@ -11,7 +11,7 @@ public class AccountSync extends Account{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private String channnelId;
+	private String channelId;
 	private String channelSecret;
 	private String auPayStoreId;
 	private String serviceId;

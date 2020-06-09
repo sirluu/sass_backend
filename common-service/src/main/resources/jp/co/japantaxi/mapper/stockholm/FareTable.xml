@@ -19,7 +19,7 @@
 		f.latenightearlymorningextra, f.reservationfee,
 		f.pickupfeeexistence, f.pickupfeedescription, f.bookingfeeexistence,
 		f.bookingfeedescription, f.lastmodifieddate
-		FROM faretable f 
+		FROM faretable f
 		WHERE f.sfid=#{id}
 	</select>
 
@@ -35,6 +35,23 @@
 		f.pickupfeeexistence, f.pickupfeedescription, f.bookingfeeexistence,
 		f.bookingfeedescription, f.lastmodifieddate
 		FROM faretable f
+		WHERE
+		f.sfid IN (${ids})
+		ORDER BY f.sfid DESC
+	</select>
+
+	<select id="getListFareTableSyncFromStockholm"
+		parameterType="jp.co.japantaxi.model.ParameterRequest"
+		resultType="jp.co.japantaxi.model.FareTable">
+		SELECT f.sfid, f.appcompany, f.pickupfare,
+		f.firstsquaredistance,
+		f.firstsquarefare, f.additionaldistance,
+		f.additionalfare,
+		f.latenightearlymorningextra, f.reservationfee,
+		f.pickupfeeexistence,
+		f.pickupfeedescription, f.bookingfeeexistence,
+		f.bookingfeedescription
+		FROM faretablesync f
 		WHERE f.sfid IN (${ids})
 		ORDER BY f.sfid DESC
 	</select>
@@ -52,7 +69,8 @@
 		f.bookingfeedescription, f.lastmodifieddate
 		FROM faretable f
 		WHERE(date_trunc('second',f.lastmodifieddate) >=${startTime})
-		ORDER BY f.sfid DESC
+		ORDER BY
+		f.sfid DESC
 	</select>
 
 	<select id="getListFareTableIdFromStockholm"
@@ -62,8 +80,9 @@
 		WHERE f.sfid IN (${ids})
 		ORDER BY f.sfid DESC
 	</select>
-	
-	<select id="getListFareTableSyncIdFromStockholm" resultType="java.lang.String">
+
+	<select id="getListFareTableSyncIdFromStockholm"
+		resultType="java.lang.String">
 		SELECT f.sfid FROM faretablesync f
 	</select>
 

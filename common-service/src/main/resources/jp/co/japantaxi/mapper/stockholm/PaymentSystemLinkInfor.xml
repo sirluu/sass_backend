@@ -12,10 +12,14 @@
 		parameterType="jp.co.japantaxi.model.ParameterRequest"
 		resultType="jp.co.japantaxi.model.PaymentSystemLinkInfor">
 		SELECT p.sfid, p.internetpaymerstore, p.linepaychannelid,
-		p.linepaychannelsecret, p.aupaystoreid, p.serviceid, p.tofacemerchantid, p.nontofacemerchantid,
-		p.tofacehashkey, p.nontofacehashkey, p.tofaceencryptkey, p.nontofaceencryptkey,
-		p.tofaceencryptiv, p.nontofaceencryptiv, p.tofacebasicauthid, p.nontofacebasicauthid,
-		p.tofacebasicauthpassword, p.nontofacebasicauthpassword, p.tofacecardtype, p.nontofacecardtype,
+		p.linepaychannelsecret, p.aupaystoreid, p.serviceid,
+		p.tofacemerchantid, p.nontofacemerchantid,
+		p.tofacehashkey,
+		p.nontofacehashkey, p.tofaceencryptkey, p.nontofaceencryptkey,
+		p.tofaceencryptiv, p.nontofaceencryptiv, p.tofacebasicauthid,
+		p.nontofacebasicauthid,
+		p.tofacebasicauthpassword,
+		p.nontofacebasicauthpassword, p.tofacecardtype, p.nontofacecardtype,
 		p.tofacepaymentrouteid, p.nontofacepaymentrouteid, p.lastmodifieddate
 		FROM
 		paymentsystemlinkinfor p WHERE
@@ -26,10 +30,14 @@
 		parameterType="jp.co.japantaxi.model.ParameterRequest"
 		resultType="jp.co.japantaxi.model.PaymentSystemLinkInfor">
 		SELECT p.sfid, p.internetpaymerstore, p.linepaychannelid,
-		p.linepaychannelsecret, p.aupaystoreid, p.serviceid, p.tofacemerchantid, p.nontofacemerchantid,
-		p.tofacehashkey, p.nontofacehashkey, p.tofaceencryptkey, p.nontofaceencryptkey,
-		p.tofaceencryptiv, p.nontofaceencryptiv, p.tofacebasicauthid, p.nontofacebasicauthid,
-		p.tofacebasicauthpassword, p.nontofacebasicauthpassword, p.tofacecardtype, p.nontofacecardtype,
+		p.linepaychannelsecret, p.aupaystoreid, p.serviceid,
+		p.tofacemerchantid, p.nontofacemerchantid,
+		p.tofacehashkey,
+		p.nontofacehashkey, p.tofaceencryptkey, p.nontofaceencryptkey,
+		p.tofaceencryptiv, p.nontofaceencryptiv, p.tofacebasicauthid,
+		p.nontofacebasicauthid,
+		p.tofacebasicauthpassword,
+		p.nontofacebasicauthpassword, p.tofacecardtype, p.nontofacecardtype,
 		p.tofacepaymentrouteid, p.nontofacepaymentrouteid, p.lastmodifieddate
 		FROM
 		paymentsystemlinkinfor p WHERE
@@ -39,14 +47,44 @@
 		DESC
 	</select>
 
+	<select id="getListPaymentSystemLinkInforSyncFromStockholm"
+		parameterType="jp.co.japantaxi.model.ParameterRequest"
+		resultType="jp.co.japantaxi.model.PaymentSystemLinkInfor">
+		SELECT p.sfid, p.internetpaymerstore,
+		p.linepaychannelsecret,
+		p.aupaystoreid, p.serviceid,
+		p.linepaychannelid, p.tofacemerchantid,
+		p.tofacehashkey,
+		p.tofaceencryptkey, p.tofaceencryptiv,
+		p.tofacebasicauthid,
+		p.tofacebasicauthpassword, p.tofacecardtype,
+		p.tofacepaymentrouteid,
+		p.nontofacemerchantid, p.nontofacehashkey,
+		p.nontofaceencryptkey,
+		p.nontofaceencryptiv, p.nontofacebasicauthid,
+		p.nontofacebasicauthpassword, p.nontofacecardtype,
+		p.nontofacepaymentrouteid
+		FROM
+		paymentsystemlinkinforsync p WHERE
+		p.sfid
+		IN
+		(${ids}) ORDER BY
+		p.sfid
+		DESC
+	</select>
+
 	<select id="getListPaymentSystemLinkInfor2Sync"
 		parameterType="jp.co.japantaxi.model.ParameterRequest"
 		resultType="jp.co.japantaxi.model.PaymentSystemLinkInfor">
 		SELECT p.sfid, p.internetpaymerstore, p.linepaychannelid,
-		p.linepaychannelsecret, p.aupaystoreid, p.serviceid, p.tofacemerchantid, p.nontofacemerchantid,
-		p.tofacehashkey, p.nontofacehashkey, p.tofaceencryptkey, p.nontofaceencryptkey,
-		p.tofaceencryptiv, p.nontofaceencryptiv, p.tofacebasicauthid, p.nontofacebasicauthid,
-		p.tofacebasicauthpassword, p.nontofacebasicauthpassword, p.tofacecardtype, p.nontofacecardtype,
+		p.linepaychannelsecret, p.aupaystoreid, p.serviceid,
+		p.tofacemerchantid, p.nontofacemerchantid,
+		p.tofacehashkey,
+		p.nontofacehashkey, p.tofaceencryptkey, p.nontofaceencryptkey,
+		p.tofaceencryptiv, p.nontofaceencryptiv, p.tofacebasicauthid,
+		p.nontofacebasicauthid,
+		p.tofacebasicauthpassword,
+		p.nontofacebasicauthpassword, p.tofacecardtype, p.nontofacecardtype,
 		p.tofacepaymentrouteid, p.nontofacepaymentrouteid, p.lastmodifieddate
 		FROM
 		paymentsystemlinkinfor p
@@ -66,33 +104,41 @@
 		p.sfid
 		DESC
 	</select>
-	
-	<select id="getListPaymentSystemLinkInforSyncIdFromStockholm" resultType="java.lang.String">
+
+	<select id="getListPaymentSystemLinkInforSyncIdFromStockholm"
+		resultType="java.lang.String">
 		SELECT p.sfid FROM paymentsystemlinkinforsync p
 	</select>
 
 	<insert id="insertPaymentSystemLinkInfor"
 		parameterType="jp.co.japantaxi.model.PaymentSystemLinkInfor">
 		INSERT INTO paymentsystemlinkinfor
-		(sfid, internetpaymerstore, linepaychannelid,
-		linepaychannelsecret, aupaystoreid, serviceid,
+		(sfid,
+		internetpaymerstore, linepaychannelid,
+		linepaychannelsecret,
+		aupaystoreid, serviceid,
 		tofacemerchantid, nontofacemerchantid,
 		tofacehashkey, nontofacehashkey,
 		tofaceencryptkey, nontofaceencryptkey,
 		tofaceencryptiv, nontofaceencryptiv,
-		tofacebasicauthid, nontofacebasicauthid,
-		tofacebasicauthpassword, nontofacebasicauthpassword,
+		tofacebasicauthid,
+		nontofacebasicauthid,
+		tofacebasicauthpassword,
+		nontofacebasicauthpassword,
 		tofacecardtype, nontofacecardtype,
 		tofacepaymentrouteid, nontofacepaymentrouteid,
 		lastmodifieddate)
 		VALUES(#{sfid}, #{internetpaymerstore}, #{linepaychannelid},
 		#{linepaychannelsecret}, #{aupaystoreid}, #{serviceid},
 		#{tofacemerchantid}, #{nontofacemerchantid},
-		#{tofacehashkey}, #{nontofacehashkey},
+		#{tofacehashkey},
+		#{nontofacehashkey},
 		#{tofaceencryptkey}, #{nontofaceencryptkey},
 		#{tofaceencryptiv}, #{nontofaceencryptiv},
-		#{tofacebasicauthid}, #{nontofacebasicauthid},
-		#{tofacebasicauthpassword}, #{nontofacebasicauthpassword},
+		#{tofacebasicauthid},
+		#{nontofacebasicauthid},
+		#{tofacebasicauthpassword},
+		#{nontofacebasicauthpassword},
 		#{tofacecardtype}, #{nontofacecardtype},
 		#{tofacepaymentrouteid}, #{nontofacepaymentrouteid},
 		#{lastmodifieddate})
@@ -102,16 +148,25 @@
 		parameterType="jp.co.japantaxi.model.PaymentSystemLinkInfor">
 		UPDATE paymentsystemlinkinfor
 		SET
-		internetpaymerstore=#{internetpaymerstore}, linepaychannelid=#{linepaychannelid},
-		linepaychannelsecret=#{linepaychannelsecret}, aupaystoreid=#{aupaystoreid}, serviceid=#{serviceid},
-		tofacemerchantid=#{tofacemerchantid}, nontofacemerchantid=#{nontofacemerchantid},
+		internetpaymerstore=#{internetpaymerstore},
+		linepaychannelid=#{linepaychannelid},
+		linepaychannelsecret=#{linepaychannelsecret},
+		aupaystoreid=#{aupaystoreid}, serviceid=#{serviceid},
+		tofacemerchantid=#{tofacemerchantid},
+		nontofacemerchantid=#{nontofacemerchantid},
 		tofacehashkey=#{tofacehashkey}, nontofacehashkey=#{nontofacehashkey},
-		tofaceencryptkey=#{tofaceencryptkey}, nontofaceencryptkey=#{nontofaceencryptkey},
-		tofaceencryptiv=#{tofaceencryptiv}, nontofaceencryptiv=#{nontofaceencryptiv},
-		tofacebasicauthid=#{tofacebasicauthid}, nontofacebasicauthid=#{nontofacebasicauthid},
-		tofacebasicauthpassword=#{tofacebasicauthpassword}, nontofacebasicauthpassword=#{nontofacebasicauthpassword},
-		tofacecardtype=#{tofacecardtype}, nontofacecardtype=#{nontofacecardtype},
-		tofacepaymentrouteid=#{tofacepaymentrouteid}, nontofacepaymentrouteid=#{nontofacepaymentrouteid},
+		tofaceencryptkey=#{tofaceencryptkey},
+		nontofaceencryptkey=#{nontofaceencryptkey},
+		tofaceencryptiv=#{tofaceencryptiv},
+		nontofaceencryptiv=#{nontofaceencryptiv},
+		tofacebasicauthid=#{tofacebasicauthid},
+		nontofacebasicauthid=#{nontofacebasicauthid},
+		tofacebasicauthpassword=#{tofacebasicauthpassword},
+		nontofacebasicauthpassword=#{nontofacebasicauthpassword},
+		tofacecardtype=#{tofacecardtype},
+		nontofacecardtype=#{nontofacecardtype},
+		tofacepaymentrouteid=#{tofacepaymentrouteid},
+		nontofacepaymentrouteid=#{nontofacepaymentrouteid},
 		lastmodifieddate=#{lastmodifieddate}
 		WHERE sfid =
 		#{sfid}
@@ -120,14 +175,18 @@
 	<insert id="insertPaymentSystemLinkInforSync"
 		parameterType="jp.co.japantaxi.model.PaymentSystemLinkInfor">
 		INSERT INTO paymentsystemlinkinforsync
-		(sfid, internetpaymerstore, linepaychannelid,
-		linepaychannelsecret, aupaystoreid, serviceid,
+		(sfid,
+		internetpaymerstore, linepaychannelid,
+		linepaychannelsecret,
+		aupaystoreid, serviceid,
 		tofacemerchantid, nontofacemerchantid,
 		tofacehashkey, nontofacehashkey,
 		tofaceencryptkey, nontofaceencryptkey,
 		tofaceencryptiv, nontofaceencryptiv,
-		tofacebasicauthid, nontofacebasicauthid,
-		tofacebasicauthpassword, nontofacebasicauthpassword,
+		tofacebasicauthid,
+		nontofacebasicauthid,
+		tofacebasicauthpassword,
+		nontofacebasicauthpassword,
 		tofacecardtype, nontofacecardtype,
 		tofacepaymentrouteid, nontofacepaymentrouteid,
 		syncedtime)
@@ -135,11 +194,14 @@
 		#{internetpaymerstore}, #{linepaychannelid},
 		#{linepaychannelsecret}, #{aupaystoreid}, #{serviceid},
 		#{tofacemerchantid}, #{nontofacemerchantid},
-		#{tofacehashkey}, #{nontofacehashkey},
+		#{tofacehashkey},
+		#{nontofacehashkey},
 		#{tofaceencryptkey}, #{nontofaceencryptkey},
 		#{tofaceencryptiv}, #{nontofaceencryptiv},
-		#{tofacebasicauthid}, #{nontofacebasicauthid},
-		#{tofacebasicauthpassword}, #{nontofacebasicauthpassword},
+		#{tofacebasicauthid},
+		#{nontofacebasicauthid},
+		#{tofacebasicauthpassword},
+		#{nontofacebasicauthpassword},
 		#{tofacecardtype}, #{nontofacecardtype},
 		#{tofacepaymentrouteid}, #{nontofacepaymentrouteid},
 		#{syncedtime})
@@ -149,16 +211,25 @@
 		parameterType="jp.co.japantaxi.model.PaymentSystemLinkInfor">
 		UPDATE paymentsystemlinkinforsync
 		SET
-		internetpaymerstore=#{internetpaymerstore}, linepaychannelid=#{linepaychannelid},
-		linepaychannelsecret=#{linepaychannelsecret}, aupaystoreid=#{aupaystoreid}, serviceid=#{serviceid},
-		tofacemerchantid=#{tofacemerchantid}, nontofacemerchantid=#{nontofacemerchantid},
+		internetpaymerstore=#{internetpaymerstore},
+		linepaychannelid=#{linepaychannelid},
+		linepaychannelsecret=#{linepaychannelsecret},
+		aupaystoreid=#{aupaystoreid}, serviceid=#{serviceid},
+		tofacemerchantid=#{tofacemerchantid},
+		nontofacemerchantid=#{nontofacemerchantid},
 		tofacehashkey=#{tofacehashkey}, nontofacehashkey=#{nontofacehashkey},
-		tofaceencryptkey=#{tofaceencryptkey}, nontofaceencryptkey=#{nontofaceencryptkey},
-		tofaceencryptiv=#{tofaceencryptiv}, nontofaceencryptiv=#{nontofaceencryptiv},
-		tofacebasicauthid=#{tofacebasicauthid}, nontofacebasicauthid=#{nontofacebasicauthid},
-		tofacebasicauthpassword=#{tofacebasicauthpassword}, nontofacebasicauthpassword=#{nontofacebasicauthpassword},
-		tofacecardtype=#{tofacecardtype}, nontofacecardtype=#{nontofacecardtype},
-		tofacepaymentrouteid=#{tofacepaymentrouteid}, nontofacepaymentrouteid=#{nontofacepaymentrouteid},
+		tofaceencryptkey=#{tofaceencryptkey},
+		nontofaceencryptkey=#{nontofaceencryptkey},
+		tofaceencryptiv=#{tofaceencryptiv},
+		nontofaceencryptiv=#{nontofaceencryptiv},
+		tofacebasicauthid=#{tofacebasicauthid},
+		nontofacebasicauthid=#{nontofacebasicauthid},
+		tofacebasicauthpassword=#{tofacebasicauthpassword},
+		nontofacebasicauthpassword=#{nontofacebasicauthpassword},
+		tofacecardtype=#{tofacecardtype},
+		nontofacecardtype=#{nontofacecardtype},
+		tofacepaymentrouteid=#{tofacepaymentrouteid},
+		nontofacepaymentrouteid=#{nontofacepaymentrouteid},
 		syncedtime=#{syncedtime}
 		WHERE sfid =
 		#{sfid}

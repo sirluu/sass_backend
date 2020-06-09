@@ -24,7 +24,7 @@ public class MerchantResponse implements Serializable{
 		 */
 		private static final long serialVersionUID = 246112083084645508L;
 		private String sfid;
-		private int appCompanyId;
+		private Integer appCompanyId;
 		private String merTermNo;
 		private String affiliationStoreNameKanji;
 		private String affiliationStoreNameKana;

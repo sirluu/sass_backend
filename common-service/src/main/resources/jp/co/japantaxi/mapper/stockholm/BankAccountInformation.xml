@@ -11,34 +11,58 @@
 	<select id="getBankAccountInformationById"
 		parameterType="jp.co.japantaxi.model.ParameterRequest"
 		resultType="jp.co.japantaxi.model.BankAccountInformation">
-		SELECT b.sfid, b.account, b.appcompany, b.accountcategory, b.accountbank,
-		b.accountnumber, b.accountname, b.accountnamekana, b.accounttype,
+		SELECT b.sfid, b.account, b.appcompany, b.accountcategory,
+		b.accountbank,
+		b.accountnumber, b.accountname, b.accountnamekana,
+		b.accounttype,
 		b.invaliddate,
 		b.invalidreason, b.lastmodifieddate
-		FROM bankaccountinformation b
+		FROM
+		bankaccountinformation b
 		WHERE b.sfid=#{id}
 	</select>
 
 	<select id="getListBankAccountInformationFromStockholm"
 		parameterType="jp.co.japantaxi.model.ParameterRequest"
 		resultType="jp.co.japantaxi.model.BankAccountInformation">
-		SELECT b.sfid, b.account, b.appcompany, b.accountcategory, b.accountbank,
-		b.accountnumber, b.accountname, b.accountnamekana, b.accounttype,
+		SELECT b.sfid, b.account, b.appcompany, b.accountcategory,
+		b.accountbank,
+		b.accountnumber, b.accountname, b.accountnamekana,
+		b.accounttype,
 		b.invaliddate,
 		b.invalidreason, b.lastmodifieddate
-		FROM bankaccountinformation b
+		FROM
+		bankaccountinformation b
+		WHERE b.sfid IN (${ids})
 		ORDER BY b.sfid DESC
+	</select>
+
+	<select id="getListBankAccountInformationSyncFromStockholm"
+		parameterType="jp.co.japantaxi.model.ParameterRequest"
+		resultType="jp.co.japantaxi.model.BankAccountInformation">
+		SELECT b.sfid, b.account, b.appcompany, b.accountcategory,
+		b.accountbank, b.accountnumber, b.accountname, b.accountnamekana,
+		b.accounttype, b.invaliddate, b.invalidreason
+		FROM
+		bankaccountinformationsync b
+		WHERE b.sfid IN (${ids})
+		ORDER BY b.sfid
+		DESC
 	</select>
 
 	<select id="getListBankAccountInformation2Sync"
 		parameterType="jp.co.japantaxi.model.ParameterRequest"
 		resultType="jp.co.japantaxi.model.BankAccountInformation">
-		SELECT b.sfid, b.account, b.appcompany, b.accountcategory, b.accountbank,
-		b.accountnumber, b.accountname, b.accountnamekana, b.accounttype,
+		SELECT b.sfid, b.account, b.appcompany, b.accountcategory,
+		b.accountbank,
+		b.accountnumber, b.accountname, b.accountnamekana,
+		b.accounttype,
 		b.invaliddate,
 		b.invalidreason, b.lastmodifieddate
-		FROM bankaccountinformation b
-		WHERE(date_trunc('second',b.lastmodifieddate) >= ${startTime})
+		FROM
+		bankaccountinformation b
+		WHERE(date_trunc('second',b.lastmodifieddate)
+		>= ${startTime})
 		ORDER BY b.sfid DESC
 	</select>
 
@@ -46,37 +70,47 @@
 		parameterType="jp.co.japantaxi.model.ParameterRequest"
 		resultType="java.lang.String">
 		SELECT b.sfid FROM bankaccountinformation b
-		WHERE b.sfid IN (${ids})
+		WHERE b.sfid IN
+		(${ids})
 		ORDER BY b.sfid DESC
 	</select>
-	
-	<select id="getListBankAccountInformationSyncIdFromStockholm" resultType="java.lang.String">
+
+	<select id="getListBankAccountInformationSyncIdFromStockholm"
+		resultType="java.lang.String">
 		SELECT b.sfid FROM bankaccountinformationsync b
 	</select>
 
 	<insert id="insertBankAccountInformation"
 		parameterType="jp.co.japantaxi.model.BankAccountInformation">
 		INSERT INTO bankaccountinformation
-		(sfid, account, appcompany,
+		(sfid, account,
+		appcompany,
 		accountcategory, accountbank, accountnumber, accountname,
 		accountnamekana, accounttype, invaliddate, invalidreason,
 		lastmodifieddate)
-		VALUES(#{sfid}, #{account}, #{appcompany}, #{accountcategory},
+		VALUES(#{sfid}, #{account}, #{appcompany},
+		#{accountcategory},
 		#{accountbank},
-		#{accountnumber}, #{accountname}, #{accountnamekana},
+		#{accountnumber}, #{accountname},
+		#{accountnamekana},
 		#{accounttype},
-		#{invaliddate}, #{invalidreason}, #{lastmodifieddate})
+		#{invaliddate}, #{invalidreason},
+		#{lastmodifieddate})
 	</insert>
 
 	<update id="updateBankAccountInformation"
 		parameterType="jp.co.japantaxi.model.BankAccountInformation">
 		UPDATE bankaccountinformation
-		SET account=#{account}, appcompany=#{appcompany}, 
-		accountcategory=#{accountcategory}, accountbank=#{accountbank}, 
-		accountnumber=#{accountnumber}, accountname=#{accountname}, 
-		accountnamekana=#{accountnamekana}, accounttype=#{accounttype}, 
-		invaliddate=#{invaliddate}, 
-		invalidreason=#{invalidreason}, 
+		SET account=#{account},
+		appcompany=#{appcompany},
+		accountcategory=#{accountcategory},
+		accountbank=#{accountbank},
+		accountnumber=#{accountnumber},
+		accountname=#{accountname},
+		accountnamekana=#{accountnamekana},
+		accounttype=#{accounttype},
+		invaliddate=#{invaliddate},
+		invalidreason=#{invalidreason},
 		lastmodifieddate=#{lastmodifieddate}
 		WHERE sfid=#{sfid}
 	</update>
@@ -84,52 +118,63 @@
 	<insert id="insertBankAccountInformationSync"
 		parameterType="jp.co.japantaxi.model.BankAccountInformation">
 		INSERT INTO bankaccountinformationsync
-		(sfid, account, appcompany, accountcategory, accountbank, accountnumber, accountname,
+		(sfid, account,
+		appcompany, accountcategory, accountbank, accountnumber, accountname,
 		accountnamekana, accounttype, invaliddate, invalidreason, syncedtime)
-		VALUES(#{sfid}, #{account}, #{appcompany}, #{accountcategory}, #{accountbank},
-		#{accountnumber}, #{accountname}, #{accountnamekana}, #{accounttype},
+		VALUES(#{sfid}, #{account}, #{appcompany}, #{accountcategory},
+		#{accountbank},
+		#{accountnumber}, #{accountname}, #{accountnamekana},
+		#{accounttype},
 		#{invaliddate}, #{invalidreason}, #{syncedtime})
 	</insert>
 
 	<update id="updateBankAccountInformationSync"
 		parameterType="jp.co.japantaxi.model.BankAccountInformation">
 		UPDATE bankaccountinformationsync
-		SET account=#{account}, appcompany=#{appcompany}, 
-		accountcategory=#{accountcategory}, accountbank=#{accountbank}, 
-		accountnumber=#{accountnumber}, accountname=#{accountname}, 
-		accountnamekana=#{accountnamekana}, accounttype=#{accounttype}, 
-		invaliddate=#{invaliddate}, 
-		invalidreason=#{invalidreason}, 
+		SET account=#{account},
+		appcompany=#{appcompany},
+		accountcategory=#{accountcategory}, accountbank=#{accountbank},
+		accountnumber=#{accountnumber}, accountname=#{accountname},
+		accountnamekana=#{accountnamekana}, accounttype=#{accounttype},
+		invaliddate=#{invaliddate},
+		invalidreason=#{invalidreason},
 		syncedtime=#{syncedtime}
 		WHERE sfid=#{sfid}
 	</update>
 	<!-- Singapore -->
-	<select id="getListBankAccInfo" resultType="jp.co.japantaxi.model.BankAccountInformation">
+	<select id="getListBankAccInfo"
+		resultType="jp.co.japantaxi.model.BankAccountInformation">
 		select a.*
-		FROM ( SELECT ROW_NUMBER() OVER ( ORDER BY sfid ) AS
+		FROM ( SELECT ROW_NUMBER() OVER ( ORDER BY sfid )
+		AS
 		RowNum, *
 		FROM bankaccountinformation
 		) AS a
 		WHERE RowNum >= 1
-		AND RowNum &lt;=
+		AND
+		RowNum &lt;=
 		20
 		ORDER BY RowNum
 	</select>
-	<select id="getListBankAccountInfoByAccountId" parameterType="java.lang.String" resultType="jp.co.japantaxi.response.MerchantResponse$BankAccountFielsBKMapper">
+	<select id="getListBankAccountInfoByAccountId"
+		parameterType="java.lang.String"
+		resultType="jp.co.japantaxi.response.MerchantResponse$BankAccountFielsBKMapper">
 		SELECT bank.account,
-			bm.banknamekana,
-			bm.bankcode,
-			bm.branchnamekana,
-			bm.branchcode as branchCode,
-			bank.accountname as accountName,
-			bank.accountnumber,
-			bank.accountnamekana,
-			bank.accountcategory as accountCategory,
-			bank.accounttype as accountType,
-			acc.mertermno as mertermno
+		bm.banknamekana,
+		bm.bankcode,
+		bm.branchnamekana,
+		bm.branchcode as branchCode,
+		bank.accountname as accountName,
+		bank.accountnumber,
+		bank.accountnamekana,
+		bank.accountcategory as accountCategory,
+		bank.accounttype as accountType,
+		acc.mertermno as mertermno
 		FROM bankaccountinformationsync bank
-			INNER JOIN bankmastersync bm ON bank.accountbank = bm.sfid LEFT JOIN  accountsync acc ON bank.account = acc.sfid
-		WHERE bank.account=#{accountId} 
+		INNER JOIN bankmastersync bm ON bank.accountbank = bm.sfid LEFT JOIN
+		accountsync acc ON bank.account = acc.sfid
+		WHERE
+		bank.account=#{accountId}
 		<if test='accountCategory != null'>
 			AND bank.accountcategory=#{accountCategory}
 		</if>

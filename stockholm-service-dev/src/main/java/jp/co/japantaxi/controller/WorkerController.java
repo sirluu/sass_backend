@@ -328,16 +328,16 @@ public class WorkerController {
 //    bankMasterController.getSFBankMaster(parameterRequest, batchStatus);
 //    LOGGER.info("BankMaster getSF process end at : {} ",
 //        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
-    LOGGER.info("AppCompany getSF process begin at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
-    appCompanyController.getSFAppCompany(parameterRequest, batchStatus);
-    LOGGER.info("AppCompany getSF process end at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
-//    LOGGER.info("PaymentSystemLinkInfor getSF process begin at : {} ",
+//    LOGGER.info("AppCompany getSF process begin at : {} ",
 //        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
-//    paymentController.getSFPaymentSystemLinkInfor(parameterRequest, batchStatus);
-//    LOGGER.info("PaymentSystemLinkInfor getSF process end at : {} ",
+//    appCompanyController.getSFAppCompany(parameterRequest, batchStatus);
+//    LOGGER.info("AppCompany getSF process end at : {} ",
 //        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
+    LOGGER.info("PaymentSystemLinkInfor getSF process begin at : {} ",
+        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
+    paymentController.getSFPaymentSystemLinkInfor(parameterRequest, batchStatus);
+    LOGGER.info("PaymentSystemLinkInfor getSF process end at : {} ",
+        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
   }
 
   // 2-2 基幹DB用データ加工での起動（2-2のみ実行）
@@ -362,16 +362,16 @@ public class WorkerController {
 //    bankMasterController.coreDateCreatBankMaster(parameterRequest, batchStatus);
 //    LOGGER.info("BankMaster coreDateCreat process end at : {} ",
 //        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
-    LOGGER.info("AppCompany coreDateCreat process begin at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
-    appCompanyController.coreDateCreatAppCompany(parameterRequest, batchStatus);
-    LOGGER.info("AppCompany coreDateCreat process end at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
-//    LOGGER.info("PaymentSystemLinkInfor coreDateCreat process begin at : {} ",
+//    LOGGER.info("AppCompany coreDateCreat process begin at : {} ",
 //        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
-//    paymentController.coreDateCreatPaymentSystemLinkInfor(parameterRequest, batchStatus);
-//    LOGGER.info("PaymentSystemLinkInfor coreDateCreat process end at : {} ",
+//    appCompanyController.coreDateCreatAppCompany(parameterRequest, batchStatus);
+//    LOGGER.info("AppCompany coreDateCreat process end at : {} ",
 //        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
+    LOGGER.info("PaymentSystemLinkInfor coreDateCreat process begin at : {} ",
+        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
+    paymentController.coreDateCreatPaymentSystemLinkInfor(parameterRequest, batchStatus);
+    LOGGER.info("PaymentSystemLinkInfor coreDateCreat process end at : {} ",
+        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
   }
 
   // 洗い替え機能で実行

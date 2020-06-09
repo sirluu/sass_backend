@@ -46,8 +46,7 @@ public class ConvertDataUtilTest {
 		expected.setKeirino(1234);
 		expected.setLinkmertermno("teststring");
 		expected.setMerchantcontrinforapplicationcars(Utility.parseInt("teststring"));
-		expected.setMerchantcontrinforapplicationdate(
-				DateTimeUtil.getDateFromString("teststring", DateTimeUtil.DATE_TIME_FM, DateTimeUtil.TIMEZONE_UTC));
+		expected.setMerchantcontrinforapplicationdate(DateTimeUtil.getTimestampFromString("teststring", DateTimeUtil.DATE_TIME_FM));
 		expected.setMerchantcontrinforisfacetofacesettlement(Utility.parseBoolean("teststring"));
 		expected.setMerchantcontrinforisregistry(Utility.parseBoolean("teststring"));
 		expected.setMerchantcontrinforlicenseacquisitiondate(
@@ -57,8 +56,7 @@ public class ConvertDataUtilTest {
 		expected.setMerchantcontrinfortabletmodel("teststring");
 		expected.setMerchantdeliveryinforaddress("teststring");
 		expected.setMerchantdeliveryinforcontactname("teststring");
-		expected.setMerchantdeliveryinfordate(
-				DateTimeUtil.getDateFromString("teststring", DateTimeUtil.DATE_TIME_FM, DateTimeUtil.TIMEZONE_UTC));
+		expected.setMerchantdeliveryinfordate(DateTimeUtil.getTimestampFromString("teststring", DateTimeUtil.DATE_TIME_FM));
 		expected.setMerchantdeliveryinforgakkencustomernumber("teststring");
 		expected.setMerchantdeliveryinformemo("teststring");
 		expected.setMerchantdeliveryinforname("teststring");
@@ -325,7 +323,7 @@ public class ConvertDataUtilTest {
 		expected.setSyncedtime(Timestamp.valueOf(LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId())));
 		Account actual = new Account();
 
-		Assert.assertNotEquals(expected, ConvertDataUtil.convertAccount2Sync(actual));
+		Assert.assertNotEquals(expected, ConvertDataUtil.convertAccount2Sync(actual, true));
 	}
 	
 	@Test
@@ -339,8 +337,22 @@ public class ConvertDataUtilTest {
 		expected.setBookingfeedescription("teststring");
 		expected.setBankaccount("teststring");
 		expected.setBankaccount2("teststring");
-		expected.setCarimagecolor("teststring");
-		expected.setCarimagename("teststring");
+		expected.setCarimagecolor1("teststring");
+		expected.setCarimagecolor2("teststring");
+		expected.setCarimagecolor3("teststring");
+		expected.setCarimagecolor4("teststring");
+		expected.setCarimagecolor5("teststring");
+		expected.setCarimagecolor6("teststring");
+		expected.setCarimagecolor7("teststring");
+		expected.setCarimagecolor8("teststring");
+		expected.setCarimagename1("teststring");
+		expected.setCarimagename2("teststring");
+		expected.setCarimagename3("teststring");
+		expected.setCarimagename4("teststring");
+		expected.setCarimagename5("teststring");
+		expected.setCarimagename6("teststring");
+		expected.setCarimagename7("teststring");
+		expected.setCarimagename8("teststring");
 		expected.setCars(Utility.parseInt("teststring"));
 		expected.setClosingtimefrom(DateTimeUtil.getTimestampFromString("teststring", DateTimeUtil.DATE_TIME_FM));
 		expected.setClosingtimeto(DateTimeUtil.getTimestampFromString("teststring", DateTimeUtil.DATE_TIME_FM));
@@ -510,8 +522,22 @@ public class ConvertDataUtilTest {
 		Assert.assertEquals(expected.getJtxcompanyid(), ConvertDataUtil.convertJsonObjectToAppCompany(actual).getJtxcompanyid());
 		Assert.assertEquals(expected.getAppdisplayname(), ConvertDataUtil.convertJsonObjectToAppCompany(actual).getAppdisplayname());
 		Assert.assertEquals(expected.getBookingfeedescription(), ConvertDataUtil.convertJsonObjectToAppCompany(actual).getBookingfeedescription());
-		Assert.assertEquals(expected.getCarimagecolor(), ConvertDataUtil.convertJsonObjectToAppCompany(actual).getCarimagecolor());
-		Assert.assertEquals(expected.getCarimagename(), ConvertDataUtil.convertJsonObjectToAppCompany(actual).getCarimagename());
+		Assert.assertEquals(expected.getCarimagecolor1(), ConvertDataUtil.convertJsonObjectToAppCompany(actual).getCarimagecolor1());
+		Assert.assertEquals(expected.getCarimagecolor2(), ConvertDataUtil.convertJsonObjectToAppCompany(actual).getCarimagecolor2());
+		Assert.assertEquals(expected.getCarimagecolor3(), ConvertDataUtil.convertJsonObjectToAppCompany(actual).getCarimagecolor3());
+		Assert.assertEquals(expected.getCarimagecolor4(), ConvertDataUtil.convertJsonObjectToAppCompany(actual).getCarimagecolor4());
+		Assert.assertEquals(expected.getCarimagecolor5(), ConvertDataUtil.convertJsonObjectToAppCompany(actual).getCarimagecolor5());
+		Assert.assertEquals(expected.getCarimagecolor6(), ConvertDataUtil.convertJsonObjectToAppCompany(actual).getCarimagecolor6());
+		Assert.assertEquals(expected.getCarimagecolor7(), ConvertDataUtil.convertJsonObjectToAppCompany(actual).getCarimagecolor7());
+		Assert.assertEquals(expected.getCarimagecolor8(), ConvertDataUtil.convertJsonObjectToAppCompany(actual).getCarimagecolor8());
+		Assert.assertEquals(expected.getCarimagename1(), ConvertDataUtil.convertJsonObjectToAppCompany(actual).getCarimagename1());
+		Assert.assertEquals(expected.getCarimagename2(), ConvertDataUtil.convertJsonObjectToAppCompany(actual).getCarimagename2());
+		Assert.assertEquals(expected.getCarimagename3(), ConvertDataUtil.convertJsonObjectToAppCompany(actual).getCarimagename3());
+		Assert.assertEquals(expected.getCarimagename4(), ConvertDataUtil.convertJsonObjectToAppCompany(actual).getCarimagename4());
+		Assert.assertEquals(expected.getCarimagename5(), ConvertDataUtil.convertJsonObjectToAppCompany(actual).getCarimagename5());
+		Assert.assertEquals(expected.getCarimagename6(), ConvertDataUtil.convertJsonObjectToAppCompany(actual).getCarimagename6());
+		Assert.assertEquals(expected.getCarimagename7(), ConvertDataUtil.convertJsonObjectToAppCompany(actual).getCarimagename7());
+		Assert.assertEquals(expected.getCarimagename8(), ConvertDataUtil.convertJsonObjectToAppCompany(actual).getCarimagename8());
 		Assert.assertEquals(expected.getCars(), ConvertDataUtil.convertJsonObjectToAppCompany(actual).getCars());
 		Assert.assertEquals(expected.getClosingtimefrom(), ConvertDataUtil.convertJsonObjectToAppCompany(actual).getClosingtimefrom());
 		Assert.assertEquals(expected.getClosingtimeto(), ConvertDataUtil.convertJsonObjectToAppCompany(actual).getClosingtimeto());
@@ -592,8 +618,22 @@ public class ConvertDataUtilTest {
 		expected.setJtxcompanyid(Utility.parseInt("teststring"));
 		expected.setAppdisplayname("teststring");
 		expected.setBookingfeedescription("teststring");
-		expected.setCarimagecolor("teststring");
-		expected.setCarimagename("teststring");
+		expected.setCarimagecolor1("teststring");
+		expected.setCarimagecolor2("teststring");
+		expected.setCarimagecolor3("teststring");
+		expected.setCarimagecolor4("teststring");
+		expected.setCarimagecolor5("teststring");
+		expected.setCarimagecolor6("teststring");
+		expected.setCarimagecolor7("teststring");
+		expected.setCarimagecolor8("teststring");
+		expected.setCarimagename1("teststring");
+		expected.setCarimagename2("teststring");
+		expected.setCarimagename3("teststring");
+		expected.setCarimagename4("teststring");
+		expected.setCarimagename5("teststring");
+		expected.setCarimagename6("teststring");
+		expected.setCarimagename7("teststring");
+		expected.setCarimagename8("teststring");
 		expected.setCars(Utility.parseInt("teststring"));
 		expected.setClosingtimefrom(DateTimeUtil.getTimestampFromString("teststring", DateTimeUtil.DATE_TIME_FM));
 		expected.setClosingtimeto(DateTimeUtil.getTimestampFromString("teststring", DateTimeUtil.DATE_TIME_FM));
@@ -648,7 +688,7 @@ public class ConvertDataUtilTest {
 		AppCompany actual = new AppCompany();
 		
 		JsonMapper.readDataSync(Constant.APPCOMPANY);
-		Assert.assertNotEquals(actual, ConvertDataUtil.convertAppCompany2Sync(expected));
+		Assert.assertNotEquals(actual, ConvertDataUtil.convertAppCompany2Sync(expected, true));
 	}
 	
 	@Test
@@ -716,7 +756,7 @@ public class ConvertDataUtilTest {
 		expected.setSyncedtime(Timestamp.valueOf(LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId())));
 		BankAccountInformation actual = new BankAccountInformation();
 		JsonMapper.readDataSync(Constant.BANKACCOUNTINFORMATION);
-		Assert.assertNotEquals(actual, ConvertDataUtil.convertBankAccountInformation2Sync(expected));
+		Assert.assertNotEquals(actual, ConvertDataUtil.convertBankAccountInformation2Sync(expected, true));
 	}
 	
 	@Test
@@ -797,7 +837,7 @@ public class ConvertDataUtilTest {
 		BankMaster expected = new BankMaster();
 		expected.setSyncedtime(Timestamp.valueOf(LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId())));
 		BankMaster actual = new BankMaster();
-		Assert.assertNotEquals(actual, ConvertDataUtil.convertBankMaster2Sync(expected));
+		Assert.assertNotEquals(actual, ConvertDataUtil.convertBankMaster2Sync(expected, true));
 	}
 	
 	@Test
@@ -805,7 +845,7 @@ public class ConvertDataUtilTest {
 		FareTable expected = new FareTable();
 		expected.setSyncedtime(Timestamp.valueOf(LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId())));
 		FareTable actual = new FareTable();
-		Assert.assertNotEquals(actual, ConvertDataUtil.convertFareTable2Sync(expected));
+		Assert.assertNotEquals(actual, ConvertDataUtil.convertFareTable2Sync(expected, true));
 	}
 
 	@Test
@@ -820,7 +860,7 @@ public class ConvertDataUtilTest {
 		expected.setSyncedtime(Timestamp.valueOf(LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId())));
 		PaymentSystemLinkInfor actual = new PaymentSystemLinkInfor();
 		JsonMapper.readDataSync(Constant.PAYMENTSYSTEMLINKINFOR);
-		Assert.assertNotEquals(actual, ConvertDataUtil.convertPaymentSystemLinkInfor2Sync(expected));
+		Assert.assertNotEquals(actual, ConvertDataUtil.convertPaymentSystemLinkInfor2Sync(expected, true));
 	}
 	
 	@Test

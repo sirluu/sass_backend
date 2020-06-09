@@ -55,9 +55,7 @@ public class AppCompanyResponse {
 	private String netPayTypes;
 	private String paymentMethod;
 	private String minutesToWaitForPickUp;
-	private String carImageColor;
-	private String carImageName;
-//	private String logoImage;
+
 	private Integer replyWatingMinute;
 	private Integer groupCompanies;
 	private String communicationUrl;
@@ -89,6 +87,23 @@ public class AppCompanyResponse {
 	private String destinationContactName;
 	private String destinationCompanyName;
 	
+	private String carImageColor1;
+	private String carImageColor2;
+	private String carImageColor3;
+	private String carImageColor4;
+	private String carImageColor5;
+	private String carImageColor6;
+	private String carImageColor7;
+	private String carImageColor8;
+	private String carImageName1;
+	private String carImageName2;
+	private String carImageName3;
+	private String carImageName4;
+	private String carImageName5;
+	private String carImageName6;
+	private String carImageName7;
+	private String carImageName8;
+	
 	@Getter
 	@Setter
 	public static class AppCompanyCoopApproval extends AppCompanyResponse {
@@ -118,6 +133,7 @@ public class AppCompanyResponse {
 		private BankAccountFiels bankAccountbk;
 		private BankAccountFiels bankAccountbk2;
 		private String accountMerTermNo;
+		private String carImage;
 	}
 	
 	@Getter
@@ -154,6 +170,7 @@ public class AppCompanyResponse {
 		private Map<String, Object> fareTable;
 		private HashMap<String, Object> bankAccount;
 		private HashMap<String, Object> bankAccount2;
+		
 	}
 	
 	@Getter
@@ -166,5 +183,16 @@ public class AppCompanyResponse {
 		private String salesPrefecture;
 		private String appDisplayName;
 		private String sfid;
+	}
+	
+	@Getter
+	@Setter
+	public static class AppCompanyApproveFlgChild {
+		private String faretableId;
+		private String bankAccInfo;
+		private String bankmaster;
+		private String bankAccInfo2;
+		private String bankmaster2;
+		private String paymentId;
 	}
 }

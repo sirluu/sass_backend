@@ -10,6 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AppCompanyCoopApprovalBrooklyn {
+
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private String sfid;
 	private Integer jtxCompanyId;
@@ -53,8 +54,12 @@ public class AppCompanyCoopApprovalBrooklyn {
 	private String netPayTypes;
 	private String paymentMethod;
 	private String minutesToWaitForPickUp;
-	private String carImageColor;
-	private String carImageName;
+
+//	private String carImageColor;
+//	private String carImageName;
+
+	private String carImage;
+	
 	private Integer replyWatingMinute;
 	private Integer groupCompanies;
 	private String communicationUrl;

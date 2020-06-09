@@ -10,6 +10,8 @@ public interface PaymentSystemLinkInforMapper {
 
   List<PaymentSystemLinkInfor> getListPaymentSystemLinkInforFromStockholm(ParameterRequest ids);
 
+  List<PaymentSystemLinkInfor> getListPaymentSystemLinkInforSyncFromStockholm(ParameterRequest ids);
+
   List<PaymentSystemLinkInfor> getListPaymentSystemLinkInfor2Sync(ParameterRequest startTime);
 
   List<String> getListPaymentSystemLinkInforIdFromStockholm(ParameterRequest ids);

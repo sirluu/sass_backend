@@ -175,8 +175,10 @@ public class ConvertDataUtil {
     return account;
   }
 
-  public static Account convertAccount2Sync(Account account) {
-    account.setSyncedtime(Timestamp.valueOf(LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId())));
+  public static Account convertAccount2Sync(Account account, boolean sync) {
+    if (sync) {
+      account.setSyncedtime(Timestamp.valueOf(LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId())));
+    }
     return account;
   }
 
@@ -194,13 +196,27 @@ public class ConvertDataUtil {
         jsonObject.get("bookingFeeDescription").toString().replace("{}", "").trim());
     appCompany.setBankaccount(jsonObject.get("bankAccount").toString().replace("{}", "").trim());
     appCompany.setBankaccount2(jsonObject.get("bankAccount2").toString().replace("{}", "").trim());
-    appCompany.setCarimagecolor(jsonObject.get("carImageColor").toString().replace("{}", "").trim());
-    appCompany.setCarimagename(jsonObject.get("carImageName").toString().replace("{}", "").trim());
+    appCompany.setCarimagecolor1(jsonObject.get("carIColor1").toString().replace("{}", "").trim());
+    appCompany.setCarimagecolor2(jsonObject.get("carIColor2").toString().replace("{}", "").trim());
+    appCompany.setCarimagecolor3(jsonObject.get("carIColor3").toString().replace("{}", "").trim());
+    appCompany.setCarimagecolor4(jsonObject.get("carIColor4").toString().replace("{}", "").trim());
+    appCompany.setCarimagecolor5(jsonObject.get("carIColor5").toString().replace("{}", "").trim());
+    appCompany.setCarimagecolor6(jsonObject.get("carIColor6").toString().replace("{}", "").trim());
+    appCompany.setCarimagecolor7(jsonObject.get("carIColor7").toString().replace("{}", "").trim());
+    appCompany.setCarimagecolor8(jsonObject.get("carIColor8").toString().replace("{}", "").trim());
+    appCompany.setCarimagename1(jsonObject.get("carIName1").toString().replace("{}", "").trim());
+    appCompany.setCarimagename2(jsonObject.get("carIName2").toString().replace("{}", "").trim());
+    appCompany.setCarimagename3(jsonObject.get("carIName3").toString().replace("{}", "").trim());
+    appCompany.setCarimagename4(jsonObject.get("carIName4").toString().replace("{}", "").trim());
+    appCompany.setCarimagename5(jsonObject.get("carIName5").toString().replace("{}", "").trim());
+    appCompany.setCarimagename6(jsonObject.get("carIName6").toString().replace("{}", "").trim());
+    appCompany.setCarimagename7(jsonObject.get("carIName7").toString().replace("{}", "").trim());
+    appCompany.setCarimagename8(jsonObject.get("carIName8").toString().replace("{}", "").trim());
     appCompany.setCars(Utility.parseInt(jsonObject.get("cars").toString().replace("{}", "").trim()));
-		appCompany.setClosingtimeto(DateTimeUtil.getTimestampFromString(
-				jsonObject.get("closingTimeTo").toString().replace("{}", "").trim(), DateTimeUtil.TIME_FM_S));
-		appCompany.setClosingtimefrom(DateTimeUtil.getTimestampFromString(
-				jsonObject.get("closingTimeFrom").toString().replace("{}", "").trim(), DateTimeUtil.TIME_FM_S));
+    appCompany.setClosingtimeto(DateTimeUtil.getTimestampFromString(
+        jsonObject.get("closingTimeTo").toString().replace("{}", "").trim(), DateTimeUtil.TIME_FM_S));
+    appCompany.setClosingtimefrom(DateTimeUtil.getTimestampFromString(
+        jsonObject.get("closingTimeFrom").toString().replace("{}", "").trim(), DateTimeUtil.TIME_FM_S));
     appCompany.setCommunicationurl(jsonObject.get("communicationUrl").toString().replace("{}", "").trim());
     appCompany.setCompanylogoimage(jsonObject.get("companyLogoImage").toString().replace("{}", "").trim());
     appCompany.setCompanynameen(jsonObject.get("companyNameEN").toString().replace("{}", "").trim());
@@ -212,25 +228,16 @@ public class ConvertDataUtil {
     appCompany.setDestinationprefecture(jsonObject.get("desPrefec").toString().replace("{}", "").trim());
     appCompany.setDispatchtype(jsonObject.get("dispatchType").toString().replace("{}", "").trim());
     appCompany.setDisplaysalescity(jsonObject.get("displaySalesCity").toString().replace("{}", "").trim());
-    appCompany
-        .setDisplaysalescityen(jsonObject.get("displaySalesCityEN").toString().replace("{}", "").trim());
-
+    appCompany.setDisplaysalescityen(jsonObject.get("displaySalesCityEN").toString().replace("{}", "").trim());
     appCompany.setEmail(jsonObject.get("email").toString().replace("{}", "").trim());
     appCompany.setExtendedfieldmap(jsonObject.get("extendedFieldMap").toString().replace("{}", "").trim());
-
     appCompany.setFaretable(jsonObject.get("fareTable").toString().replace("{}", "").trim());
-
     appCompany.setGloballat(jsonObject.get("globalLat").toString().replace("{}", "").trim());
     appCompany.setGloballng(jsonObject.get("globalLng").toString().replace("{}", "").trim());
-
-    appCompany.setGroupcompanies(
-        Utility.parseInt(jsonObject.get("groupCompanies").toString().replace("{}", "").trim()));
-
-    appCompany.setInvaliddate(
-        DateTimeUtil.getDateFromString(jsonObject.get("invalidDate").toString().replace("{}", "").trim(),
-            DateTimeUtil.DD_FM, DateTimeUtil.TIMEZONE_UTC));
-    appCompany
-        .setInvaliddetailreason(jsonObject.get("invalidDetailReason").toString().replace("{}", "").trim());
+    appCompany.setGroupcompanies(Utility.parseInt(jsonObject.get("groupCompanies").toString().replace("{}", "").trim()));
+    appCompany.setInvaliddate(DateTimeUtil.getDateFromString(jsonObject.get("invalidDate").toString().replace("{}", "").trim(),
+        DateTimeUtil.DD_FM, DateTimeUtil.TIMEZONE_UTC));
+    appCompany.setInvaliddetailreason(jsonObject.get("invalidDetailReason").toString().replace("{}", "").trim());
     appCompany.setInvalidreason(jsonObject.get("invalidReason").toString().replace("{}", "").trim());
     appCompany.setIsenableclosing(
         Utility.parseBoolean(jsonObject.get("isEnableClosing").toString().replace("{}", "").trim()));
@@ -238,47 +245,34 @@ public class ConvertDataUtil {
         Utility.parseBoolean(jsonObject.get("isExternalCancel").toString().replace("{}", "").trim()));
     appCompany.setIsradionumberedit(
         Utility.parseBoolean(jsonObject.get("isRadioNumberEdit").toString().replace("{}", "").trim()));
-
     appCompany.setLogoimage(jsonObject.get("logoImage").toString().replace("{}", "").trim());
-
     appCompany.setMinutestowaitforpickup(
         jsonObject.get("minutesToWaitForPickUp").toString().replace("{}", "").trim());
-
     appCompany.setName(jsonObject.get("name").toString().replace("{}", "").trim());
     appCompany.setNetpaytypes(jsonObject.get("netPayTypes").toString().replace("{}", "").trim());
-
     appCompany.setOrdercancelurl(jsonObject.get("orderCancelUrl").toString().replace("{}", "").trim());
     appCompany.setOrderurl(jsonObject.get("orderUrl").toString().replace("{}", "").trim());
-
-    appCompany.setPartnerapiversion(
-        Utility.parseInt(jsonObject.get("partnerApiVersion").toString().replace("{}", "").trim()));
+    appCompany.setPartnerapiversion(Utility.parseInt(jsonObject.get("partnerApiVersion").toString().replace("{}", "").trim()));
     appCompany.setPaymentmethod(jsonObject.get("paymentMethod").toString().replace("{}", "").trim());
     appCompany.setPaymentmethoden(jsonObject.get("payMethodEN").toString().replace("{}", "").trim());
     appCompany.setPhonenumber(jsonObject.get("phoneNumber").toString().replace("{}", "").trim());
-    appCompany
-        .setPhonenumbercancel(jsonObject.get("phoneNumberCancel").toString().replace("{}", "").trim());
+    appCompany.setPhonenumbercancel(jsonObject.get("phoneNumberCancel").toString().replace("{}", "").trim());
     appCompany.setPickupfeedescription(
         jsonObject.get("pickupFeeDescription").toString().replace("{}", "").trim());
     appCompany.setProfile(jsonObject.get("profile").toString().replace("{}", "").trim());
-
     appCompany.setLastmodifieddate(DateTimeUtil.getTimestampFromString(
         jsonObject.get("lastMDate").toString().replace("{}", "").trim(), DateTimeUtil.DATE_TIME_FM));
-
     appCompany.setRatingaverage(
         Utility.parseFloat(jsonObject.get("ratingAverage").toString().replace("{}", "").trim()));
     appCompany.setReplywatingminute(
         Utility.parseInt(jsonObject.get("replyWatingMinute").toString().replace("{}", "").trim()));
-
     appCompany.setSalescity(jsonObject.get("salesCity").toString().replace("{}", "").trim());
     appCompany.setArea(jsonObject.get("areaId").toString().replace("{}", "").trim());
     appCompany.setAreacode(jsonObject.get("areaCode").toString().replace("{}", "").trim());
     appCompany.setSalesprefecture(jsonObject.get("salesPrefecture").toString().replace("{}", "").trim());
     appCompany.setSalesprefectureen(jsonObject.get("salesPrefeEN").toString().replace("{}", "").trim());
-
-    appCompany.setShowbookingcancel(
-        Utility.parseBoolean(jsonObject.get("showBookingCancel").toString().replace("{}", "").trim()));
-    appCompany
-        .setShowdest(Utility.parseBoolean(jsonObject.get("showDest").toString().replace("{}", "").trim()));
+    appCompany.setShowbookingcancel(Utility.parseBoolean(jsonObject.get("showBookingCancel").toString().replace("{}", "").trim()));
+    appCompany.setShowdest(Utility.parseBoolean(jsonObject.get("showDest").toString().replace("{}", "").trim()));
     appCompany.setShowemptycar(
         Utility.parseBoolean(jsonObject.get("showEmptyCar").toString().replace("{}", "").trim()));
     appCompany.setShowimmediatecancel(
@@ -293,30 +287,25 @@ public class ConvertDataUtil {
     appCompany.setStatus(jsonObject.get("status").toString().replace("{}", "").trim());
     appCompany.setSfid(jsonObject.get("id").toString().replace("{}", "").trim());
     appCompany.setWww(jsonObject.get("www").toString().replace("{}", "").trim());
-    appCompany.setWaitforpickupdefault(
-        Utility.parseInt(jsonObject.get("waitForPickUpDefault").toString().replace("{}", "").trim()));
+    appCompany.setWaitforpickupdefault(Utility.parseInt(jsonObject.get("waitForPickUpDefault").toString().replace("{}", "").trim()));
     appCompany.setWarningemail(jsonObject.get("warningEmail").toString().replace("{}", "").trim());
     appCompany.setDrivercontract(jsonObject.get("driverContract").toString().replace("{}", "").trim());
-	appCompany.setImplementationcosts(
-			Utility.parseInt(jsonObject.get("implementationCosts").toString().replace("{}", "").trim()));
-	appCompany.setMonthlyminimumcars(
-			Utility.parseInt(jsonObject.get("monthlyMinimumCars").toString().replace("{}", "").trim()));
-	appCompany.setMonthlyminimumcharge(
-			Utility.parseInt(jsonObject.get("monthlyMinimumCharge").toString().replace("{}", "").trim()));
-	appCompany.setPayablecommission(
-			Utility.parseInt(jsonObject.get("payableCommission").toString().replace("{}", "").trim()));
+	appCompany.setImplementationcosts(Utility.parseInt(jsonObject.get("implementationCosts").toString().replace("{}", "").trim()));
+	appCompany.setMonthlyminimumcars(Utility.parseInt(jsonObject.get("monthlyMinimumCars").toString().replace("{}", "").trim()));
+	appCompany.setMonthlyminimumcharge(Utility.parseInt(jsonObject.get("monthlyMinimumCharge").toString().replace("{}", "").trim()));
+	appCompany.setPayablecommission(Utility.parseInt(jsonObject.get("payableCommission").toString().replace("{}", "").trim()));
 	appCompany.setRemarks(jsonObject.get("remarks").toString().replace("{}", "").trim());
-	appCompany.setRequestcompanyidrelation(
-			Utility.parseInt(jsonObject.get("requestCompanyIDRelation").toString().replace("{}", "").trim()));
-	appCompany.setRequeststartdate(
-			DateTimeUtil.getDateFromString(jsonObject.get("requestStartDate").toString().replace("{}", "").trim(),
-					DateTimeUtil.DD_FM, DateTimeUtil.TIMEZONE_UTC));
+	appCompany.setRequestcompanyidrelation(Utility.parseInt(jsonObject.get("requestCompanyIDRelation").toString().replace("{}", "").trim()));
+	appCompany.setRequeststartdate(DateTimeUtil.getDateFromString(jsonObject.get("requestStartDate").toString().replace("{}", "").trim(), 
+	    DateTimeUtil.DD_FM, DateTimeUtil.TIMEZONE_UTC));
     return appCompany;
   }
 
-  public static AppCompany convertAppCompany2Sync(AppCompany appCompany) {
-    appCompany
-        .setSyncedtime(Timestamp.valueOf(LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId())));
+  public static AppCompany convertAppCompany2Sync(AppCompany appCompany, boolean sync) {
+    if (sync) {
+      appCompany
+      .setSyncedtime(Timestamp.valueOf(LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId())));
+    }
 
     String key = null;
     JSONObject dispatch = JsonMapper.object.getJSONObject("dispatch");
@@ -376,9 +365,12 @@ public class ConvertDataUtil {
   }
 
   public static BankAccountInformation convertBankAccountInformation2Sync(
-      BankAccountInformation bankAccountInformation) {
-    bankAccountInformation
-        .setSyncedtime(Timestamp.valueOf(LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId())));
+      BankAccountInformation bankAccountInformation, boolean sync) {
+    
+    if (sync) {
+      bankAccountInformation
+      .setSyncedtime(Timestamp.valueOf(LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId())));
+    }
 
     String key = null;
     JSONObject accounttype = JsonMapper.object.getJSONObject("accounttype");
@@ -410,10 +402,11 @@ public class ConvertDataUtil {
     return bankMaster;
   }
 
-  public static BankMaster convertBankMaster2Sync(BankMaster bankMaster) {
-    bankMaster
-        .setSyncedtime(Timestamp.valueOf(LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId())));
-
+  public static BankMaster convertBankMaster2Sync(BankMaster bankMaster, boolean sync) {
+    if (sync) {
+      bankMaster
+      .setSyncedtime(Timestamp.valueOf(LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId())));
+    }
     return bankMaster;
   }
 
@@ -447,9 +440,10 @@ public class ConvertDataUtil {
     return fareTable;
   }
 
-  public static FareTable convertFareTable2Sync(FareTable fareTable) {
-    fareTable.setSyncedtime(Timestamp.valueOf(LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId())));
-
+  public static FareTable convertFareTable2Sync(FareTable fareTable, boolean sync) {
+    if (sync) {
+      fareTable.setSyncedtime(Timestamp.valueOf(LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId())));
+    }
     return fareTable;
   }
 
@@ -492,10 +486,11 @@ public class ConvertDataUtil {
   }
   
   public static PaymentSystemLinkInfor convertPaymentSystemLinkInfor2Sync(
-	      PaymentSystemLinkInfor linkInfor) {
-	    linkInfor.setSyncedtime(Timestamp.valueOf(LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId())));
-
-	    return linkInfor;
+      PaymentSystemLinkInfor linkInfor, boolean sync) {
+    if (sync) {
+      linkInfor.setSyncedtime(Timestamp.valueOf(LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId())));
+    }
+    return linkInfor;
   }
-  
+
 }

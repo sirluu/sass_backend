@@ -11,9 +11,11 @@
 	<select id="getBankMasterById"
 		parameterType="jp.co.japantaxi.model.ParameterRequest"
 		resultType="jp.co.japantaxi.model.BankMaster">
-		SELECT b.sfid, b.name, b.bankname, b.banknamekana, b.bankcode,
+		SELECT b.sfid, b.name, b.bankname, b.banknamekana,
+		b.bankcode,
 		b.branchcode, b.branchname,
-		b.branchnamekana, b.lastmodifieddate
+		b.branchnamekana,
+		b.lastmodifieddate
 		FROM bankmaster b
 		WHERE b.sfid=#{id}
 	</select>
@@ -21,23 +23,40 @@
 	<select id="getListBankMasterFromStockholm"
 		parameterType="jp.co.japantaxi.model.ParameterRequest"
 		resultType="jp.co.japantaxi.model.BankMaster">
-		SELECT b.sfid, b.name, b.bankname, b.banknamekana, b.bankcode,
+		SELECT b.sfid, b.name, b.bankname, b.banknamekana,
+		b.bankcode,
 		b.branchcode, b.branchname,
-		b.branchnamekana, b.lastmodifieddate
+		b.branchnamekana,
+		b.lastmodifieddate
 		FROM bankmaster b
 		WHERE b.sfid IN (${ids})
+		ORDER BY
+		b.sfid DESC
+	</select>
+
+	<select id="getListBankMasterSyncFromStockholm"
+		parameterType="jp.co.japantaxi.model.ParameterRequest"
+		resultType="jp.co.japantaxi.model.BankMaster">
+		SELECT b.sfid, b.name, b.banknamekana, b.branchname,
+		b.branchnamekana, b.bankcode, b.branchcode
+		FROM bankmastersync b
+		WHERE
+		b.sfid IN (${ids})
 		ORDER BY b.sfid DESC
 	</select>
 
 	<select id="getListBankMaster2Sync"
 		parameterType="jp.co.japantaxi.model.ParameterRequest"
 		resultType="jp.co.japantaxi.model.BankMaster">
-		SELECT b.sfid, b.name, b.bankname, b.banknamekana, b.bankcode,
+		SELECT b.sfid, b.name, b.bankname, b.banknamekana,
+		b.bankcode,
 		b.branchcode, b.branchname,
-		b.branchnamekana, b.lastmodifieddate
+		b.branchnamekana,
+		b.lastmodifieddate
 		FROM bankmaster b
 		WHERE(date_trunc('second',b.lastmodifieddate) >=${startTime})
-		ORDER BY b.sfid DESC
+		ORDER BY
+		b.sfid DESC
 	</select>
 
 	<select id="getListBankMasterIdFromStockholm"
@@ -47,16 +66,19 @@
 		WHERE b.sfid IN (${ids})
 		ORDER BY b.sfid DESC
 	</select>
-	
-	<select id="getListBankMasterSyncIdFromStockholm" resultType="java.lang.String">
+
+	<select id="getListBankMasterSyncIdFromStockholm"
+		resultType="java.lang.String">
 		SELECT b.sfid FROM bankmastersync b
 	</select>
 
 	<insert id="insertBankMaster"
 		parameterType="jp.co.japantaxi.model.BankMaster">
 		INSERT INTO bankmaster
-		(sfid, name, bankname, banknamekana,
-		bankcode, branchcode,  branchname, branchnamekana, lastmodifieddate)
+		(sfid, name, bankname,
+		banknamekana,
+		bankcode, branchcode, branchname, branchnamekana,
+		lastmodifieddate)
 		VALUES
 		(#{sfid}, #{name}, #{bankname},
 		#{banknamekana}, #{bankcode}, #{branchcode}, #{branchname},
@@ -83,7 +105,8 @@
 		bankcode, branchcode, branchname, branchnamekana, syncedtime)
 		VALUES
 		(#{sfid}, #{name},
-		#{banknamekana}, #{bankcode}, #{branchcode}, #{branchname},
+		#{banknamekana}, #{bankcode}, #{branchcode},
+		#{branchname},
 		#{branchnamekana}, #{syncedtime})
 	</insert>
 
@@ -98,7 +121,8 @@
 		branchname=#{branchname},
 		branchnamekana=#{branchnamekana},
 		syncedtime=#{syncedtime}
-		WHERE sfid=#{sfid}
+		WHERE
+		sfid=#{sfid}
 	</update>
 
 </mapper>

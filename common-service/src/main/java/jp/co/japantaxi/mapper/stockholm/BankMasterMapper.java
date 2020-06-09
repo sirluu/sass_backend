@@ -10,6 +10,8 @@ public interface BankMasterMapper {
 
   List<BankMaster> getListBankMasterFromStockholm(ParameterRequest ids);
 
+  List<BankMaster> getListBankMasterSyncFromStockholm(ParameterRequest ids);
+
   List<BankMaster> getListBankMaster2Sync(ParameterRequest startTime);
 
   List<String> getListBankMasterIdFromStockholm(ParameterRequest ids);

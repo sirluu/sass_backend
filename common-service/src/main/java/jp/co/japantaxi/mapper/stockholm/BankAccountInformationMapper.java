@@ -13,7 +13,9 @@ public interface BankAccountInformationMapper {
   BankAccountInformation getBankAccountInformationById(ParameterRequest id);
 
   List<BankAccountInformation> getListBankAccountInformationFromStockholm(ParameterRequest ids);
-
+  
+  List<BankAccountInformation> getListBankAccountInformationSyncFromStockholm(ParameterRequest ids);
+  
   List<BankAccountInformation> getListBankAccountInformation2Sync(ParameterRequest startTime);
 
   List<String> getListBankAccountInformationIdFromStockholm(ParameterRequest ids);

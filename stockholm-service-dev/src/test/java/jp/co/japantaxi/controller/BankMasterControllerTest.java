@@ -19,6 +19,7 @@ import jp.co.japantaxi.model.BankAccountInformation;
 import jp.co.japantaxi.model.BankMaster;
 import jp.co.japantaxi.model.BatchStatus;
 import jp.co.japantaxi.model.ParameterRequest;
+import jp.co.japantaxi.utils.Constant;
 import jp.co.japantaxi.utils.DateTimeUtil;
 
 @RunWith(SpringRunner.class)
@@ -95,7 +96,7 @@ public class BankMasterControllerTest {
 	public void test_getListBankMasterFromStockholm() {
 		List<String> list = new ArrayList<>();
 		Mockito.when(cacheManager.getListObjectId("BankMaster")).thenReturn(list);
-		Assert.assertEquals(masterController.getListBankMasterFromStockholm(), list);
+		Assert.assertEquals(masterController.getListBankMasterFromStockholm(Constant.BANKMASTER), list);
 	}
 
 	@Test
@@ -167,7 +168,7 @@ public class BankMasterControllerTest {
 		list.add(bankMaster);
 
 		Assert.assertEquals(list,
-				masterController.getListBankMasterToUpdate(salesForceIds, stockholmIds, sfBankMasterList));
+				masterController.getListBankMasterToUpdate(list, sfBankMasterList));
 	}
 
 	@Test
@@ -223,7 +224,7 @@ public class BankMasterControllerTest {
 	public void test_getListBankAccountInformationFromStockholm() {
 		List<String> list = new ArrayList<>();
 		Mockito.when(cacheManager.getListObjectId("BankAccountInformation")).thenReturn(list);
-		Assert.assertEquals(masterController.getListBankAccountInformationFromStockholm(), list);
+		Assert.assertEquals(masterController.getListBankAccountInformationFromStockholm(Constant.BANKACCOUNTINFORMATION), list);
 	}
 
 	@Test
@@ -300,8 +301,7 @@ public class BankMasterControllerTest {
 		sfBankAccountInformationList.add(accountInformation);
 		list.add(accountInformation);
 
-		Assert.assertEquals(list, masterController.getListBankAccountInformationToUpdate(salesForceIds, stockholmIds,
-				sfBankAccountInformationList));
+		Assert.assertEquals(list, masterController.getListBankAccountInformationToUpdate(list, sfBankAccountInformationList));
 	}
 
 	@Test

@@ -16,6 +16,8 @@ public interface AccountMapper {
 
 	List<Account> getListAccountFromStockholm(ParameterRequest ids);
 
+    List<Account> getListAccountSyncFromStockholm(ParameterRequest ids);
+
 	List<Account> getListAccount2Sync(ParameterRequest startTime);
 
 	List<String> getListAccountIdFromStockholm(ParameterRequest ids);

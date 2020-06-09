@@ -4,22 +4,22 @@ public class Constant {
 
 	public static final String ACCOUNT = "Account";
 	public static final String ACCOUNTSYNC = "AccountSync";
-	
+
 	public static final String APPCOMPANY = "AppCompany";
 	public static final String APPCOMPANYSYNC = "AppCompanySync";
-	
+
 	public static final String BANKMASTER = "BankMaster";
 	public static final String BANKMASTERSYNC = "BankMasterSync";
-	
+
 	public static final String BANKACCOUNTINFORMATION = "BankAccountInformation";
 	public static final String BANKACCOUNTINFORMATIONSYNC = "BankAccountInformationSync";
-	
+
 	public static final String FARETABLE = "FareTable";
 	public static final String FARETABLESYNC = "FareTableSync";
-	
+
 	public static final String PAYMENTSYSTEMLINKINFOR = "PaymentSystemLinkInfor";
 	public static final String PAYMENTSYSTEMLINKINFORSYNC = "PaymentSystemLinkInforSync";
-	
+
 	public static final String FROM_DATETIME = "fromdatetime";
 	public static final String TO_DATETIME = "todatetime";
 	
@@ -32,7 +32,7 @@ public class Constant {
 	public static final String BACK_PRO = "BACK_PRO error convert at table: ";
 	public static final String BACK_REG = "BACK_REG error sync at table: ";
 	
-	public static final int LIMIT = 1000;
+	public static final int LIMIT = 500;
 	
 	public enum PROCESSMODE {
 		GETSF("GETSF"), COREDATECREAT("COREDATECREAT"), CLEAR("CLEAR"), NULL("");
