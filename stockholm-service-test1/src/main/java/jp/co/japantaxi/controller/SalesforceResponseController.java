@@ -67,15 +67,21 @@ public class SalesforceResponseController {
 
   public ParameterRequest parameterRequest(String context) {
     ParameterRequest parameterRequest = new ParameterRequest();
-    List<String> listResponse = cacheManagerConfig.getListObjectId(context);
-    if (!listResponse.isEmpty()) {
-      String ids = "";
-      for (String sfid : listResponse) {
-        ids = ids + "'" + sfid + "',";
+    parameterRequest.setIds("''");
+    List<String> listResponse = new ArrayList<String>();
+    try {
+      listResponse = cacheManagerConfig.getListObjectId(context);
+      if (!listResponse.isEmpty()) {
+        String ids = "";
+        for (String sfid : listResponse) {
+          ids = ids + "'" + sfid + "',";
+        }
+        ids = ids.substring(0, ids.length() - 1);
+        parameterRequest.setIds(ids);
       }
-      ids = ids.substring(0, ids.length() - 1);
-      parameterRequest.setIds(ids);
-    }
+     } catch (Exception e) {
+       LOGGER.info("List Object Id from cache >>> is empty");
+     }
     return parameterRequest;
   }
 

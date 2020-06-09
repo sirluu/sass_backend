@@ -17,6 +17,7 @@ import jp.co.japantaxi.mapper.stockholm.PaymentSystemLinkInforMapper;
 import jp.co.japantaxi.model.BatchStatus;
 import jp.co.japantaxi.model.ParameterRequest;
 import jp.co.japantaxi.model.PaymentSystemLinkInfor;
+import jp.co.japantaxi.utils.Constant;
 import jp.co.japantaxi.utils.DateTimeUtil;
 import jp.co.japantaxi.utils.Utility;
 
@@ -127,7 +128,7 @@ public class PaymentTypeControllerTest {
 	public void test_getListPaymentSystemLinkInforFromStockholm() {
 		List<String> list = new ArrayList<>();
 		Mockito.when(cacheManager.getListObjectId("PaymentSystemLinkInfor")).thenReturn(list);
-		Assert.assertEquals(paymentController.getListPaymentSystemLinkInforFromStockholm(), list);
+		Assert.assertEquals(paymentController.getListPaymentSystemLinkInforFromStockholm(Constant.PAYMENTSYSTEMLINKINFOR), list);
 	}
 
 	@Test
@@ -199,8 +200,7 @@ public class PaymentTypeControllerTest {
 		sfPaymentSystemLinkInforList.add(systemLinkInfor);
 		list.add(systemLinkInfor);
 
-		Assert.assertEquals(list, paymentController.getListPaymentSystemLinkInforToUpdate(salesForceIds, stockholmIds,
-				sfPaymentSystemLinkInforList));
+		Assert.assertEquals(list, paymentController.getListPaymentSystemLinkInforToUpdate(list, sfPaymentSystemLinkInforList));
 	}
 
 	@Test

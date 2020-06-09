@@ -17,6 +17,7 @@ import jp.co.japantaxi.mapper.stockholm.AppCompanyMapper;
 import jp.co.japantaxi.model.AppCompany;
 import jp.co.japantaxi.model.BatchStatus;
 import jp.co.japantaxi.model.ParameterRequest;
+import jp.co.japantaxi.utils.Constant;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = AppCompanyController.class)
@@ -97,7 +98,7 @@ public class AppCompanyControllerTest {
 	public void test_getListAppCompanyFromStockholm() {
 		List<String> list = new ArrayList<>();
 		Mockito.when(cacheManagerConfig.getListObjectId("AppCompany")).thenReturn(list);
-		Assert.assertEquals(companyController.getListAppCompanyFromStockholm(), list);
+		Assert.assertEquals(companyController.getListAppCompanyFromStockholm(Constant.APPCOMPANY), list);
 	}
 
 	@Test
@@ -171,10 +172,10 @@ public class AppCompanyControllerTest {
 		sfAppCompanyList.add(taxiComptactAddress);
 
 		Assert.assertEquals(list.size(),
-				companyController.getListAppCompanyToUpdate(salesForceIds, stockholmIds, sfAppCompanyList).size());
+				companyController.getListAppCompanyToUpdate(list, sfAppCompanyList).size());
 		stockholmIds = new ArrayList<>();
 		Assert.assertEquals(0,
-				companyController.getListAppCompanyToUpdate(salesForceIds, stockholmIds, sfAppCompanyList).size());
+				companyController.getListAppCompanyToUpdate(list, sfAppCompanyList).size());
 	}
 
 	@Test
