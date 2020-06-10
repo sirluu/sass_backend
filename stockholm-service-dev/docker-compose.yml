@@ -13,9 +13,10 @@ services:
     deploy:
       resources:
         limits:
+          cpus: 100m
           memory: 512Mi
-        requests:
-          cpu: 100m
+        reservations:
+          cpus: 100m
           memory: 512Mi
 volumes:
   data:
