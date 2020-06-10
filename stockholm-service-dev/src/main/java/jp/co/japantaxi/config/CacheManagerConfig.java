@@ -130,9 +130,11 @@ public class CacheManagerConfig {
   }
 
   public void clearMap(String context) {
-    setNextPageToken(null);
     setListObjectId(context, null);
     setErrorCode(context, HttpStatus.OK.value());
   }
 
+  public void clearNextPageToken() {
+    setNextPageToken(null);
+  }
 }

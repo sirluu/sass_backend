@@ -61,47 +61,30 @@ public class BankMasterController {
             salesforceResponseController.getListBankMasterFromSalesforce(batchStatus);
         if (!sfBankMasterList.isEmpty()) {
           List<String> sfBankMasterIds = cacheManagerConfig.getListObjectId(Constant.BANKMASTER);
-          List<String> stBankMasterIds = getListBankMasterIdFromStockholm();
+          cacheManagerConfig.clearMap(Constant.BANKMASTER);
+          List<String> stBankMasterIds = getListBankMasterIdFromStockholm(sfBankMasterIds);
           List<BankMaster> bankMasterListToInsert =
               getListBankMasterToInsert(sfBankMasterIds, stBankMasterIds, sfBankMasterList);
+          List<BankMaster> bankMasterListToUpdate =
+              getListBankMasterToUpdate(sfBankMasterIds, stBankMasterIds, sfBankMasterList);
           if (!bankMasterListToInsert.isEmpty()) {
             insertBankMaster(bankMasterListToInsert);
           }
-          ParameterRequest parareq = new ParameterRequest();
-          parareq.setStartTime(Utility.parseString(parameterRequest.getStartTime()));
-          List<BankMaster> stBankMasterList = bankMasterMapper.getListBankMaster2Sync(parareq);
-          int size = stBankMasterList.size();
-          int offset = size / Constant.LIMIT;
-          List<BankMaster> syncList = new ArrayList<BankMaster>();
-          List<BankMaster> bankMasters = new ArrayList<BankMaster>();
-          for (int i = 0; i <= offset; i++) {
-            if (i < offset) {
-              syncList = stBankMasterList.subList(Constant.LIMIT * i, Constant.LIMIT * (i + 1));
-              LOGGER.info("Checking updated data >>> from record {} to record {}", Constant.LIMIT * i,
-                  Constant.LIMIT * (i + 1));
-            } else if (i == offset) {
-              syncList = stBankMasterList.subList(Constant.LIMIT * offset, size);
-              LOGGER.info("Checking updated data >>> from record {} to record {}",
-                  Constant.LIMIT * offset, size);
-            }
-            bankMasters = getListBankMasterToUpdate(sfBankMasterList, syncList);
-            if (!bankMasters.isEmpty()) {
-              updateBankMaster(bankMasters);
-            }
+          if (!bankMasterListToUpdate.isEmpty()) {
+            updateBankMaster(bankMasterListToUpdate);
           }
         }
         String nptk = cacheManagerConfig.getNextPageToken("next_page_token");
         if (nptk != null) {
           getSFBankMaster(parameterRequest, batchStatus);
         }
+        cacheManagerConfig.clearNextPageToken();
       }
     } catch (Exception ex) {
       workerController.commonError(Constant.SF_REG + Constant.BANKMASTER, batchStatus, ex);
-    } finally {
-      cacheManagerConfig.clearMap(Constant.BANKMASTER);
     }
   }
-
+  
   /**
    * @param parameterRequest
    * @param batchStatus
@@ -132,7 +115,7 @@ public class BankMasterController {
                     Constant.BANKMASTER, Constant.BANKMASTERSYNC,
                     Constant.LIMIT * offset, size);
         }
-        objectIds = getListBankMasterIdFromStockholm(syncList);
+        objectIds = Utility.getIdListFromObjetcList(syncList);
         if (objectIds != null) {
           List<String> objectSyncIds = getListBankMasterSyncIdFromStockholm();
           List<BankMaster> objectListToInsert =
@@ -169,52 +152,34 @@ public class BankMasterController {
         if (!sfBankAccountInformationList.isEmpty()) {
           List<String> sfBankAccountInformationIds =
               cacheManagerConfig.getListObjectId(Constant.BANKACCOUNTINFORMATION);
-          List<String> stBankAccountInformationIds = getListBankAccountInformationIdFromStockholm();
+          cacheManagerConfig.clearMap(Constant.BANKACCOUNTINFORMATION);
+          List<String> stBankAccountInformationIds =
+              getListBankAccountInformationIdFromStockholm(sfBankAccountInformationIds);
           List<BankAccountInformation> bankAccountInformationListToInsert =
               getListBankAccountInformationToInsert(sfBankAccountInformationIds,
+                  stBankAccountInformationIds, sfBankAccountInformationList);
+          List<BankAccountInformation> bankAccountInformationListToUpdate =
+              getListBankAccountInformationToUpdate(sfBankAccountInformationIds,
                   stBankAccountInformationIds, sfBankAccountInformationList);
           if (!bankAccountInformationListToInsert.isEmpty()) {
             insertBankAccountInformation(bankAccountInformationListToInsert);
           }
-          ParameterRequest parareq = new ParameterRequest();
-          parareq.setStartTime(Utility.parseString(parameterRequest.getStartTime()));
-          List<BankAccountInformation> stBankAccountInformationList =
-              bankAccountInforMapper.getListBankAccountInformation2Sync(parareq);
-          int size = stBankAccountInformationList.size();
-          int offset = size / Constant.LIMIT;
-          List<BankAccountInformation> syncList = new ArrayList<BankAccountInformation>();
-          List<BankAccountInformation> accountInformations = new ArrayList<BankAccountInformation>();
-          for (int i = 0; i <= offset; i++) {
-            if (i < offset) {
-              syncList =
-                  stBankAccountInformationList.subList(Constant.LIMIT * i, Constant.LIMIT * (i + 1));
-              LOGGER.info("Checking updated data >>> from record {} to record {}", Constant.LIMIT * i,
-                  Constant.LIMIT * (i + 1));
-            } else if (i == offset) {
-              syncList = stBankAccountInformationList.subList(Constant.LIMIT * offset, size);
-              LOGGER.info("Checking updated data >>> from record {} to record {}",
-                  Constant.LIMIT * offset, size);
-            }
-            accountInformations =
-                getListBankAccountInformationToUpdate(sfBankAccountInformationList, syncList);
-            if (!accountInformations.isEmpty()) {
-              updateBankAccountInformation(accountInformations);
-            }
+          if (!bankAccountInformationListToUpdate.isEmpty()) {
+            updateBankAccountInformation(bankAccountInformationListToUpdate);
           }
         }
         String nptk = cacheManagerConfig.getNextPageToken("next_page_token");
         if (nptk != null) {
           getSFBankAccountInformation(parameterRequest, batchStatus);
         }
+        cacheManagerConfig.clearNextPageToken();
       }
     } catch (Exception ex) {
       workerController.commonError(Constant.SF_REG + Constant.BANKACCOUNTINFORMATION, batchStatus,
           ex);
-    } finally {
-      cacheManagerConfig.clearMap(Constant.BANKACCOUNTINFORMATION);
     }
   }
-
+  
   /**
    * @param parameterRequest
    * @param batchStatus
@@ -248,7 +213,7 @@ public class BankMasterController {
                 Constant.BANKACCOUNTINFORMATION, Constant.BANKACCOUNTINFORMATIONSYNC,
                 Constant.LIMIT * offset, size);
           }
-          objectIds = getListBankAccountInformationIdFromStockholm(syncList);
+          objectIds = Utility.getIdListFromObjetcList(syncList);
           if (objectIds != null) {
             List<String> objectSyncIds = getListBankAccountInformationSyncIdFromStockholm();
             List<BankAccountInformation> objectListToInsert =
@@ -297,7 +262,6 @@ public class BankMasterController {
     for (int i = 0; i < bankMasterList.size(); i++) {
       try {
         bankMasterMapper.updateBankMaster(bankMasterList.get(i));
-        LOGGER.info("updateBankMaster >>> " + bankMasterList.get(i).getSfid());
       } catch (Exception e) {
         LOGGER.error(
             Constant.NORMALCODE.E03
@@ -340,7 +304,7 @@ public class BankMasterController {
       try {
         bankMasterMapper
             .updateBankMasterSync(ConvertDataUtil.convertBankMaster2Sync(bankMasterList.get(i), true));
-        LOGGER.info("updateBankMasterSync >>> " + bankMasterList.get(i).getSfid());
+        LOGGER.info("BankMasterSync updating >>> " + bankMasterList.get(i).getSfid());
         worker.setSfid(bankMasterList.get(i).getSfid());
         // Syncテープルに更新場合：承認されたものは未承認変更。（Workerの「syncapproveflg 」に「TRUE」→「FALSE」）
         worker.setSycapproveflg(false);
@@ -355,24 +319,12 @@ public class BankMasterController {
     }
   }
 
-  public List<BankMaster> getListBankMasterFromStockholm(String context) {
-    return bankMasterMapper.getListBankMasterFromStockholm(
-        salesforceResponseController.parameterRequest(context));
+  public List<String> getListBankMasterIdFromStockholm(List<String> objectIds) {
+    ParameterRequest parareq = new ParameterRequest();
+    parareq.setIds(Utility.parseList(objectIds));
+    return bankMasterMapper.getListBankMasterIdFromStockholm(parareq);
   }
-
-  public List<String> getListBankMasterIdFromStockholm() {
-    return bankMasterMapper.getListBankMasterIdFromStockholm(
-        salesforceResponseController.parameterRequest(Constant.BANKMASTER));
-  }
-
-  public List<String> getListBankMasterIdFromStockholm(List<BankMaster> bankMasterList) {
-    List<String> listId = new ArrayList<>();
-    for (int i = 0; i < bankMasterList.size(); i++) {
-      listId.add(bankMasterList.get(i).getSfid());
-    }
-    return listId;
-  }
-
+ 
   public List<String> getListBankMasterSyncIdFromStockholm() {
     return bankMasterMapper.getListBankMasterSyncIdFromStockholm();
   }
@@ -398,23 +350,6 @@ public class BankMasterController {
     return listBankMasterToInsert;
   }
 
-  public List<BankMaster> getListBankMasterToUpdate(
-        List<BankMaster> sfBankMasterList,
-        List<BankMaster> stBankMasterList) {
-    List<String> listIdToUpdate = Utility.compare(sfBankMasterList, stBankMasterList);
-    List<BankMaster> listBankMasterToUpdate = new ArrayList<>();
-    if (!listIdToUpdate.isEmpty()) {
-        for (String sfid : listIdToUpdate) {
-            for (BankMaster bankMaster : sfBankMasterList) {
-                if (bankMaster.getSfid().equalsIgnoreCase(sfid)) {
-                    listBankMasterToUpdate.add(bankMaster);
-                }
-            }
-        }
-    }
-    return listBankMasterToUpdate;
-  }
- 
   public List<BankMaster> getListBankMasterToUpdateSync(
       List<BankMaster> sfBankMasterList,
       List<BankMaster> stBankMasterList) {
@@ -465,7 +400,6 @@ public class BankMasterController {
     for (int i = 0; i < bankAccountInformationList.size(); i++) {
       try {
         bankAccountInforMapper.updateBankAccountInformation(bankAccountInformationList.get(i));
-        LOGGER.info("updateBankAccountInformation >>> " + bankAccountInformationList.get(i).getSfid());
       } catch (Exception e) {
         LOGGER.error(
             Constant.NORMALCODE.E03
@@ -501,7 +435,7 @@ public class BankMasterController {
       try {
         bankAccountInforMapper.updateBankAccountInformationSync(
             ConvertDataUtil.convertBankAccountInformation2Sync(bankAccountInformationList.get(i), true));
-        LOGGER.info("updateBankAccountInformationSync >>> " + bankAccountInformationList.get(i).getSfid());
+        LOGGER.info("BankAccountInformationSync updating >>> " + bankAccountInformationList.get(i).getSfid());
         worker.setSfid(bankAccountInformationList.get(i).getSfid());
         // Syncテープルに更新場合：承認されたものは未承認変更。（Workerの「syncapproveflg」に「TRUE」→「FALSE」）
         worker.setSycapproveflg(false);
@@ -515,23 +449,10 @@ public class BankMasterController {
     }
   }
 
-  public List<BankAccountInformation> getListBankAccountInformationFromStockholm(String context) {
-    return bankAccountInforMapper.getListBankAccountInformationFromStockholm(
-        salesforceResponseController.parameterRequest(context));
-  }
-
-  public List<String> getListBankAccountInformationIdFromStockholm() {
-    return bankAccountInforMapper.getListBankAccountInformationIdFromStockholm(
-        salesforceResponseController.parameterRequest(Constant.BANKACCOUNTINFORMATION));
-  }
-
-  public List<String> getListBankAccountInformationIdFromStockholm(
-      List<BankAccountInformation> bankAccountInforList) {
-    List<String> listId = new ArrayList<>();
-    for (int i = 0; i < bankAccountInforList.size(); i++) {
-      listId.add(bankAccountInforList.get(i).getSfid());
-    }
-    return listId;
+  public List<String> getListBankAccountInformationIdFromStockholm(List<String> objectIds) {
+    ParameterRequest parareq = new ParameterRequest();
+    parareq.setIds(Utility.parseList(objectIds));
+    return bankAccountInforMapper.getListBankAccountInformationIdFromStockholm(parareq);
   }
 
   public List<String> getListBankAccountInformationSyncIdFromStockholm() {
@@ -561,22 +482,44 @@ public class BankMasterController {
   }
 
   public List<BankAccountInformation> getListBankAccountInformationToUpdate(
-        List<BankAccountInformation> sfBankAccInfoList,
-        List<BankAccountInformation> stBankAccInfoList) {
-    List<String> listIdToUpdate = Utility.compare(updateBankAccList(sfBankAccInfoList), updateBankAccList(stBankAccInfoList));
+      List<String> salesForceIds, List<String> stockholmIds,
+      List<BankAccountInformation> sfBankAccountInformationList) {
+    List<String> listIdToUpdate = new ArrayList<>();
+    if (!stockholmIds.isEmpty()) {
+      listIdToUpdate = Utility.intersection(salesForceIds, stockholmIds);
+    }
     List<BankAccountInformation> listBankAccountInformationToUpdate = new ArrayList<>();
     if (!listIdToUpdate.isEmpty()) {
-        for (String sfid : listIdToUpdate) {
-            for (BankAccountInformation bankAccountInformation : sfBankAccInfoList) {
-                if (bankAccountInformation.getSfid().equalsIgnoreCase(sfid)) {
-                    listBankAccountInformationToUpdate.add(bankAccountInformation);
-                }
-            }
+      for (String sfid : listIdToUpdate) {
+        for (BankAccountInformation bankAccountInformation : sfBankAccountInformationList) {
+          if (bankAccountInformation.getSfid().equalsIgnoreCase(sfid)) {
+            listBankAccountInformationToUpdate.add(bankAccountInformation);
+          }
         }
+      }
     }
     return listBankAccountInformationToUpdate;
   }
-
+  
+  public List<BankMaster> getListBankMasterToUpdate(List<String> salesForceIds,
+      List<String> stockholmIds, List<BankMaster> sfBankMasterList) {
+    List<String> listIdToUpdate = new ArrayList<>();
+    if (!stockholmIds.isEmpty()) {
+      listIdToUpdate = Utility.intersection(salesForceIds, stockholmIds);
+    }
+    List<BankMaster> listBankMasterToUpdate = new ArrayList<>();
+    if (!listIdToUpdate.isEmpty()) {
+      for (String sfid : listIdToUpdate) {
+        for (BankMaster bankMaster : sfBankMasterList) {
+          if (bankMaster.getSfid().equalsIgnoreCase(sfid)) {
+            listBankMasterToUpdate.add(bankMaster);
+          }
+        }
+      }
+    }
+    return listBankMasterToUpdate;
+  }
+  
   public List<BankAccountInformation> getListBankAccountInformationToUpdateSync(
       List<BankAccountInformation> sfBankAccInfoList,
       List<BankAccountInformation> stBankAccInfoList) {

@@ -1,17 +1,22 @@
-version: "3"
-
+version: '3'
 services:
-    stockholm-service-dev:
-        restart: always
-        build:
-            context: ./
-            dockerfile: Dockerfile
-        image: stockholm-service-dev
-        ports:
-        - 3102:8888
-        volumes:
-          - ./data/:/var/lib/docker/volumes/data
-
+  stockholm-service-dev:
+    restart: always
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: stockholm-service-dev
+    ports:
+    - 3102:8888
+    volumes:
+    - ./data/:/var/lib/docker/volumes/data
+    deploy:
+      resources:
+        limits:
+          memory: 512Mi
+        requests:
+          cpu: 100m
+          memory: 512Mi
 volumes:
   data:
     external: true

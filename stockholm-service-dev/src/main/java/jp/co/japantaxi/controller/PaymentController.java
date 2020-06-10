@@ -42,13 +42,14 @@ public class PaymentController {
 	@Autowired
 	public PaymentSystemLinkInforMapper linkInforMapper;
 
-	/**
-	 * @param parameterRequest
-	 * @param batchStatus      try catch: BACK_REG
-	 *                         [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）] try catch: Sentry
-	 *                         連携しエラー通知を行う
-	 */
-	public void getSFPaymentSystemLinkInfor(ParameterRequest parameterRequest, BatchStatus batchStatus) {
+    /**
+     * @param parameterRequest
+     * @param batchStatus 
+     * try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）]
+     * try catch: Sentry 連携しエラー通知を行う
+     */
+    public void getSFPaymentSystemLinkInfor(ParameterRequest parameterRequest,
+        BatchStatus batchStatus) {
       try {
         int error = cacheManagerConfig.getErrorCode(Constant.PAYMENTSYSTEMLINKINFOR.toLowerCase());
         if (Constant.checkError(error) == null) {
@@ -57,59 +58,40 @@ public class PaymentController {
           if (!sfPaymentSystemLinkInforList.isEmpty()) {
             List<String> sfPaymentSystemLinkInforIds =
                 cacheManagerConfig.getListObjectId(Constant.PAYMENTSYSTEMLINKINFOR);
+            cacheManagerConfig.clearMap(Constant.PAYMENTSYSTEMLINKINFOR);
             List<String> stPaymentSystemLinkInforIds =
-                getListPaymentSystemLinkInforIdFromStockholm();
+                getListPaymentSystemLinkInforIdFromStockholm(sfPaymentSystemLinkInforIds);
             List<PaymentSystemLinkInfor> linkInforsToInsert =
                 getListPaymentSystemLinkInforToInsert(sfPaymentSystemLinkInforIds,
+                    stPaymentSystemLinkInforIds, sfPaymentSystemLinkInforList);
+            List<PaymentSystemLinkInfor> linkInforsToUpdate =
+                getListPaymentSystemLinkInforToUpdate(sfPaymentSystemLinkInforIds,
                     stPaymentSystemLinkInforIds, sfPaymentSystemLinkInforList);
             if (!linkInforsToInsert.isEmpty()) {
               insertPaymentSystemLinkInfor(linkInforsToInsert);
             }
-            ParameterRequest parareq = new ParameterRequest();
-            parareq.setStartTime(Utility.parseString(parameterRequest.getStartTime()));
-            List<PaymentSystemLinkInfor> stPaymentSystemLinkInforList =
-                linkInforMapper.getListPaymentSystemLinkInfor2Sync(parareq);
-            int size = stPaymentSystemLinkInforList.size();
-            int offset = size / Constant.LIMIT;
-            List<PaymentSystemLinkInfor> syncList = new ArrayList<PaymentSystemLinkInfor>();
-            List<PaymentSystemLinkInfor> linkInfors = new ArrayList<PaymentSystemLinkInfor>();
-            for (int i = 0; i <= offset; i++) {
-              if (i < offset) {
-                syncList = stPaymentSystemLinkInforList.subList(Constant.LIMIT * i,
-                    Constant.LIMIT * (i + 1));
-                LOGGER.info("Checking updated data >>> from record {} to record {}",
-                    Constant.LIMIT * i, Constant.LIMIT * (i + 1));
-              } else if (i == offset) {
-                syncList = stPaymentSystemLinkInforList.subList(Constant.LIMIT * offset, size);
-                LOGGER.info("Checking updated data >>> from record {} to record {}",
-                    Constant.LIMIT * offset, size);
-              }
-              linkInfors =
-                  getListPaymentSystemLinkInforToUpdate(sfPaymentSystemLinkInforList, syncList);
-              if (!linkInfors.isEmpty()) {
-                updatePaymentSystemLinkInfor(linkInfors);
-              }
+            if (!linkInforsToUpdate.isEmpty()) {
+              updatePaymentSystemLinkInfor(linkInforsToUpdate);
             }
           }
           String nptk = cacheManagerConfig.getNextPageToken("next_page_token");
           if (nptk != null) {
             getSFPaymentSystemLinkInfor(parameterRequest, batchStatus);
           }
+          cacheManagerConfig.clearNextPageToken();
         }
       } catch (Exception ex) {
         workerController.commonError(Constant.SF_REG + Constant.PAYMENTSYSTEMLINKINFOR, batchStatus,
             ex);
-      } finally {
-        cacheManagerConfig.clearMap(Constant.PAYMENTSYSTEMLINKINFOR);
       }
-	}
-
-	/**
-	 * @param parameterRequest
-	 * @param batchStatus      try catch: BACK_REG
-	 *                         [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）] try catch: Sentry
-	 *                         連携しエラー通知を行う
-	 */
+    }
+	  
+  /**
+   * @param parameterRequest
+   * @param batchStatus
+   * try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）] 
+   * try catch: Sentry 連携しエラー通知を行う
+   */
 	public void coreDateCreatPaymentSystemLinkInfor(ParameterRequest parameterRequest, BatchStatus batchStatus) {
       try {
         ParameterRequest parareq = new ParameterRequest();
@@ -137,7 +119,7 @@ public class PaymentController {
                 Constant.PAYMENTSYSTEMLINKINFOR, Constant.PAYMENTSYSTEMLINKINFORSYNC,
                 Constant.LIMIT * offset, size);
           }
-          objectIds = getListPaymentSystemLinkInforIdFromStockholm(syncList);
+          objectIds = Utility.getIdListFromObjetcList(syncList);
           if (objectIds != null) {
             List<String> objectSyncIds = getListPaymentSystemLinkInforSyncIdFromStockholm();
             List<PaymentSystemLinkInfor> objectListToInsert =
@@ -154,8 +136,7 @@ public class PaymentController {
           }
         }
       } catch (Exception ex) {
-        workerController.commonError(Constant.BACK_REG + Constant.PAYMENTSYSTEMLINKINFORSYNC,
-            batchStatus, ex);
+        workerController.commonError(Constant.BACK_REG + Constant.PAYMENTSYSTEMLINKINFORSYNC, batchStatus, ex);
       }
 	}
 
@@ -184,7 +165,6 @@ public class PaymentController {
 		for (int i = 0; i < linkInfors.size(); i++) {
 			try {
 				linkInforMapper.updatePaymentSystemLinkInfor(linkInfors.get(i));
-		        LOGGER.info("updatePaymentSystemLinkInfor >>> " + linkInfors.get(i).getSfid());
 			} catch (Exception e) {
 				LOGGER.error(
 						Constant.NORMALCODE.E03
@@ -225,7 +205,7 @@ public class PaymentController {
 			try {
 				linkInforMapper.updatePaymentSystemLinkInforSync(
 						ConvertDataUtil.convertPaymentSystemLinkInfor2Sync(linkInfors.get(i), true));
-		        LOGGER.info("updatePaymentSystemLinkInforSync >>> " + linkInfors.get(i).getSfid());
+		        LOGGER.info("PaymentSystemLinkInforSync updating >>> " + linkInfors.get(i).getSfid());
 				worker.setSfid(linkInfors.get(i).getSfid());
 				// Syncテープルに更新場合：承認されたものは未承認変更。（Workerの「sycapproveflg」に「TRUE」→「FALSE」）
 				worker.setSycapproveflg(false);
@@ -240,23 +220,11 @@ public class PaymentController {
 		}
 	}
 
-	public List<PaymentSystemLinkInfor> getListPaymentSystemLinkInforFromStockholm(String context) {
-		return linkInforMapper
-				.getListPaymentSystemLinkInforFromStockholm(salesforceResponseController.parameterRequest(context));
-	}
-
-	public List<String> getListPaymentSystemLinkInforIdFromStockholm() {
-		return linkInforMapper.getListPaymentSystemLinkInforIdFromStockholm(
-				salesforceResponseController.parameterRequest(Constant.PAYMENTSYSTEMLINKINFOR));
-	}
-
-	public List<String> getListPaymentSystemLinkInforIdFromStockholm(List<PaymentSystemLinkInfor> linkInforList) {
-		List<String> listId = new ArrayList<>();
-		for (int i = 0; i < linkInforList.size(); i++) {
-			listId.add(linkInforList.get(i).getSfid());
-		}
-		return listId;
-	}
+    public List<String> getListPaymentSystemLinkInforIdFromStockholm(List<String> objectIds) {
+      ParameterRequest parareq = new ParameterRequest();
+      parareq.setIds(Utility.parseList(objectIds));
+      return linkInforMapper.getListPaymentSystemLinkInforIdFromStockholm(parareq);
+    }
 
 	public List<String> getListPaymentSystemLinkInforSyncIdFromStockholm() {
 		return linkInforMapper.getListPaymentSystemLinkInforSyncIdFromStockholm();
@@ -283,23 +251,26 @@ public class PaymentController {
 		return listPaymentSystemLinkInforToInsert;
 	}
 
-	public List<PaymentSystemLinkInfor> getListPaymentSystemLinkInforToUpdate(
-			List<PaymentSystemLinkInfor> sfLinkInforList,
-			List<PaymentSystemLinkInfor> stLinkInforList) {
-		List<String> listIdToUpdate = Utility.compare(sfLinkInforList, stLinkInforList);
-		List<PaymentSystemLinkInfor> listLinkInforToUpdate = new ArrayList<>();
-		if (!listIdToUpdate.isEmpty()) {
-			for (String sfid : listIdToUpdate) {
-				for (PaymentSystemLinkInfor linkInfor : sfLinkInforList) {
-					if (linkInfor.getSfid().equalsIgnoreCase(sfid)) {
-						listLinkInforToUpdate.add(linkInfor);
-					}
-				}
-			}
-		}
-		return listLinkInforToUpdate;
-	}
-
+    public List<PaymentSystemLinkInfor> getListPaymentSystemLinkInforToUpdate(
+        List<String> salesForceIds, List<String> stockholmIds,
+        List<PaymentSystemLinkInfor> sfPaymentSystemLinkInforList) {
+      List<String> listIdToUpdate = new ArrayList<>();
+      if (!stockholmIds.isEmpty()) {
+        listIdToUpdate = Utility.intersection(salesForceIds, stockholmIds);
+      }
+      List<PaymentSystemLinkInfor> listPaymentSystemLinkInforToUpdate = new ArrayList<>();
+      if (!listIdToUpdate.isEmpty()) {
+        for (String sfid : listIdToUpdate) {
+          for (PaymentSystemLinkInfor linkInfor : sfPaymentSystemLinkInforList) {
+            if (linkInfor.getSfid().equalsIgnoreCase(sfid)) {
+              listPaymentSystemLinkInforToUpdate.add(linkInfor);
+            }
+          }
+        }
+      }
+      return listPaymentSystemLinkInforToUpdate;
+    }
+	  
     public List<PaymentSystemLinkInfor> getListPaymentSystemLinkInforToUpdateSync(
         List<PaymentSystemLinkInfor> sflinkInforList, List<PaymentSystemLinkInfor> stlinkInforList) {
       List<String> listIdToUpdate =

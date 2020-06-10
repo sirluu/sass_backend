@@ -32,7 +32,7 @@ public class Constant {
 	public static final String BACK_PRO = "BACK_PRO error convert at table: ";
 	public static final String BACK_REG = "BACK_REG error sync at table: ";
 	
-	public static final int LIMIT = 500;
+	public static final int LIMIT = 100;
 	
 	public enum PROCESSMODE {
 		GETSF("GETSF"), COREDATECREAT("COREDATECREAT"), CLEAR("CLEAR"), NULL("");

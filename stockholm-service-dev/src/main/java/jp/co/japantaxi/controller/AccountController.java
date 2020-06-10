@@ -52,57 +52,40 @@ public class AccountController {
    * try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）]
    * try catch: Sentry 連携しエラー通知を行う
    */
-  public void getSFAccount(ParameterRequest parameterRequest, BatchStatus batchStatus) {
-    try {
-      int error = cacheManagerConfig.getErrorCode(Constant.ACCOUNT.toLowerCase());
-      if (Constant.checkError(error) == null) {
-        //①SalesfoceAPIをコールして上記オブジェクト情報を取得する
-        List<Account> sfAccountList =
-            salesforceResponseController.getListAccountFromSalesforce(batchStatus);
-        //③API取得に成功した情報をDBに登録、更新する
-        if (!sfAccountList.isEmpty()) {
-          List<String> sfAccIds = cacheManagerConfig.getListObjectId(Constant.ACCOUNT);
-          List<String> stAccIds = getListAccountIdFromStockholm();
-          List<Account> accountListToInsert =
-              getListAccountToInsert(sfAccIds, stAccIds, sfAccountList);
-          if (!accountListToInsert.isEmpty()) {
-            insertAccount(accountListToInsert);
-          }
-          ParameterRequest parareq = new ParameterRequest();
-          parareq.setStartTime(Utility.parseString(parameterRequest.getStartTime()));
-          List<Account> stAccountList = accountMapper.getListAccount2Sync(parareq);
-          int size = stAccountList.size();
-          int offset = size / Constant.LIMIT;
-          List<Account> syncList = new ArrayList<Account>();
-          List<Account> accountListToUpdate = new ArrayList<Account>();
-          for (int i = 0; i <= offset; i++) {
-            if (i < offset) {
-              syncList = stAccountList.subList(Constant.LIMIT * i, Constant.LIMIT * (i + 1));
-              LOGGER.info("Checking updated data >>> from record {} to record {}", Constant.LIMIT * i,
-                  Constant.LIMIT * (i + 1));
-            } else if (i == offset) {
-              syncList = stAccountList.subList(Constant.LIMIT * offset, size);
-              LOGGER.info("Checking updated data >>> from record {} to record {}",
-                  Constant.LIMIT * offset, size);
+    public void getSFAccount(ParameterRequest parameterRequest, BatchStatus batchStatus) {
+      try {
+        int error = cacheManagerConfig.getErrorCode(Constant.ACCOUNT.toLowerCase());
+        if (Constant.checkError(error) == null) {
+          // ①SalesfoceAPIをコールして上記オブジェクト情報を取得する
+          List<Account> sfAccountList =
+              salesforceResponseController.getListAccountFromSalesforce(batchStatus);
+          // ③API取得に成功した情報をDBに登録、更新する
+          if (!sfAccountList.isEmpty()) {
+            List<String> sfAccIds = cacheManagerConfig.getListObjectId(Constant.ACCOUNT);
+            cacheManagerConfig.clearMap(Constant.ACCOUNT);
+            List<String> stAccIds = getListAccountIdFromStockholm(sfAccIds);
+            List<Account> accountListToInsert =
+                getListAccountToInsert(sfAccIds, stAccIds, sfAccountList);
+            List<Account> accountListToUpdate =
+                getListAccountToUpdate(sfAccIds, stAccIds, sfAccountList);
+            if (!accountListToInsert.isEmpty()) {
+              insertAccount(accountListToInsert);
             }
-            accountListToUpdate = getListAccountToUpdate(sfAccountList, syncList);
             if (!accountListToUpdate.isEmpty()) {
               updateAccount(accountListToUpdate);
             }
           }
+          String nptk = cacheManagerConfig.getNextPageToken("next_page_token");
+          if (nptk != null) {
+            getSFAccount(parameterRequest, batchStatus);
+          }
+          cacheManagerConfig.clearNextPageToken();
         }
-        String nptk = cacheManagerConfig.getNextPageToken("next_page_token");
-        if (nptk != null) {
-          getSFAccount(parameterRequest, batchStatus);
-        }
+      } catch (Exception ex) {
+        workerController.commonError(Constant.SF_REG + Constant.ACCOUNT, batchStatus, ex);
       }
-    } catch (Exception ex) {
-      workerController.commonError(Constant.SF_REG + Constant.ACCOUNT, batchStatus, ex);
-    } finally {
-      cacheManagerConfig.clearMap(Constant.ACCOUNT);
     }
-  }
-
+  
   /**
    * @param parameterRequest
    * @param batchStatus
@@ -133,7 +116,7 @@ public class AccountController {
       				Constant.ACCOUNT, Constant.ACCOUNTSYNC,
       				Constant.LIMIT * offset, size);
       	}
-        objectIds = getListAccountIdFromStockholm(syncList);
+        objectIds = Utility.getIdListFromObjetcList(syncList);
         if (objectIds != null) {
           List<String> objectSyncIds = getListAccountSyncIdFromStockholm();
           List<Account> objectListToInsert =
@@ -168,47 +151,30 @@ public class AccountController {
             salesforceResponseController.getListFareTableFromSalesforce(batchStatus);
         if (!sfFareTableList.isEmpty()) {
           List<String> sfFareTableIds = cacheManagerConfig.getListObjectId(Constant.FARETABLE);
-          List<String> stFareTableIds = getListFareTableIdFromStockholm();
+          cacheManagerConfig.clearMap(Constant.FARETABLE);
+          List<String> stFareTableIds = getListFareTableIdFromStockholm(sfFareTableIds);
           List<FareTable> fareTableListToInsert =
               getListFareTableToInsert(sfFareTableIds, stFareTableIds, sfFareTableList);
+          List<FareTable> faretableListToUpdate =
+              getListFareTableToUpdate(sfFareTableIds, stFareTableIds, sfFareTableList);
           if (!fareTableListToInsert.isEmpty()) {
             insertFareTable(fareTableListToInsert);
           }
-          ParameterRequest parareq = new ParameterRequest();
-          parareq.setStartTime(Utility.parseString(parameterRequest.getStartTime()));
-          List<FareTable> stFareTableList = fareTableMapper.getListFareTable2Sync(parareq);
-          int size = stFareTableList.size();
-          int offset = size / Constant.LIMIT;
-          List<FareTable> syncList = new ArrayList<FareTable>();
-          List<FareTable> fareTables = new ArrayList<FareTable>();
-          for (int i = 0; i <= offset; i++) {
-            if (i < offset) {
-              syncList = stFareTableList.subList(Constant.LIMIT * i, Constant.LIMIT * (i + 1));
-              LOGGER.info("Checking updated data >>> from record {} to record {}", Constant.LIMIT * i,
-                  Constant.LIMIT * (i + 1));
-            } else if (i == offset) {
-              syncList = stFareTableList.subList(Constant.LIMIT * offset, size);
-              LOGGER.info("Checking updated data >>> from record {} to record {}",
-                  Constant.LIMIT * offset, size);
-            }
-            fareTables = getListFareTableToUpdate(sfFareTableList, syncList);
-            if (!fareTables.isEmpty()) {
-              updateFareTable(fareTables);
-            }
+          if (!faretableListToUpdate.isEmpty()) {
+            updateFareTable(faretableListToUpdate);
           }
         }
         String nptk = cacheManagerConfig.getNextPageToken("next_page_token");
         if (nptk != null) {
           getSFFareTable(parameterRequest, batchStatus);
         }
+        cacheManagerConfig.clearNextPageToken();
       }
     } catch (Exception ex) {
       workerController.commonError(Constant.SF_REG + Constant.FARETABLE, batchStatus, ex);
-    } finally {
-      cacheManagerConfig.clearMap(Constant.FARETABLE);
     }
   }
-
+    
   /**
    * @param parameterRequest
    * @param batchStatus
@@ -239,7 +205,7 @@ public class AccountController {
       				Constant.FARETABLE, Constant.FARETABLESYNC,
       				Constant.LIMIT * offset, size);
       	}
-      	objectIds = getListFareTableIdFromStockholm(syncList);
+      	objectIds = Utility.getIdListFromObjetcList(syncList);
         if (objectIds != null) {
           List<String> objectSyncIds = getListFareTableSyncIdFromStockholm();
           List<FareTable> objectListToInsert =
@@ -287,7 +253,6 @@ public class AccountController {
     for (int i = 0; i < fareTableList.size(); i++) {
       try {
         fareTableMapper.updateFareTable(fareTableList.get(i));
-        LOGGER.info("updateFareTable >>> " + fareTableList.get(i).getSfid());
       } catch (Exception e) {
         LOGGER.error(
             Constant.NORMALCODE.E03
@@ -330,7 +295,7 @@ public class AccountController {
       try {
         fareTableMapper
             .updateFareTableSync(ConvertDataUtil.convertFareTable2Sync(fareTableList.get(i), true));
-        LOGGER.info("updateFareTableSync >>> " + fareTableList.get(i).getSfid());
+        LOGGER.info("FareTableSync updating >>> " + fareTableList.get(i).getSfid());
         worker.setSfid(fareTableList.get(i).getSfid());
         // Syncテープルに更新場合：承認されたものは未承認変更。（Workerの「sycapproveflg」に「TRUE」→「FALSE」）
         worker.setSycapproveflg(false);
@@ -345,22 +310,10 @@ public class AccountController {
     }
   }
 
-  public List<FareTable> getListFareTableFromStockholm(String context) {
-    return fareTableMapper.getListFareTableFromStockholm(
-        salesforceResponseController.parameterRequest(context));
-  }
-
-  public List<String> getListFareTableIdFromStockholm() {
-    return fareTableMapper.getListFareTableIdFromStockholm(
-        salesforceResponseController.parameterRequest(Constant.FARETABLE));
-  }
-
-  public List<String> getListFareTableIdFromStockholm(List<FareTable> fareTableList) {
-    List<String> listId = new ArrayList<>();
-    for (int i = 0; i < fareTableList.size(); i++) {
-      listId.add(fareTableList.get(i).getSfid());
-    }
-    return listId;
+  public List<String> getListFareTableIdFromStockholm(List<String> objectIds) {
+    ParameterRequest parareq = new ParameterRequest();
+    parareq.setIds(Utility.parseList(objectIds));
+    return fareTableMapper.getListFareTableIdFromStockholm(parareq);
   }
 
   public List<String> getListFareTableSyncIdFromStockholm() {
@@ -388,8 +341,12 @@ public class AccountController {
     return listFareTableToInsert;
   }
 
-  public List<FareTable> getListFareTableToUpdate(List<FareTable> sfFareTableList, List<FareTable> stFareTableList) {
-    List<String> listIdToUpdate = Utility.compare(sfFareTableList, stFareTableList);
+  public List<FareTable> getListFareTableToUpdate(List<String> salesForceIds,
+      List<String> stockholmIds, List<FareTable> sfFareTableList) {
+    List<String> listIdToUpdate = new ArrayList<>();
+    if (!stockholmIds.isEmpty()) {
+      listIdToUpdate = Utility.intersection(salesForceIds, stockholmIds);
+    }
     List<FareTable> listFareTableToUpdate = new ArrayList<>();
     if (!listIdToUpdate.isEmpty()) {
       for (String sfid : listIdToUpdate) {
@@ -402,7 +359,7 @@ public class AccountController {
     }
     return listFareTableToUpdate;
   }
-
+  
   public List<FareTable> getListFareTableToUpdateSync(
       List<FareTable> sfFareTableList,
       List<FareTable> stFareTableList) {
@@ -459,7 +416,6 @@ public class AccountController {
     for (int i = 0; i < accountList.size(); i++) {
       try {
         accountMapper.updateAccount(accountList.get(i));
-        LOGGER.info("updateAccount >>> " + accountList.get(i).getSfid());
       } catch (Exception e) {
         LOGGER.error(
             Constant.NORMALCODE.E03
@@ -500,7 +456,7 @@ public class AccountController {
     for (int i = 0; i < accountList.size(); i++) {
       try {
         accountMapper.updateAccountSync(ConvertDataUtil.convertAccount2Sync(accountList.get(i), true));
-        LOGGER.info("updateAccountSync >>> " + accountList.get(i).getSfid());
+        LOGGER.info("AccountSync updating >>> " + accountList.get(i).getSfid());
         worker.setSfid(accountList.get(i).getSfid());
         // Syncテープルに更新場合：承認されたものは未承認変更。（Workerの「sycapproveflg」に「TRUE」→「FALSE」）
         worker.setSycapproveflg(false);
@@ -515,22 +471,10 @@ public class AccountController {
     }
   }
 
-  public List<Account> getListAccountFromStockholm(String context) {
-    return accountMapper.getListAccountFromStockholm(
-        salesforceResponseController.parameterRequest(context));
-  }
-
-  public List<String> getListAccountIdFromStockholm() {
-    return accountMapper.getListAccountIdFromStockholm(
-        salesforceResponseController.parameterRequest(Constant.ACCOUNT));
-  }
-
-  public List<String> getListAccountIdFromStockholm(List<Account> accountList) {
-    List<String> listId = new ArrayList<>();
-    for (int i = 0; i < accountList.size(); i++) {
-      listId.add(accountList.get(i).getSfid());
-    }
-    return listId;
+  public List<String> getListAccountIdFromStockholm(List<String> objectIds) {
+    ParameterRequest parareq = new ParameterRequest();
+    parareq.setIds(Utility.parseList(objectIds));
+    return accountMapper.getListAccountIdFromStockholm(parareq);
   }
 
   public List<String> getListAccountSyncIdFromStockholm() {
@@ -558,8 +502,12 @@ public class AccountController {
     return listAccountToInsert;
   }
 
-  public List<Account> getListAccountToUpdate(List<Account> sfAccountList, List<Account> stAccountList) {
-    List<String> listIdToUpdate = Utility.compare(updateAccList(sfAccountList), updateAccList(stAccountList));
+  public List<Account> getListAccountToUpdate(List<String> salesForceIds, List<String> stockholmIds,
+      List<Account> sfAccountList) {
+    List<String> listIdToUpdate = new ArrayList<>();
+    if (!stockholmIds.isEmpty()) {
+      listIdToUpdate = Utility.intersection(salesForceIds, stockholmIds);
+    }
     List<Account> listAccountToUpdate = new ArrayList<>();
     if (!listIdToUpdate.isEmpty()) {
       for (String sfid : listIdToUpdate) {
@@ -572,7 +520,7 @@ public class AccountController {
     }
     return listAccountToUpdate;
   }
-
+  
   public List<Account> getListAccountToUpdateSync(
       List<Account> sfAccountList,
       List<Account> stAccountList) {

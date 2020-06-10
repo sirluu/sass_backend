@@ -6,7 +6,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -19,7 +18,6 @@ import jp.co.japantaxi.model.BankAccountInformation;
 import jp.co.japantaxi.model.BankMaster;
 import jp.co.japantaxi.model.BatchStatus;
 import jp.co.japantaxi.model.ParameterRequest;
-import jp.co.japantaxi.utils.Constant;
 import jp.co.japantaxi.utils.DateTimeUtil;
 
 @RunWith(SpringRunner.class)
@@ -93,19 +91,10 @@ public class BankMasterControllerTest {
 	}
 
 	@Test
-	public void test_getListBankMasterFromStockholm() {
-		List<String> list = new ArrayList<>();
-		Mockito.when(cacheManager.getListObjectId("BankMaster")).thenReturn(list);
-		Assert.assertEquals(masterController.getListBankMasterFromStockholm(Constant.BANKMASTER), list);
-	}
-
-	@Test
 	public void test_getListBankMasterIdFromStockholm() {
-		List<BankMaster> list = new ArrayList<>();
-		BankMaster add = new BankMaster();
-		add.setSfid("1");
-		list.add(add);
-		masterController.getListBankMasterIdFromStockholm();
+        List<String> list = new ArrayList<>();
+        list.add("1");
+        list.add("2");
 		masterController.getListBankMasterIdFromStockholm(list);
 	}
 
@@ -168,7 +157,7 @@ public class BankMasterControllerTest {
 		list.add(bankMaster);
 
 		Assert.assertEquals(list,
-				masterController.getListBankMasterToUpdate(list, sfBankMasterList));
+				masterController.getListBankMasterToUpdate(salesForceIds, stockholmIds, sfBankMasterList));
 	}
 
 	@Test
@@ -221,21 +210,12 @@ public class BankMasterControllerTest {
 	}
 
 	@Test
-	public void test_getListBankAccountInformationFromStockholm() {
-		List<String> list = new ArrayList<>();
-		Mockito.when(cacheManager.getListObjectId("BankAccountInformation")).thenReturn(list);
-		Assert.assertEquals(masterController.getListBankAccountInformationFromStockholm(Constant.BANKACCOUNTINFORMATION), list);
-	}
-
-	@Test
 	public void test_getListBankAccountInformationIdFromStockholm() {
-		List<BankAccountInformation> list = new ArrayList<>();
-		BankAccountInformation add = new BankAccountInformation();
-		add.setSfid("1");
-		list.add(add);
-		masterController.getListBankAccountInformationIdFromStockholm();
-		masterController.getListBankAccountInformationIdFromStockholm(list);
-	}
+      List<String> list = new ArrayList<>();
+      list.add("1");
+      list.add("2");
+      masterController.getListBankAccountInformationIdFromStockholm(list);
+    }
 
 	@Test
 	public void test_getListBankAccountInformationToInsert() {
@@ -301,7 +281,7 @@ public class BankMasterControllerTest {
 		sfBankAccountInformationList.add(accountInformation);
 		list.add(accountInformation);
 
-		Assert.assertEquals(list, masterController.getListBankAccountInformationToUpdate(list, sfBankAccountInformationList));
+		Assert.assertEquals(list, masterController.getListBankAccountInformationToUpdate(salesForceIds, stockholmIds, sfBankAccountInformationList));
 	}
 
 	@Test

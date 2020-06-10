@@ -1,8 +1,5 @@
 package jp.co.japantaxi.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -10,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
-
 import jp.co.japantaxi.config.CacheManagerConfig;
 import jp.co.japantaxi.model.BatchStatus;
 import jp.co.japantaxi.model.ParameterRequest;
@@ -40,15 +36,6 @@ public class SalesforceResponseControllerTest {
 
 	@Autowired
 	private CacheManagerConfig cacheManagerConfig;
-
-	@Test
-	public void test_parameterrequest() {
-		List<String> ids = new ArrayList<String>();
-		ids.add("1");
-		ids.add("2");
-		cacheManagerConfig.setListObjectId("context", ids);
-		salesforceResponseController.parameterRequest("context");
-	}
 
 	public void test_callsalesforce() {
 		BatchStatus batchStatus = BatchControllerTest.getBatchControl();

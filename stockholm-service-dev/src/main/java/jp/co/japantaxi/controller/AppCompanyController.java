@@ -56,47 +56,30 @@ public class AppCompanyController {
             salesforceResponseController.getListAppCompanyFromSalesforce(batchStatus);
         if (!sfAppCompanyList.isEmpty()) {
           List<String> sfAppCompanyIds = cacheManagerConfig.getListObjectId(Constant.APPCOMPANY);
-          List<String> stAppCompanyIds = getListAppCompanyIdFromStockholm();
+          cacheManagerConfig.clearMap(Constant.APPCOMPANY);
+          List<String> stAppCompanyIds = getListAppCompanyIdFromStockholm(sfAppCompanyIds);
           List<AppCompany> appCompanysToInsert =
               getListAppCompanyToInsert(sfAppCompanyIds, stAppCompanyIds, sfAppCompanyList);
+          List<AppCompany> appCompanysToUpdate =
+              getListAppCompanyToUpdate(sfAppCompanyIds, stAppCompanyIds, sfAppCompanyList);
           if (!appCompanysToInsert.isEmpty()) {
             insertAppCompany(appCompanysToInsert);
           }
-          ParameterRequest parareq = new ParameterRequest();
-          parareq.setStartTime(Utility.parseString(parameterRequest.getStartTime()));
-          List<AppCompany> stAppCompanyList = appCompanyMapper.getListAppCompany2Sync(parareq);
-          int size = stAppCompanyList.size();
-          int offset = size / Constant.LIMIT;
-          List<AppCompany> syncList = new ArrayList<AppCompany>();
-          List<AppCompany> appCompanies = new ArrayList<AppCompany>();
-          for (int i = 0; i <= offset; i++) {
-            if (i < offset) {
-              syncList = stAppCompanyList.subList(Constant.LIMIT * i, Constant.LIMIT * (i + 1));
-              LOGGER.info("Checking updated data >>> from record {} to record {}", Constant.LIMIT * i,
-                  Constant.LIMIT * (i + 1));
-            } else if (i == offset) {
-              syncList = stAppCompanyList.subList(Constant.LIMIT * offset, size);
-              LOGGER.info("Checking updated data >>> from record {} to record {}",
-                  Constant.LIMIT * offset, size);
-            }
-            appCompanies = getListAppCompanyToUpdate(sfAppCompanyList, syncList);
-            if (!appCompanies.isEmpty()) {
-              updateAppCompany(appCompanies);
-            }
+          if (!appCompanysToUpdate.isEmpty()) {
+            updateAppCompany(appCompanysToUpdate);
           }
         }
         String nptk = cacheManagerConfig.getNextPageToken("next_page_token");
         if (nptk != null) {
-          getSFAppCompany(parameterRequest, batchStatus);
+            getSFAppCompany(parameterRequest, batchStatus);
         }
+        cacheManagerConfig.clearNextPageToken();
       }
     } catch (Exception ex) {
       workerController.commonError(Constant.SF_REG + Constant.APPCOMPANY, batchStatus, ex);
-    } finally {
-      cacheManagerConfig.clearMap(Constant.APPCOMPANY);
     }
   }
-
+  
   /**
    * @param parameterRequest
    * @param batchStatus
@@ -128,7 +111,7 @@ public class AppCompanyController {
           LOGGER.info("CoreDateCreat >>> {} sync to {} >>> from record {} to record {}",
               Constant.APPCOMPANY, Constant.APPCOMPANYSYNC, Constant.LIMIT * offset, size);
         }
-        objectIds = getListAppCompanyIdFromStockholm(syncList);
+        objectIds = Utility.getIdListFromObjetcList(syncList);
         if (objectIds != null) {
           List<String> objectSyncIds = getListAppCompanySyncIdFromStockholm();
           List<AppCompany> objectListToInsert =
@@ -176,7 +159,6 @@ public class AppCompanyController {
     for (int i = 0; i < appCompanies.size(); i++) {
       try {
         appCompanyMapper.updateAppCompany(appCompanies.get(i));
-        LOGGER.info("updateAppCompany >>> " + appCompanies.get(i).getSfid());
       } catch (Exception e) {
         LOGGER.error(
             Constant.NORMALCODE.E03
@@ -220,7 +202,7 @@ public class AppCompanyController {
         try {
           appCompanyMapper
               .updateAppCompanySync(ConvertDataUtil.convertAppCompany2Sync(appCompanies.get(i), true));
-          LOGGER.info("updateAppCompanySync >>> " + appCompanies.get(i).getSfid());
+          LOGGER.info("AppCompanySync updating >>> " + appCompanies.get(i).getSfid());
           worker.setSfid(appCompanies.get(i).getSfid());
           // Syncテープルに更新場合：承認されたものは未承認変更。（Workerの「sycapproveflg」に「TRUE」→「FALSE」）
           worker.setSycapproveflg(false);
@@ -236,22 +218,10 @@ public class AppCompanyController {
     }
   }
 
-  public List<AppCompany> getListAppCompanyFromStockholm(String context) {
-    return appCompanyMapper.getListAppCompanyFromStockholm(
-        salesforceResponseController.parameterRequest(context));
-  }
-
-  public List<String> getListAppCompanyIdFromStockholm() {
-    return appCompanyMapper.getListAppCompanyIdFromStockholm(
-        salesforceResponseController.parameterRequest(Constant.APPCOMPANY));
-  }
-
-  public List<String> getListAppCompanyIdFromStockholm(List<AppCompany> appCompanyList) {
-    List<String> listId = new ArrayList<>();
-    for (int i = 0; i < appCompanyList.size(); i++) {
-      listId.add(appCompanyList.get(i).getSfid());
-    }
-    return listId;
+  public List<String> getListAppCompanyIdFromStockholm(List<String> objectIds) {
+    ParameterRequest parareq = new ParameterRequest();
+    parareq.setIds(Utility.parseList(objectIds));
+    return appCompanyMapper.getListAppCompanyIdFromStockholm(parareq);
   }
 
   public List<String> getListAppCompanySyncIdFromStockholm() {
@@ -279,21 +249,25 @@ public class AppCompanyController {
     return appCompaniesToInsert;
   }
 
-  public List<AppCompany> getListAppCompanyToUpdate(List<AppCompany> sfAppCompanyList, List<AppCompany> stAppCompanyList) {
-    List<String> listIdToUpdate = Utility.compare(updateAppList(sfAppCompanyList), updateAppList(stAppCompanyList));
-    List<AppCompany> listAppCompanyToUpdate = new ArrayList<>();
+  public List<AppCompany> getListAppCompanyToUpdate(List<String> salesForceIds,
+      List<String> stockholmIds, List<AppCompany> appCompanies) {
+    List<String> listIdToUpdate = new ArrayList<>();
+    if (!stockholmIds.isEmpty()) {
+      listIdToUpdate = Utility.intersection(salesForceIds, stockholmIds);
+    }
+    List<AppCompany> appCompaniesSyncToUpdate = new ArrayList<>();
     if (!listIdToUpdate.isEmpty()) {
       for (String sfid : listIdToUpdate) {
-        for (AppCompany appCompany : sfAppCompanyList) {
+        for (AppCompany appCompany : appCompanies) {
           if (appCompany.getSfid().equalsIgnoreCase(sfid)) {
-            listAppCompanyToUpdate.add(appCompany);
+            appCompaniesSyncToUpdate.add(appCompany);
           }
         }
       }
     }
-    return listAppCompanyToUpdate;
+    return appCompaniesSyncToUpdate;
   }
-
+  
   public List<AppCompany> getListAppCompanyToUpdateSync(
       List<AppCompany> sfAppCompanyList,
       List<AppCompany> stAppCompanyList) {
