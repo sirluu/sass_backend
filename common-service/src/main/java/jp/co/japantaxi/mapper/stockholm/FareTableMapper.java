@@ -8,16 +8,16 @@ public interface FareTableMapper {
 
   FareTable getFareTableById(ParameterRequest id);
 
-  List<FareTable> getListFareTableFromStockholm(ParameterRequest ids);
-
-  List<FareTable> getListFareTableSyncFromStockholm(ParameterRequest ids);
-
-  List<FareTable> getListFareTable2Sync(ParameterRequest startTime);
-
   List<String> getListFareTableIdFromStockholm(ParameterRequest ids);
 
-  List<String> getListFareTableSyncIdFromStockholm();
+  List<String> getListFareTableIds(ParameterRequest request);
 
+  List<FareTable> getListFareTable(ParameterRequest request);
+
+  List<FareTable> getListFareTableSync(ParameterRequest request);
+
+  Integer countFareTable(ParameterRequest request);
+  
   void insertFareTable(FareTable fareTable);
 
   void updateFareTable(FareTable fareTable);
@@ -27,5 +27,5 @@ public interface FareTableMapper {
   void updateFareTableSync(FareTable fareTable);
 
   void truncateFareTable();
-
+  
 }

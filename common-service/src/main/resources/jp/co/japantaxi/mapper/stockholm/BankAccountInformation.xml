@@ -8,6 +8,50 @@
 		TRUNCATE TABLE bankaccountinformation
 	</select>
 
+	<select id="getListBankAccountInformationIds"
+		parameterType="jp.co.japantaxi.model.ParameterRequest"
+		resultType="java.lang.String">
+		SELECT sfid FROM (WITH TO_CHECK (sfid) AS (VALUES ${ids})
+		SELECT tc.sfid, NOT EXISTS (SELECT sfid FROM bankaccountinformationsync b
+		WHERE b.sfid = tc.sfid) AS checked FROM to_check tc) AS t
+		WHERE t.checked = #{checked}
+	</select>
+
+	<select id="getListBankAccountInformation"
+		parameterType="jp.co.japantaxi.model.ParameterRequest"
+		resultType="jp.co.japantaxi.model.BankAccountInformation">
+		SELECT b.sfid, b.account, b.appcompany, b.accountcategory,
+		b.accountbank,
+		b.accountnumber, b.accountname, b.accountnamekana,
+		b.accounttype,
+		b.invaliddate,
+		b.invalidreason, b.lastmodifieddate
+		FROM
+		bankaccountinformation b
+		WHERE(date_trunc('second', b.lastmodifieddate)
+		>=${startTime})
+		ORDER BY b.sfid DESC OFFSET ${offset} LIMIT ${limit}
+	</select>
+
+	<select id="getListBankAccountInformationSync"
+		parameterType="jp.co.japantaxi.model.ParameterRequest"
+		resultType="jp.co.japantaxi.model.PaymentSystemLinkInfor">
+		SELECT b.sfid, b.account, b.appcompany, b.accountcategory,
+		b.accountbank, b.accountnumber, b.accountname, b.accountnamekana,
+		b.accounttype, b.invaliddate, b.invalidreason
+		FROM
+		bankaccountinformationsync b WHERE
+		b.sfid IN (${ids}) ORDER BY b.sfid
+		DESC
+	</select>
+
+	<select id="countBankAccountInformation"
+		parameterType="jp.co.japantaxi.model.ParameterRequest"
+		resultType="java.lang.Integer">
+		SELECT count(b.sfid) AS rows FROM bankaccountinformation b
+		WHERE (date_trunc('second', b.lastmodifieddate) >= ${startTime})
+	</select>
+	
 	<select id="getBankAccountInformationById"
 		parameterType="jp.co.japantaxi.model.ParameterRequest"
 		resultType="jp.co.japantaxi.model.BankAccountInformation">
@@ -21,51 +65,7 @@
 		bankaccountinformation b
 		WHERE b.sfid=#{id}
 	</select>
-
-	<select id="getListBankAccountInformationFromStockholm"
-		parameterType="jp.co.japantaxi.model.ParameterRequest"
-		resultType="jp.co.japantaxi.model.BankAccountInformation">
-		SELECT b.sfid, b.account, b.appcompany, b.accountcategory,
-		b.accountbank,
-		b.accountnumber, b.accountname, b.accountnamekana,
-		b.accounttype,
-		b.invaliddate,
-		b.invalidreason, b.lastmodifieddate
-		FROM
-		bankaccountinformation b
-		WHERE b.sfid IN (${ids})
-		ORDER BY b.sfid DESC
-	</select>
-
-	<select id="getListBankAccountInformationSyncFromStockholm"
-		parameterType="jp.co.japantaxi.model.ParameterRequest"
-		resultType="jp.co.japantaxi.model.BankAccountInformation">
-		SELECT b.sfid, b.account, b.appcompany, b.accountcategory,
-		b.accountbank, b.accountnumber, b.accountname, b.accountnamekana,
-		b.accounttype, b.invaliddate, b.invalidreason
-		FROM
-		bankaccountinformationsync b
-		WHERE b.sfid IN (${ids})
-		ORDER BY b.sfid
-		DESC
-	</select>
-
-	<select id="getListBankAccountInformation2Sync"
-		parameterType="jp.co.japantaxi.model.ParameterRequest"
-		resultType="jp.co.japantaxi.model.BankAccountInformation">
-		SELECT b.sfid, b.account, b.appcompany, b.accountcategory,
-		b.accountbank,
-		b.accountnumber, b.accountname, b.accountnamekana,
-		b.accounttype,
-		b.invaliddate,
-		b.invalidreason, b.lastmodifieddate
-		FROM
-		bankaccountinformation b
-		WHERE(date_trunc('second',b.lastmodifieddate)
-		>= ${startTime})
-		ORDER BY b.sfid DESC
-	</select>
-
+	
 	<select id="getListBankAccountInformationIdFromStockholm"
 		parameterType="jp.co.japantaxi.model.ParameterRequest"
 		resultType="java.lang.String">
@@ -73,11 +73,6 @@
 		WHERE b.sfid IN
 		(${ids})
 		ORDER BY b.sfid DESC
-	</select>
-
-	<select id="getListBankAccountInformationSyncIdFromStockholm"
-		resultType="java.lang.String">
-		SELECT b.sfid FROM bankaccountinformationsync b
 	</select>
 
 	<insert id="insertBankAccountInformation"

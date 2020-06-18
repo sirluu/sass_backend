@@ -90,7 +90,6 @@ public class SalesforceResponseController {
 		cacheManagerConfig.setToken(null);
 	    LOGGER.warn("Token expired or invalid >>> need reset token !!!");
       }
-      cacheManagerConfig.setErrorCode(context, e.getRawStatusCode());
       // 内容：コード(E00)、取得オブジェクト名、SFエラーコード、SFエラー内容 400,404,415,500
 	  LOGGER.error(String.format("%s >>> %s >>> ErrorCode: %s >>> Error: %s",
 	      	Constant.NORMALCODE.E00, Constant.API_GET + context, e.getRawStatusCode(), e.getMessage()));
@@ -131,24 +130,10 @@ public class SalesforceResponseController {
    */
   public List<Object> getListObjectFromSalesforce(String context, BatchStatus batchStatus) {
     List<Object> listObj = new ArrayList<>();
-    int error = cacheManagerConfig.getErrorCode(context.toLowerCase());
-    if (Constant.checkError(error) == null) {
-      JSONArray jsonArray = callSalesforce(context, batchStatus);
-      if (jsonArray != null) {
-          listObj = JsonMapper.toList(jsonArray);
-          batchController.updateBatchStatus(batchStatus, false, false, false, true);
-          cacheManagerConfig.setListObjectId(context, getListObjectIdFromSalesforce(context, listObj));
-      }
-    } else {
-        // 内容：コード(E00)、取得オブジェクト名、SFエラーコード、SFエラー内容 400,404,415,500
-      LOGGER.error(String.format("%s >>> %s >>> error at %s >>> ErrorCode: %s",
-          	Constant.NORMALCODE.E00, Constant.API_GET, context, error));
-  	  StringBuilder sb = new StringBuilder();
-      sb.append(batchStatus.getStatusinfo());
-      sb.append("\n");
-      sb.append(Constant.API_GET + context);
-      batchStatus.setStatusinfo(sb.toString());
-      batchController.updateBatchStatus(batchStatus, false, false, true, false);
+    JSONArray jsonArray = callSalesforce(context, batchStatus);
+    if (jsonArray != null) {
+      listObj = JsonMapper.toList(jsonArray);
+      batchController.updateBatchStatus(batchStatus, false, false, false, true);
     }
     return listObj;
   }

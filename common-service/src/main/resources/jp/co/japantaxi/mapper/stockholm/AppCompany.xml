@@ -8,6 +8,121 @@
 		TRUNCATE TABLE appcompany
 	</select>
 
+	<select id="getListAppCompanyIds"
+		parameterType="jp.co.japantaxi.model.ParameterRequest"
+		resultType="java.lang.String">
+		SELECT sfid FROM (WITH TO_CHECK
+		(sfid) AS (VALUES ${ids})
+		SELECT tc.sfid, NOT EXISTS (SELECT sfid FROM appcompanysync p
+		WHERE p.sfid =
+		tc.sfid) AS checked FROM to_check tc
+		) AS t WHERE
+		t.checked = #{checked}
+	</select>
+
+	<select id="getListAppCompany"
+		parameterType="jp.co.japantaxi.model.ParameterRequest"
+		resultType="jp.co.japantaxi.model.AppCompany">
+		SELECT p.sfid, p.name, p.account, p.faretable,
+		p.jtxcompanyid, p.appdisplayname, p.status, p.acceptmajor2,
+		p.acceptminor2, p.dispatchtype, p.phonenumber, p.phonenumbercancel,
+		p.email, p.warningemail, p.companylogoimage, p.area, p.areacode,
+		p.salesprefecture, p.salescity, p.profile, p.cars, p.isenableclosing,
+		p.displaysalescity, p.showdest, p.showmoving, p.showmustarrivaltime,
+		p.showvisit, p.showbookingcancel, p.extendedfieldmap,
+		p.closingtimefrom, p.closingtimeto, p.globallat, p.globallng,
+		p.companynameen, p.displaysalescityen, p.pickupfeedescription,
+		p.bookingfeedescription, p.partnerapiversion, p.showemptycar,
+		p.ratingaverage, p.waitforpickupdefault, p.showminutestowaitforpickup,
+		p.isradionumberedit, p.isexternalcancel, p.showimmediatecancel,
+		p.netpaytypes, p.paymentmethod, p.minutestowaitforpickup, p.logoimage,
+		p.replywatingminute, p.groupcompanies, p.communicationurl, p.orderurl,
+		p.ordercancelurl, p.invaliddate, p.invalidreason,
+		p.invaliddetailreason, p.drivercontract, p.implementationcosts,
+		p.monthlyminimumcharge, p.monthlyminimumcars, p.remarks,
+		p.payablecommission, p.requeststartdate, p.requestcompanyidrelation,
+		p.bankaccount, p.bankaccount2, p.lastmodifieddate, p.www,
+		p.paymentmethoden, p.salesprefectureen, p.destinationprefecture,
+		p.destinationaddress, p.destinationpostalcode,
+		p.destinationcontactname, p.destinationcompanyname, p.carimagecolor1,
+		p.carimagecolor2, p.carimagecolor3, p.carimagecolor4,
+		p.carimagecolor5, p.carimagecolor6, p.carimagecolor7,
+		p.carimagecolor8, p.carimagename1, p.carimagename2, p.carimagename3,
+		p.carimagename4, p.carimagename5, p.carimagename6, p.carimagename7,
+		p.carimagename8
+		FROM appcompany p
+		WHERE(date_trunc('second',p.lastmodifieddate) >=${startTime})
+		ORDER BY
+		p.sfid DESC OFFSET ${offset} LIMIT ${limit}
+	</select>
+
+	<select id="getListAppCompanySync"
+		parameterType="jp.co.japantaxi.model.ParameterRequest"
+		resultType="jp.co.japantaxi.model.AppCompany">
+		SELECT p.sfid, p.name, p.account, p.faretable,
+		p.jtxcompanyid,
+		p.appdisplayname, p.status, p.acceptmajor2,
+		p.acceptminor2,
+		p.dispatchtype_isexternaldispatch as
+		dispatchtypeisexternaldispatch, p.dispatchtype_partnerapiversion as
+		dispatchtypepartnerapiversion,
+		p.phonenumber, p.phonenumbercancel,
+		p.email, p.warningemail,
+		p.companylogoimage, p.areacode,
+		p.salesprefecture, p.salescity,
+		p.profile, p.cars, p.isenableclosing,
+		p.displaysalescity, p.showdest,
+		p.showmoving, p.showmustarrivaltime,
+		p.showvisit, p.showbookingcancel,
+		p.extendedfieldmap,
+		p.closingtimefrom, p.closingtimeto, p.globallat,
+		p.globallng,
+		p.companynameen, p.displaysalescityen,
+		p.pickupfeedescription,
+		p.bookingfeedescription, p.partnerapiversion,
+		p.showemptycar,
+		p.ratingaverage, p.waitforpickupdefault,
+		p.showminutestowaitforpickup,
+		p.isradionumberedit, p.isexternalcancel,
+		p.showimmediatecancel,
+		p.netpaytypes, p.paymentmethod,
+		p.minutestowaitforpickup, p.logoimage,
+		p.replywatingminute,
+		p.groupcompanies, p.communicationurl, p.orderurl,
+		p.ordercancelurl,
+		p.invaliddate, p.invalidreason,
+		p.invaliddetailreason,
+		p.drivercontract_dispatchmethodid as
+		drivercontractdispatchmethodid, p.drivercontract_ispreviewenabled as
+		drivercontractispreviewenabled,
+		p.drivercontract_isenabled as
+		drivercontractisenabled, p.drivercontract_useasdefault as
+		drivercontractuseasdefault,
+		p.drivercontract_onlyusewhennecessary as
+		drivercontractonlyusewhennecessary, p.implementationcosts,
+		p.monthlyminimumcharge, p.monthlyminimumcars, p.remarks,
+		p.payablecommission, p.requeststartdate, p.requestcompanyidrelation,
+		p.bankaccount, p.bankaccount2, p.www, p.paymentmethoden,
+		p.salesprefectureen, p.destinationprefecture, p.destinationaddress,
+		p.destinationpostalcode, p.destinationcontactname,
+		p.destinationcompanyname, p.carimagecolor1, p.carimagecolor2,
+		p.carimagecolor3, p.carimagecolor4, p.carimagecolor5,
+		p.carimagecolor6, p.carimagecolor7, p.carimagecolor8, p.carimagename1,
+		p.carimagename2, p.carimagename3, p.carimagename4, p.carimagename5,
+		p.carimagename6, p.carimagename7, p.carimagename8
+		FROM appcompanysync p
+		WHERE
+		p.sfid IN (${ids}) ORDER BY p.sfid DESC
+	</select>
+
+	<select id="countAppCompany"
+		parameterType="jp.co.japantaxi.model.ParameterRequest"
+		resultType="java.lang.Integer">
+		SELECT count(p.sfid) AS rows FROM appcompany p
+		WHERE
+		(date_trunc('second', p.lastmodifieddate) >= ${startTime})
+	</select>
+	
 	<select id="getAppCompanyById"
 		parameterType="jp.co.japantaxi.model.ParameterRequest"
 		resultType="jp.co.japantaxi.model.AppCompany">
@@ -45,14 +160,10 @@
 		a.showimmediatecancel,
 		a.netpaytypes, a.paymentmethod, a.paymentmethoden,
 		a.minutestowaitforpickup,
-		a.carimagecolor1, a.carimagecolor2,
-		a.carimagecolor3, a.carimagecolor4,
-		a.carimagecolor5, a.carimagecolor6,
-		a.carimagecolor7, a.carimagecolor8,
-		a.carimagename1, a.carimagename2,
-		a.carimagename3, a.carimagename4,
-		a.carimagename5, a.carimagename6,
-		a.carimagename7, a.carimagename8,
+		a.carimagecolor1, a.carimagecolor2, a.carimagecolor3, a.carimagecolor4,
+		a.carimagecolor5, a.carimagecolor6, a.carimagecolor7, a.carimagecolor8,
+		a.carimagename1, a.carimagename2, a.carimagename3, a.carimagename4,
+		a.carimagename5, a.carimagename6, a.carimagename7, a.carimagename8,
 		a.replywatingminute,
 		a.groupcompanies, a.communicationurl, a.orderurl,
 		a.ordercancelurl,
@@ -80,136 +191,6 @@
 		WHERE a.sfid=#{id}
 	</select>
 
-	<select id="getListAppCompanyFromStockholm"
-		parameterType="jp.co.japantaxi.model.ParameterRequest"
-		resultType="jp.co.japantaxi.model.AppCompany">
-		SELECT a.sfid, a.name, a.account, a.faretable,
-		a.jtxcompanyid, a.appdisplayname, a.status, a.acceptmajor2,
-		a.acceptminor2, a.dispatchtype, a.phonenumber, a.phonenumbercancel,
-		a.email, a.warningemail, a.companylogoimage, a.area, a.areacode,
-		a.salesprefecture, a.salescity, a.profile, a.cars, a.isenableclosing,
-		a.displaysalescity, a.showdest, a.showmoving, a.showmustarrivaltime,
-		a.showvisit, a.showbookingcancel, a.extendedfieldmap,
-		a.closingtimefrom, a.closingtimeto, a.globallat, a.globallng,
-		a.companynameen, a.displaysalescityen, a.pickupfeedescription,
-		a.bookingfeedescription, a.partnerapiversion, a.showemptycar,
-		a.ratingaverage, a.waitforpickupdefault, a.showminutestowaitforpickup,
-		a.isradionumberedit, a.isexternalcancel, a.showimmediatecancel,
-		a.netpaytypes, a.paymentmethod, a.minutestowaitforpickup, a.logoimage,
-		a.replywatingminute, a.groupcompanies, a.communicationurl, a.orderurl,
-		a.ordercancelurl, a.invaliddate, a.invalidreason,
-		a.invaliddetailreason, a.drivercontract, a.implementationcosts,
-		a.monthlyminimumcharge, a.monthlyminimumcars, a.remarks,
-		a.payablecommission, a.requeststartdate, a.requestcompanyidrelation,
-		a.bankaccount, a.bankaccount2, a.lastmodifieddate, a.www,
-		a.paymentmethoden, a.salesprefectureen, a.destinationprefecture,
-		a.destinationaddress, a.destinationpostalcode,
-		a.destinationcontactname, a.destinationcompanyname, a.carimagecolor1,
-		a.carimagecolor2, a.carimagecolor3, a.carimagecolor4,
-		a.carimagecolor5, a.carimagecolor6, a.carimagecolor7,
-		a.carimagecolor8, a.carimagename1, a.carimagename2, a.carimagename3,
-		a.carimagename4, a.carimagename5, a.carimagename6, a.carimagename7,
-		a.carimagename8
-		FROM appcompany a
-		WHERE a.sfid IN (${ids})
-		ORDER BY
-		a.sfid DESC
-	</select>
-
-	<select id="getListAppCompanySyncFromStockholm"
-		parameterType="jp.co.japantaxi.model.ParameterRequest"
-		resultType="jp.co.japantaxi.model.AppCompany">
-		SELECT a.sfid, a.name, a.account, a.faretable,
-		a.jtxcompanyid,
-		a.appdisplayname, a.status, a.acceptmajor2,
-		a.acceptminor2,
-		a.dispatchtype_isexternaldispatch as
-		dispatchtypeisexternaldispatch, a.dispatchtype_partnerapiversion as
-		dispatchtypepartnerapiversion,
-		a.phonenumber, a.phonenumbercancel,
-		a.email, a.warningemail,
-		a.companylogoimage, a.areacode,
-		a.salesprefecture, a.salescity,
-		a.profile, a.cars, a.isenableclosing,
-		a.displaysalescity, a.showdest,
-		a.showmoving, a.showmustarrivaltime,
-		a.showvisit, a.showbookingcancel,
-		a.extendedfieldmap,
-		a.closingtimefrom, a.closingtimeto, a.globallat,
-		a.globallng,
-		a.companynameen, a.displaysalescityen,
-		a.pickupfeedescription,
-		a.bookingfeedescription, a.partnerapiversion,
-		a.showemptycar,
-		a.ratingaverage, a.waitforpickupdefault,
-		a.showminutestowaitforpickup,
-		a.isradionumberedit, a.isexternalcancel,
-		a.showimmediatecancel,
-		a.netpaytypes, a.paymentmethod,
-		a.minutestowaitforpickup, a.logoimage,
-		a.replywatingminute,
-		a.groupcompanies, a.communicationurl, a.orderurl,
-		a.ordercancelurl,
-		a.invaliddate, a.invalidreason,
-		a.invaliddetailreason,
-		a.drivercontract_dispatchmethodid as
-		drivercontractdispatchmethodid, a.drivercontract_ispreviewenabled as
-		drivercontractispreviewenabled,
-		a.drivercontract_isenabled as
-		drivercontractisenabled, a.drivercontract_useasdefault as
-		drivercontractuseasdefault,
-		a.drivercontract_onlyusewhennecessary as
-		drivercontractonlyusewhennecessary, a.implementationcosts,
-		a.monthlyminimumcharge, a.monthlyminimumcars, a.remarks,
-		a.payablecommission, a.requeststartdate, a.requestcompanyidrelation,
-		a.bankaccount, a.bankaccount2, a.www, a.paymentmethoden,
-		a.salesprefectureen, a.destinationprefecture, a.destinationaddress,
-		a.destinationpostalcode, a.destinationcontactname,
-		a.destinationcompanyname, a.carimagecolor1, a.carimagecolor2,
-		a.carimagecolor3, a.carimagecolor4, a.carimagecolor5,
-		a.carimagecolor6, a.carimagecolor7, a.carimagecolor8, a.carimagename1,
-		a.carimagename2, a.carimagename3, a.carimagename4, a.carimagename5,
-		a.carimagename6, a.carimagename7, a.carimagename8
-		FROM appcompanysync a
-		WHERE a.sfid IN (${ids}) ORDER BY a.sfid DESC
-	</select>
-
-	<select id="getListAppCompany2Sync"
-		parameterType="jp.co.japantaxi.model.ParameterRequest"
-		resultType="jp.co.japantaxi.model.AppCompany">
-		SELECT a.sfid, a.name, a.account, a.faretable,
-		a.jtxcompanyid, a.appdisplayname, a.status, a.acceptmajor2,
-		a.acceptminor2, a.dispatchtype, a.phonenumber, a.phonenumbercancel,
-		a.email, a.warningemail, a.companylogoimage, a.area, a.areacode,
-		a.salesprefecture, a.salescity, a.profile, a.cars, a.isenableclosing,
-		a.displaysalescity, a.showdest, a.showmoving, a.showmustarrivaltime,
-		a.showvisit, a.showbookingcancel, a.extendedfieldmap,
-		a.closingtimefrom, a.closingtimeto, a.globallat, a.globallng,
-		a.companynameen, a.displaysalescityen, a.pickupfeedescription,
-		a.bookingfeedescription, a.partnerapiversion, a.showemptycar,
-		a.ratingaverage, a.waitforpickupdefault, a.showminutestowaitforpickup,
-		a.isradionumberedit, a.isexternalcancel, a.showimmediatecancel,
-		a.netpaytypes, a.paymentmethod, a.minutestowaitforpickup, a.logoimage,
-		a.replywatingminute, a.groupcompanies, a.communicationurl, a.orderurl,
-		a.ordercancelurl, a.invaliddate, a.invalidreason,
-		a.invaliddetailreason, a.drivercontract, a.implementationcosts,
-		a.monthlyminimumcharge, a.monthlyminimumcars, a.remarks,
-		a.payablecommission, a.requeststartdate, a.requestcompanyidrelation,
-		a.bankaccount, a.bankaccount2, a.lastmodifieddate, a.www,
-		a.paymentmethoden, a.salesprefectureen, a.destinationprefecture,
-		a.destinationaddress, a.destinationpostalcode,
-		a.destinationcontactname, a.destinationcompanyname, a.carimagecolor1,
-		a.carimagecolor2, a.carimagecolor3, a.carimagecolor4,
-		a.carimagecolor5, a.carimagecolor6, a.carimagecolor7,
-		a.carimagecolor8, a.carimagename1, a.carimagename2, a.carimagename3,
-		a.carimagename4, a.carimagename5, a.carimagename6, a.carimagename7,
-		a.carimagename8
-		FROM appcompany a
-		WHERE(date_trunc('second',a.lastmodifieddate) >=${startTime})
-		ORDER BY
-		a.sfid DESC
-	</select>
-
 	<select id="getListAppCompanyIdFromStockholm"
 		parameterType="jp.co.japantaxi.model.ParameterRequest"
 		resultType="java.lang.String">
@@ -218,48 +199,24 @@
 		ORDER BY a.sfid DESC
 	</select>
 
-	<select id="getListAppCompanySyncIdFromStockholm"
-		resultType="java.lang.String">
-		SELECT a.sfid FROM appcompanysync a
-	</select>
-
 	<insert id="insertAppCompany"
 		parameterType="jp.co.japantaxi.model.AppCompany">
 		INSERT INTO appcompany
-		(sfid, name, account, faretable,
-		jtxcompanyid, appdisplayname, status,
-		acceptmajor2, dispatchtype,
-		phonenumber, phonenumbercancel, email,
-		warningemail, companylogoimage,
-		area, areacode, salesprefecture, salesprefectureen, salescity,
-		profile, cars,
-		isenableclosing, showdest, showmoving,
-		showmustarrivaltime, showvisit,
-		showbookingcancel, extendedfieldmap,
-		closingtimefrom, closingtimeto,
-		globallat, globallng, companynameen,
-		displaysalescityen, pickupfeedescription,
-		bookingfeedescription,
-		partnerapiversion, showemptycar, ratingaverage,
-		waitforpickupdefault,
-		showminutestowaitforpickup, isradionumberedit,
-		isexternalcancel,
-		showimmediatecancel, netpaytypes, paymentmethod, paymentmethoden,
-		minutestowaitforpickup,
-		carimagecolor1, carimagecolor2, carimagecolor3,
-		carimagecolor4, carimagecolor5, carimagecolor6, carimagecolor7,
-		carimagecolor8,
-		carimagename1, carimagename2, carimagename3,
-		carimagename4, carimagename5, carimagename6, carimagename7,
-		carimagename8,
-		replywatingminute, groupcompanies, communicationurl,
-		orderurl, ordercancelurl, invaliddate,
-		invalidreason,
-		invaliddetailreason, acceptminor2, logoimage, displaysalescity,
-		drivercontract, implementationcosts, monthlyminimumcharge,
-		monthlyminimumcars,
-		remarks, payablecommission, requeststartdate,
-		requestcompanyidrelation, bankaccount, bankaccount2, www,
+		(sfid, name, account, faretable, jtxcompanyid, appdisplayname, status,
+		acceptmajor2, dispatchtype, phonenumber, phonenumbercancel, email,
+		warningemail, companylogoimage, area, areacode, salesprefecture, salesprefectureen, salescity, profile, cars,
+		isenableclosing, showdest, showmoving, showmustarrivaltime, showvisit,
+		showbookingcancel, extendedfieldmap, closingtimefrom, closingtimeto,
+		globallat, globallng, companynameen, displaysalescityen, pickupfeedescription,
+		bookingfeedescription, partnerapiversion, showemptycar, ratingaverage,
+		waitforpickupdefault, showminutestowaitforpickup, isradionumberedit,
+		isexternalcancel, showimmediatecancel, netpaytypes, paymentmethod, paymentmethoden, minutestowaitforpickup,
+		carimagecolor1, carimagecolor2, carimagecolor3, carimagecolor4, carimagecolor5, carimagecolor6, carimagecolor7, carimagecolor8,
+		carimagename1, carimagename2, carimagename3, carimagename4, carimagename5, carimagename6, carimagename7, carimagename8,
+		replywatingminute, groupcompanies, communicationurl, orderurl, ordercancelurl, invaliddate,
+		invalidreason, invaliddetailreason, acceptminor2, logoimage, displaysalescity,
+		drivercontract, implementationcosts, monthlyminimumcharge, monthlyminimumcars,
+		remarks, payablecommission, requeststartdate, requestcompanyidrelation, bankaccount, bankaccount2, www,
 		destinationprefecture, destinationaddress, destinationpostalcode,
 		destinationcontactname, destinationcompanyname, lastmodifieddate)
 		VALUES(#{sfid}, #{name},
@@ -272,8 +229,7 @@
 		#{phonenumbercancel},
 		#{email}, #{warningemail},
 		#{companylogoimage},
-		#{area}, #{areacode}, #{salesprefecture},
-		#{salesprefectureen},
+		#{area}, #{areacode}, #{salesprefecture}, #{salesprefectureen},
 		#{salescity}, #{profile},
 		#{cars},
 		${isenableclosing==true?"'1'":"'0'"},
@@ -300,13 +256,8 @@
 		#{netpaytypes},
 		#{paymentmethod}, #{paymentmethoden},
 		#{minutestowaitforpickup},
-		#{carimagecolor1}, #{carimagecolor2}, #{carimagecolor3},
-		#{carimagecolor4}, #{carimagecolor5}, #{carimagecolor6},
-		#{carimagecolor7}, #{carimagecolor8},
-		#{carimagename1},
-		#{carimagename2}, #{carimagename3}, #{carimagename4},
-		#{carimagename5}, #{carimagename6}, #{carimagename7},
-		#{carimagename8},
+		#{carimagecolor1}, #{carimagecolor2}, #{carimagecolor3}, #{carimagecolor4}, #{carimagecolor5}, #{carimagecolor6}, #{carimagecolor7}, #{carimagecolor8},
+		#{carimagename1}, #{carimagename2}, #{carimagename3}, #{carimagename4}, #{carimagename5}, #{carimagename6}, #{carimagename7}, #{carimagename8},
 		#{replywatingminute},
 		#{groupcompanies},
 		#{communicationurl},
@@ -315,13 +266,13 @@
 		#{invalidreason},
 		#{invaliddetailreason}, #{acceptminor2},
 		#{logoimage},
-		#{displaysalescity},
+		#{displaysalescity}, 
 		#{drivercontract},
-		#{implementationcosts},
-		#{monthlyminimumcharge},
+		#{implementationcosts}, 
+		#{monthlyminimumcharge}, 
 		#{monthlyminimumcars},
-		#{remarks},
-		#{payablecommission},
+		#{remarks}, 
+		#{payablecommission}, 
 		#{requeststartdate},
 		#{requestcompanyidrelation},
 		#{bankaccount},
@@ -350,10 +301,8 @@
 		email=#{email},
 		warningemail=#{warningemail},
 		companylogoimage=#{companylogoimage},
-		area=#{area},
-		areacode=#{areacode},
-		salesprefecture=#{salesprefecture},
-		salesprefectureen=#{salesprefectureen}, salescity=#{salescity},
+		area=#{area}, areacode=#{areacode},
+		salesprefecture=#{salesprefecture}, salesprefectureen=#{salesprefectureen}, salescity=#{salescity},
 		profile=#{profile}, cars=#{cars},
 		isenableclosing=${isenableclosing==true?"'1'":"'0'"},
 		showdest=${showdest==true?"'1'":"'0'"},
@@ -376,17 +325,12 @@
 		isradionumberedit=${isradionumberedit==true?"'1'":"'0'"},
 		isexternalcancel=${isexternalcancel==true?"'1'":"'0'"},
 		showimmediatecancel=${showimmediatecancel==true?"'1'":"'0'"},
-		netpaytypes=#{netpaytypes}, paymentmethod=#{paymentmethod},
-		paymentmethoden=#{paymentmethoden},
+		netpaytypes=#{netpaytypes}, paymentmethod=#{paymentmethod}, paymentmethoden=#{paymentmethoden},
 		minutestowaitforpickup=#{minutestowaitforpickup},
-		carimagecolor1=#{carimagecolor1}, carimagecolor2=#{carimagecolor2},
-		carimagecolor3=#{carimagecolor3}, carimagecolor4=#{carimagecolor4},
-		carimagecolor5=#{carimagecolor5}, carimagecolor6=#{carimagecolor6},
-		carimagecolor7=#{carimagecolor7}, carimagecolor8=#{carimagecolor8},
-		carimagename1=#{carimagename1}, carimagename2=#{carimagename2},
-		carimagename3=#{carimagename3}, carimagename4=#{carimagename4},
-		carimagename5=#{carimagename5}, carimagename6=#{carimagename6},
-		carimagename7=#{carimagename7}, carimagename8=#{carimagename8},
+		carimagecolor1=#{carimagecolor1}, carimagecolor2=#{carimagecolor2}, carimagecolor3=#{carimagecolor3}, carimagecolor4=#{carimagecolor4},
+		carimagecolor5=#{carimagecolor5}, carimagecolor6=#{carimagecolor6}, carimagecolor7=#{carimagecolor7}, carimagecolor8=#{carimagecolor8},
+		carimagename1=#{carimagename1}, carimagename2=#{carimagename2}, carimagename3=#{carimagename3}, carimagename4=#{carimagename4},
+		carimagename5=#{carimagename5}, carimagename6=#{carimagename6}, carimagename7=#{carimagename7}, carimagename8=#{carimagename8},
 		replywatingminute=#{replywatingminute},
 		groupcompanies=#{groupcompanies},
 		communicationurl=#{communicationurl}, orderurl=#{orderurl},
@@ -396,11 +340,11 @@
 		acceptminor2=#{acceptminor2}, logoimage=#{logoimage},
 		displaysalescity=#{displaysalescity},
 		drivercontract=#{drivercontract},
-		implementationcosts=#{implementationcosts},
-		monthlyminimumcharge=#{monthlyminimumcharge},
+		implementationcosts=#{implementationcosts}, 
+		monthlyminimumcharge=#{monthlyminimumcharge}, 
 		monthlyminimumcars=#{monthlyminimumcars},
-		remarks=#{remarks},
-		payablecommission=#{payablecommission},
+		remarks=#{remarks}, 
+		payablecommission=#{payablecommission}, 
 		requeststartdate=#{requeststartdate},
 		requestcompanyidrelation=#{requestcompanyidrelation},
 		bankaccount=#{bankaccount},
@@ -418,59 +362,36 @@
 	<insert id="insertAppCompanySync"
 		parameterType="jp.co.japantaxi.model.AppCompany">
 		INSERT INTO appcompanysync
-		(sfid, name, account,
-		faretable, jtxcompanyid, appdisplayname, status,
-		acceptmajor2,
-		dispatchtype_isexternaldispatch, dispatchtype_partnerapiversion,
+		(sfid, name, account, faretable, jtxcompanyid, appdisplayname, status,
+		acceptmajor2, dispatchtype_isexternaldispatch, dispatchtype_partnerapiversion,
 		phonenumber, phonenumbercancel, email, warningemail, companylogoimage,
-		areacode, salesprefecture, salesprefectureen, salescity, profile,
-		cars, isenableclosing, showdest,
-		showmoving, showmustarrivaltime,
-		showvisit, showbookingcancel,
-		extendedfieldmap, closingtimefrom,
-		closingtimeto, globallat, globallng,
-		companynameen, displaysalescityen,
-		pickupfeedescription, bookingfeedescription,
-		partnerapiversion,
-		showemptycar, ratingaverage, waitforpickupdefault,
+		areacode, salesprefecture, salesprefectureen, salescity, profile, cars, isenableclosing, showdest,
+		showmoving, showmustarrivaltime, showvisit, showbookingcancel,
+		extendedfieldmap, closingtimefrom, closingtimeto, globallat, globallng,
+		companynameen, displaysalescityen, pickupfeedescription, bookingfeedescription,
+		partnerapiversion, showemptycar, ratingaverage, waitforpickupdefault,
 		showminutestowaitforpickup, isradionumberedit, isexternalcancel,
-		showimmediatecancel, netpaytypes, paymentmethod, paymentmethoden,
-		minutestowaitforpickup,
-		carimagecolor1, carimagecolor2, carimagecolor3,
-		carimagecolor4, carimagecolor5, carimagecolor6, carimagecolor7,
-		carimagecolor8,
-		carimagename1, carimagename2, carimagename3,
-		carimagename4, carimagename5, carimagename6, carimagename7,
-		carimagename8,
-		replywatingminute, groupcompanies, communicationurl,
-		orderurl,
-		ordercancelurl, invaliddate, invalidreason,
-		invaliddetailreason,
-		acceptminor2, logoimage, displaysalescity,
-		drivercontract_dispatchmethodid,
-		drivercontract_ispreviewenabled,
-		drivercontract_isenabled,
-		drivercontract_useasdefault,
-		drivercontract_onlyusewhennecessary,
-		implementationcosts,
-		monthlyminimumcharge,
-		monthlyminimumcars, remarks, payablecommission,
-		requeststartdate,
-		requestcompanyidrelation, bankaccount, bankaccount2,
-		www,
+		showimmediatecancel, netpaytypes, paymentmethod, paymentmethoden, minutestowaitforpickup,
+		carimagecolor1, carimagecolor2, carimagecolor3, carimagecolor4, carimagecolor5, carimagecolor6, carimagecolor7, carimagecolor8,
+		carimagename1, carimagename2, carimagename3, carimagename4, carimagename5, carimagename6, carimagename7, carimagename8,
+		replywatingminute, groupcompanies, communicationurl, orderurl,
+		ordercancelurl, invaliddate, invalidreason, invaliddetailreason,
+		acceptminor2, logoimage, displaysalescity, drivercontract_dispatchmethodid,
+		drivercontract_ispreviewenabled, drivercontract_isenabled,
+		drivercontract_useasdefault, drivercontract_onlyusewhennecessary,
+		implementationcosts, monthlyminimumcharge,
+		monthlyminimumcars, remarks, payablecommission, requeststartdate,
+		requestcompanyidrelation, bankaccount, bankaccount2, www,
 		destinationprefecture, destinationaddress, destinationpostalcode,
 		destinationcontactname, destinationcompanyname, syncedtime)
 		VALUES(#{sfid},
-		#{name}, #{account}, #{faretable}, #{jtxcompanyid},
-		#{appdisplayname},
-		#{status}, #{acceptmajor2},
+		#{name}, #{account}, #{faretable}, #{jtxcompanyid}, #{appdisplayname},
+		#{status}, #{acceptmajor2}, 
 		${dispatchtypeisexternaldispatch==true?"'1'":"'0'"},
 		#{dispatchtypepartnerapiversion}, #{phonenumber},
 		#{phonenumbercancel}, #{email}, #{warningemail}, #{companylogoimage},
-		#{areacode}, #{salesprefecture}, #{salesprefectureen}, #{salescity},
-		#{profile}, #{cars},
-		${isenableclosing==true?"'1'":"'0'"},
-		${showdest==true?"'1'":"'0'"},
+		#{areacode}, #{salesprefecture}, #{salesprefectureen}, #{salescity}, #{profile}, #{cars},
+		${isenableclosing==true?"'1'":"'0'"}, ${showdest==true?"'1'":"'0'"},
 		${showmoving==true?"'1'":"'0'"},
 		${showmustarrivaltime==true?"'1'":"'0'"}, #{showvisit},
 		${showbookingcancel==true?"'1'":"'0'"},
@@ -493,13 +414,8 @@
 		#{netpaytypes},
 		#{paymentmethod}, #{paymentmethoden},
 		#{minutestowaitforpickup},
-		#{carimagecolor1}, #{carimagecolor2}, #{carimagecolor3},
-		#{carimagecolor4}, #{carimagecolor5}, #{carimagecolor6},
-		#{carimagecolor7}, #{carimagecolor8},
-		#{carimagename1},
-		#{carimagename2}, #{carimagename3}, #{carimagename4},
-		#{carimagename5}, #{carimagename6}, #{carimagename7},
-		#{carimagename8},
+		#{carimagecolor1}, #{carimagecolor2}, #{carimagecolor3}, #{carimagecolor4}, #{carimagecolor5}, #{carimagecolor6}, #{carimagecolor7}, #{carimagecolor8},
+		#{carimagename1}, #{carimagename2}, #{carimagename3}, #{carimagename4}, #{carimagename5}, #{carimagename6}, #{carimagename7}, #{carimagename8},
 		#{replywatingminute},
 		#{groupcompanies},
 		#{communicationurl},
@@ -535,8 +451,7 @@
 	<update id="updateAppCompanySync"
 		parameterType="jp.co.japantaxi.model.AppCompany">
 		UPDATE appcompanysync
-		SET name=#{name},
-		account=#{account},
+		SET name=#{name}, account=#{account},
 		jtxcompanyid=#{jtxcompanyid},
 		faretable=#{faretable},
 		appdisplayname=#{appdisplayname},
@@ -549,8 +464,7 @@
 		email=#{email},
 		warningemail=#{warningemail},
 		companylogoimage=#{companylogoimage}, areacode=#{areacode},
-		salesprefecture=#{salesprefecture},
-		salesprefectureen=#{salesprefectureen}, salescity=#{salescity},
+		salesprefecture=#{salesprefecture}, salesprefectureen=#{salesprefectureen}, salescity=#{salescity},
 		profile=#{profile}, cars=#{cars},
 		isenableclosing=${isenableclosing==true?"'1'":"'0'"},
 		showdest=${showdest==true?"'1'":"'0'"},
@@ -573,17 +487,12 @@
 		isradionumberedit=${isradionumberedit==true?"'1'":"'0'"},
 		isexternalcancel=${isexternalcancel==true?"'1'":"'0'"},
 		showimmediatecancel=${showimmediatecancel==true?"'1'":"'0'"},
-		netpaytypes=#{netpaytypes}, paymentmethod=#{paymentmethod},
-		paymentmethoden=#{paymentmethoden},
+		netpaytypes=#{netpaytypes}, paymentmethod=#{paymentmethod}, paymentmethoden=#{paymentmethoden},
 		minutestowaitforpickup=#{minutestowaitforpickup},
-		carimagecolor1=#{carimagecolor1}, carimagecolor2=#{carimagecolor2},
-		carimagecolor3=#{carimagecolor3}, carimagecolor4=#{carimagecolor4},
-		carimagecolor5=#{carimagecolor5}, carimagecolor6=#{carimagecolor6},
-		carimagecolor7=#{carimagecolor7}, carimagecolor8=#{carimagecolor8},
-		carimagename1=#{carimagename1}, carimagename2=#{carimagename2},
-		carimagename3=#{carimagename3}, carimagename4=#{carimagename4},
-		carimagename5=#{carimagename5}, carimagename6=#{carimagename6},
-		carimagename7=#{carimagename7}, carimagename8=#{carimagename8},
+		carimagecolor1=#{carimagecolor1}, carimagecolor2=#{carimagecolor2}, carimagecolor3=#{carimagecolor3}, carimagecolor4=#{carimagecolor4},
+		carimagecolor5=#{carimagecolor5}, carimagecolor6=#{carimagecolor6}, carimagecolor7=#{carimagecolor7}, carimagecolor8=#{carimagecolor8},
+		carimagename1=#{carimagename1}, carimagename2=#{carimagename2}, carimagename3=#{carimagename3}, carimagename4=#{carimagename4},
+		carimagename5=#{carimagename5}, carimagename6=#{carimagename6}, carimagename7=#{carimagename7}, carimagename8=#{carimagename8},
 		replywatingminute=#{replywatingminute},
 		groupcompanies=#{groupcompanies},
 		communicationurl=#{communicationurl}, orderurl=#{orderurl},
@@ -606,7 +515,7 @@
 		bankaccount=#{bankaccount},
 		bankaccount2=#{bankaccount2},
 		www=#{www},
-		destinationprefecture=#{destinationprefecture},
+	    destinationprefecture=#{destinationprefecture},
 		destinationaddress=#{destinationaddress},
 		destinationpostalcode=#{destinationpostalcode},
 		destinationcontactname=#{destinationcontactname},
@@ -614,783 +523,582 @@
 		syncedtime=#{syncedtime}
 		WHERE sfid=#{sfid}
 	</update>
-
+	
 	<!-- Singapore -->
 	<select id="getListAppCompanys" resultMap="appCompanyList">
 		SELECT
-		A.sfid,
-		A.phonenumber,
-		A.jtxcompanyid,
-		A.dispatchtype AS dispatchtype,
-		A.appdisplayname,
-		A.salesprefecture,
-		f.sfid as faretableId,
-		bankaccinfo.sfid as bankaccinfo,
-		bankmaster.sfid as bankmaster,
-		bankaccinfo2.sfid as bankaccinfo2,
-		bankmaster2.sfid as bankmaster2,
-		CASE
-		WHEN (w.sycapproveflg = 'T' AND f.sfid is null AND bankaccinfo.sfid is
-		null AND bankmaster.sfid is null AND bankaccinfo2.sfid is null AND
-		bankmaster2.sfid is null AND (select count(*)
-		from accountsync accsync
-		where accsync.appcompany = appsync.sfid and sfid IN (SELECT sfid FROM
-		worker wf WHERE wf.sfid = accsync.sfid AND wf.sycapproveflg = 'F')) =
-		0) THEN 0 ELSE 1 END AS isneedapproval
+			A.sfid,
+			A.phonenumber,
+			A.jtxcompanyid,
+			A.dispatchtype AS dispatchtype,
+			A.appdisplayname,
+			A.salesprefecture,
+			f.sfid as faretableId,
+			(select sfid from worker wf WHERE bankaccinfo.sfid = wf.sfid and wf.sycapproveflg = 'F') as bankaccinfo,
+			bankmaster.sfid as bankmaster,
+			(select sfid from worker wf WHERE bankaccinfo2.sfid = wf.sfid and wf.sycapproveflg = 'F') as bankaccinfo2,
+			bankmaster2.sfid as bankmaster2,
+			CASE
+				WHEN (w.sycapproveflg = 'T' AND f.sfid is null AND (select sfid from worker wf WHERE bankaccinfo.sfid = wf.sfid and wf.sycapproveflg = 'F') is null AND bankmaster.sfid is null AND bankaccinfo2.sfid is null AND (select sfid from worker wf WHERE bankaccinfo2.sfid = wf.sfid and wf.sycapproveflg = 'F') is null) THEN 0 ELSE 1 END AS isneedapproval
 		FROM
-		appcompany A
-		LEFT JOIN appcompanysync appsync ON appsync.sfid = A.sfid
-		LEFT JOIN worker w ON A.sfid = w.sfid
-		LEFT JOIN faretablesync f ON appsync.faretable = f.sfid AND f.sfid =
-		(select sfid from worker wf where f.sfid = wf.sfid and
-		wf.sycapproveflg = 'F')
-		LEFT JOIN bankaccountinformationsync bankaccinfo ON
-		bankaccinfo.accountcategory = '口座引落' AND appsync.bankaccount =
-		bankaccinfo.sfid AND bankaccinfo.sfid = (select sfid from worker wf
-		WHERE bankaccinfo.sfid = wf.sfid and wf.sycapproveflg = 'F')
-		LEFT OUTER JOIN bankmastersync bankmaster ON bankaccinfo.accountbank =
-		bankmaster.sfid
-		AND bankmaster.sfid = (select sfid from worker wf WHERE bankmaster.sfid =
-		wf.sfid and wf.sycapproveflg = 'F')
-		LEFT JOIN bankaccountinformationsync bankaccinfo2 ON
-		bankaccinfo2.accountcategory = 'その他（空転補填・タクエボ等）支払' AND
-		appsync.bankaccount2 = bankaccinfo2.sfid
-		AND bankaccinfo2.sfid = (select sfid from worker wf WHERE
-		bankaccinfo2.sfid = wf.sfid and wf.sycapproveflg = 'F')
-		LEFT OUTER JOIN bankmastersync bankmaster2 ON bankaccinfo2.accountbank =
-		bankmaster2.sfid
-		AND bankmaster2.sfid = (select sfid from worker wf WHERE bankmaster2.sfid
-		= wf.sfid and wf.sycapproveflg = 'F')
-		<if test='sfids != null'>
-			where sfid IN
-			<foreach item="item" index="index" collection="sfids"
-				open="(" separator="," close=")">
-				#{item}
-			</foreach>
-		</if>
+			appcompany A
+			LEFT JOIN appcompanysync appsync ON appsync.sfid = A.sfid
+			LEFT JOIN worker w ON A.sfid = w.sfid
+			LEFT JOIN faretablesync f ON appsync.faretable = f.sfid AND f.sfid = (select sfid from worker wf where f.sfid = wf.sfid and wf.sycapproveflg = 'F')
+			LEFT JOIN bankaccountinformationsync bankaccinfo ON bankaccinfo.accountcategory = '口座引落' AND appsync.bankaccount = bankaccinfo.sfid
+			LEFT OUTER JOIN bankmastersync bankmaster ON bankaccinfo.accountbank = bankmaster.sfid 
+				AND bankmaster.sfid = (select sfid from worker wf WHERE bankmaster.sfid = wf.sfid and wf.sycapproveflg = 'F')
+			LEFT JOIN bankaccountinformationsync bankaccinfo2 ON bankaccinfo2.accountcategory = 'その他（空転補填・タクエボ等）支払' AND appsync.bankaccount2 = bankaccinfo2.sfid
+			LEFT OUTER JOIN bankmastersync bankmaster2 ON bankaccinfo2.accountbank = bankmaster2.sfid 
+				AND bankmaster2.sfid = (select sfid from worker wf WHERE bankmaster2.sfid = wf.sfid and wf.sycapproveflg = 'F')
+				<if test='sfids != null'>
+				where sfid IN
+				<foreach item="item" index="index" collection="sfids" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
 		ORDER BY
 		jtxCompanyId DESC
 	</select>
-	<resultMap
-		type="jp.co.japantaxi.response.AppCompanyResponse$AppCompanyList"
-		id="appCompanyList" autoMapping="true">
-		<result property="jtxCompanyId" column="jtxcompanyid" />
-		<result property="appDisplayName" column="appdisplayname"
-			typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-		<result property="dispatchType" column="dispatchtype"
-			typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-		<result property="salesPrefecture" column="salesprefecture"
-			typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-		<result property="phoneNumber" column="phonenumber"
-			typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-		<result property="sfid" column="sfid" />
-		<result property="isNeedApproval" column="isneedapproval"
-			typeHandler="jp.co.japantaxi.utils.BooleanTypeHandler" />
+	<resultMap type="jp.co.japantaxi.response.AppCompanyResponse$AppCompanyList" id="appCompanyList" autoMapping="true">
+		<result property="jtxCompanyId" column="jtxcompanyid"/>
+		<result property="appDisplayName" column="appdisplayname" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="dispatchType" column="dispatchtype" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="salesPrefecture" column="salesprefecture" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="phoneNumber" column="phonenumber" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="sfid" column="sfid"/>
+		<result property="isNeedApproval" column="isneedapproval" typeHandler="jp.co.japantaxi.utils.BooleanTypeHandler"/>
 	</resultMap>
-	<resultMap id="appCompanyCoopApproval"
-		type="jp.co.japantaxi.response.AppCompanyResponse" autoMapping="true">
-		<result property="sfid" column="sfid" />
-		<result property="jtxCompanyId" column="jtxcompanyid" />
-		<result property="appDisplayName" column="appdisplayname"
-			typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-		<result property="acceptMajor2" column="acceptmajor2" />
-		<result property="acceptMinor2" column="acceptminor2" />
-		<result property="salesPrefecture" column="salesprefecture" />
-		<result property="areaCode" column="areaCode" />
-		<result property="globalLat" column="globallat"
-			typeHandler="jp.co.japantaxi.utils.ConvertDouble" />
-		<result property="globalLng" column="globallng"
-			typeHandler="jp.co.japantaxi.utils.ConvertDouble" />
-		<result property="dispatchType" column="dispatchtype"
-			typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-		<result property="phoneNumber" column="phonenumber"
-			typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-		<result property="isEnableClosing" column="isenableclosing" />
-		<result property="pickupFeeDescriptionEn"
-			column="pickupFeeDescriptionEN"
-			typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-		<result property="bookingFeeDescriptionEn"
-			column="bookingFeeDescriptionEn"
-			typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-		<result property="carImageName1" column="carimagename1"
-			typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-		<result property="carImageName2" column="carimagename2"
-			typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-		<result property="carImageName3" column="carimagename3"
-			typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-		<result property="carImageName4" column="carimagename4"
-			typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-		<result property="carImageName5" column="carimagename5"
-			typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-		<result property="carImageName6" column="carimagename6"
-			typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-		<result property="carImageName7" column="carimagename7"
-			typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-		<result property="carImageName8" column="carimagename8"
-			typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-		<result property="carImageColor1" column="carimagecolor1"
-			typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-		<result property="carImageColor2" column="carimagecolor2"
-			typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-		<result property="carImageColor3" column="carimagecolor3"
-			typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-		<result property="carImageColor4" column="carimagecolor4"
-			typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-		<result property="carImageColor5" column="carimagecolor5"
-			typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-		<result property="carImageColor6" column="carimagecolor6"
-			typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-		<result property="carImageColor7" column="carimagecolor7"
-			typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-		<result property="carImageColor8" column="carimagecolor8"
-			typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-		<collection property="faretables"
-			ofType="java.util.HashMap" notNullColumn="fbsfid">
-			<result property="sfid" column="fbsfid" />
-			<result property="pickupFare" column="pickupfare"
-				typeHandler="jp.co.japantaxi.utils.EmptyIntegerIfNull" />
-			<result property="firstSquareDistance"
-				column="firstsquaredistance"
-				typeHandler="jp.co.japantaxi.utils.EmptyIntegerIfNull" />
-			<result property="firstSquareFare" column="firstsquarefare"
-				typeHandler="jp.co.japantaxi.utils.EmptyIntegerIfNull" />
-			<result property="additionalDistance"
-				column="additionaldistance"
-				typeHandler="jp.co.japantaxi.utils.EmptyIntegerIfNull" />
-			<result property="additionalFare" column="additionalfare"
-				typeHandler="jp.co.japantaxi.utils.EmptyIntegerIfNull" />
-			<result property="reservationFee" column="reservationfee"
-				typeHandler="jp.co.japantaxi.utils.EmptyIntegerIfNull" />
-			<result property="pickupFeeExistence"
-				column="pickupfeeexistence"
-				typeHandler="jp.co.japantaxi.utils.BooleanTypeHandler" />
-			<result property="pickupFeeDescription"
-				column="fbpickupfeedescription"
-				typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-			<result property="bookingFeeExistence"
-				column="bookingfeeexistence"
-				typeHandler="jp.co.japantaxi.utils.BooleanTypeHandler" />
-			<result property="bookingFeeDescription"
-				column="fbbookingfeedescription"
-				typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+	<resultMap id="appCompanyCoopApproval" type="jp.co.japantaxi.response.AppCompanyResponse" autoMapping="true">
+		<result property="sfid" column="sfid"/>
+		<result property="jtxCompanyId" column="jtxcompanyid"/>
+		<result property="appDisplayName" column="appdisplayname" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="acceptMajor2" column="acceptmajor2"/>
+		<result property="acceptMinor2" column="acceptminor2"/>
+		<result property="salesPrefecture" column="salesprefecture"/>
+		<result property="areaCode" column="areaCode"/>
+		<result property="globalLat" column="globallat" typeHandler="jp.co.japantaxi.utils.ConvertDouble"/>
+		<result property="globalLng" column="globallng" typeHandler="jp.co.japantaxi.utils.ConvertDouble"/>
+		<result property="dispatchType" column="dispatchtype" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="phoneNumber" column="phonenumber" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="isEnableClosing" column="isenableclosing"/>
+		<result property="pickupFeeDescriptionEn" column="pickupFeeDescriptionEN" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="bookingFeeDescriptionEn" column="bookingFeeDescriptionEn" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="carImageName1" column="carimagename1" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="carImageName2" column="carimagename2" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="carImageName3" column="carimagename3" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="carImageName4" column="carimagename4" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="carImageName5" column="carimagename5" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="carImageName6" column="carimagename6" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="carImageName7" column="carimagename7" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="carImageName8" column="carimagename8" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="carImageColor1" column="carimagecolor1" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="carImageColor2" column="carimagecolor2" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="carImageColor3" column="carimagecolor3" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="carImageColor4" column="carimagecolor4" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="carImageColor5" column="carimagecolor5" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="carImageColor6" column="carimagecolor6" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="carImageColor7" column="carimagecolor7" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="carImageColor8" column="carimagecolor8" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<collection property="faretables" ofType="java.util.HashMap" notNullColumn="fbsfid">
+			<result property="sfid" column="fbsfid"/>
+			<result property="pickupFare" column="pickupfare" typeHandler="jp.co.japantaxi.utils.EmptyIntegerIfNull"/>
+			<result property="firstSquareDistance" column="firstsquaredistance" typeHandler="jp.co.japantaxi.utils.EmptyIntegerIfNull"/>
+			<result property="firstSquareFare" column="firstsquarefare" typeHandler="jp.co.japantaxi.utils.EmptyIntegerIfNull"/>
+			<result property="additionalDistance" column="additionaldistance" typeHandler="jp.co.japantaxi.utils.EmptyIntegerIfNull"/>
+			<result property="additionalFare" column="additionalfare" typeHandler="jp.co.japantaxi.utils.EmptyIntegerIfNull"/>
+			<result property="reservationFee" column="reservationfee" typeHandler="jp.co.japantaxi.utils.EmptyIntegerIfNull"/>
+			<result property="pickupFeeExistence" column="pickupfeeexistence" typeHandler="jp.co.japantaxi.utils.BooleanTypeHandler"/>
+			<result property="pickupFeeDescription" column="fbpickupfeedescription" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="bookingFeeExistence" column="bookingfeeexistence" typeHandler="jp.co.japantaxi.utils.BooleanTypeHandler"/>
+			<result property="bookingFeeDescription" column="fbbookingfeedescription" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
 		</collection>
-		<collection property="bankAccount"
-			ofType="java.util.HashMap">
-			<result property="bankCode" column="bankacc_bankcode"
-				typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-			<result property="bankNameKana" column="bankacc_banknamekana"
-				typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-			<result property="branchCode" column="bankacc_branchCode"
-				typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-			<result property="branchNameKana"
-				column="bankacc_branchnamekana"
-				typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-			<result property="accountType" column="bankacc_accounttype"
-				typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-			<result property="accountNumber"
-				column="bankacc_accountnumber"
-				typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-			<result property="accountNameKana"
-				column="bankacc_accountnamekana"
-				typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<collection property="bankAccount" ofType="java.util.HashMap">
+			<result property="bankCode" column="bankacc_bankcode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="bankNameKana" column="bankacc_banknamekana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="branchCode" column="bankacc_branchCode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="branchNameKana" column="bankacc_branchnamekana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="accountType" column="bankacc_accounttype" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="accountNumber" column="bankacc_accountnumber" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="accountNameKana" column="bankacc_accountnamekana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
 		</collection>
-		<collection property="bankAccount2"
-			ofType="java.util.HashMap">
-			<result property="bankCode" column="bankacc2_bankcode"
-				typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-			<result property="bankNameKana" column="bankacc2_banknamekana"
-				typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-			<result property="branchCode" column="bankacc2_branchCode"
-				typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-			<result property="branchNameKana"
-				column="bankacc2_branchnamekana"
-				typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-			<result property="accountType" column="bankacc2_accounttype"
-				typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-			<result property="accountNumber"
-				column="bankacc2_accountnumber"
-				typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-			<result property="accountNameKana"
-				column="bankacc2_accountnamekana"
-				typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<collection property="bankAccount2" ofType="java.util.HashMap">
+			<result property="bankCode" column="bankacc2_bankcode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="bankNameKana" column="bankacc2_banknamekana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="branchCode" column="bankacc2_branchCode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="branchNameKana" column="bankacc2_branchnamekana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="accountType" column="bankacc2_accounttype" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="accountNumber" column="bankacc2_accountnumber" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="accountNameKana" column="bankacc2_accountnamekana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
 		</collection>
 	</resultMap>
 	<select id="getAppCompanyDetailByCompanyId"
-		parameterType="java.lang.String" resultMap="appCompanyCoopApproval">
+		parameterType="java.lang.String"
+		resultMap="appCompanyCoopApproval">
 		select
-		app.sfid as sfid,
-		app.jtxcompanyid as jtxCompanyId,
-		app.appdisplayname,
-		app.acceptmajor2,
-		app.acceptminor2,
-		app.dispatchtype as dispatchtype,
-		app.phonenumber,
-		app.phonenumbercancel,
-		app.email,
-		app.warningemail,
-		app.companylogoimage,
-		app.salescity,
-		app.profile,
-		app.cars,
-		app.isenableclosing,
-		app.displaysalescity,
-		app.showdest,
-		app.showmoving,
-		app.showmustarrivaltime,
-		app.showvisit,
-		app.showbookingcancel,
-		app.extendedfieldmap,
-		to_char(closingTimeFrom, 'HH24:MI:SS'):: VARCHAR as closingTimeFrom,
-		to_char(closingTimeTo, 'HH24:MI:SS'):: VARCHAR as closingTimeTo,
-		app.globallat,
-		app.globallng,
-		app.companynameen,
-		app.displaysalescityen,
-		app.pickupfeedescription as pickupFeeDescriptionEN,
-		app.bookingfeedescription as bookingFeeDescriptionEn,
-		app.partnerapiversion,
-		app.showemptycar,
-		app.ratingaverage,
-		app.waitforpickupdefault,
-		app.showminutestowaitforpickup,
-		app.isradionumberedit as isRadioNumberEdit,
-		app.isexternalcancel as isExternalCancel,
-		app.showimmediatecancel,
-		app.netpaytypes,
-		paymentmethod,
-		app.minutestowaitforpickup,
-		app.logoimage,
-		app.replywatingminute,
-		app.groupcompanies,
-		app.communicationurl,
-		app.orderurl,
-		app.ordercancelurl,
-		app.areaCode,
-		app.salesprefecture,
-		app.driverContract,
-		app.implementationcosts,
-		app.monthlyminimumcharge,
-		app.monthlyminimumcars,
-		app.remarks,
-		app.payablecommission,
-		COALESCE(to_char(app.requeststartdate, 'YYYY/MM/DD'), '') AS requeststartdate,
-		app.requestcompanyidrelation,
-		app.www as website,
-		f.sfid as fbsfid,
-		f.pickupfare,
-		f.firstsquaredistance,
-		f.firstsquarefare,
-		f.additionaldistance,
-		f.additionalfare,
-		f.reservationfee,
-		f.pickupfeeexistence,
-		f.pickupfeedescription as fbpickupfeedescription,
-		f.bookingfeeexistence,
-		f.bookingfeedescription as fbbookingfeedescription,
-		bm.bankcode as bankacc_bankcode,
-		bm.banknamekana as bankacc_banknamekana,
-		bm.branchCode as bankacc_branchCode,
-		bm.branchnamekana as bankacc_branchnamekana,
-		bankacc.accounttype as bankacc_accounttype,
-		bankacc.accountnumber as bankacc_accountnumber,
-		bankacc.accountnamekana as bankacc_accountnamekana,
-		bm2.bankcode as bankacc2_bankcode,
-		bm2.banknamekana as bankacc2_banknamekana,
-		bm2.branchCode as bankacc2_branchCode,
-		bm2.branchnamekana as bankacc2_branchnamekana,
-		bankacc2.accounttype as bankacc2_accounttype,
-		bankacc2.accountnumber as bankacc2_accountnumber,
-		bankacc2.accountnamekana as bankacc2_accountnamekana,
-		app.paymentmethoden as paymentmethoden,
-		app.salesprefectureen as salesprefectureen,
-		app.destinationprefecture as destinationprefecture,
-		app.destinationaddress as destinationaddress,
-		app.destinationpostalcode as destinationpostalcode,
-		app.destinationcontactname as destinationcontactname,
-		app.destinationcompanyname as destinationcompanyname,
-		app.carimagename1 as carimagename1,
-		app.carimagename2 as carimagename2,
-		app.carimagename3,
-		app.carimagename4,
-		app.carimagename5,
-		app.carimagename6,
-		app.carimagename7,
-		app.carimagename8,
-		app.carimagecolor1,
-		app.carimagecolor2,
-		app.carimagecolor3,
-		app.carimagecolor4,
-		app.carimagecolor5,
-		app.carimagecolor6,
-		app.carimagecolor7,
-		app.carimagecolor8
+			app.sfid as sfid,
+			app.jtxcompanyid as jtxCompanyId,
+			app.appdisplayname,
+			app.acceptmajor2,
+			app.acceptminor2,
+			app.dispatchtype as dispatchtype,
+			app.phonenumber,
+			app.phonenumbercancel,
+			app.email,
+			app.warningemail,
+			app.companylogoimage,
+			app.salescity,
+			app.profile,
+			app.cars,
+			app.isenableclosing,
+			app.displaysalescity,
+			app.showdest,
+			app.showmoving,
+			app.showmustarrivaltime,
+			app.showvisit,
+			app.showbookingcancel,
+			app.extendedfieldmap,
+			to_char(closingTimeFrom, 'HH24:MI:SS'):: VARCHAR as closingTimeFrom,
+			to_char(closingTimeTo, 'HH24:MI:SS'):: VARCHAR as closingTimeTo,
+			app.globallat,
+			app.globallng,
+			app.companynameen,
+			app.displaysalescityen,
+			app.pickupfeedescription as pickupFeeDescriptionEN,
+			app.bookingfeedescription as bookingFeeDescriptionEn,
+			app.partnerapiversion,
+			app.showemptycar,
+			app.ratingaverage,
+			app.waitforpickupdefault,
+			app.showminutestowaitforpickup,
+			app.isradionumberedit as isRadioNumberEdit,
+			app.isexternalcancel as isExternalCancel,
+			app.showimmediatecancel,
+			app.netpaytypes,
+			paymentmethod,
+			app.minutestowaitforpickup,
+			app.logoimage,
+			app.replywatingminute,
+			app.groupcompanies,
+			app.communicationurl,
+			app.orderurl,
+			app.ordercancelurl,
+			app.areaCode,
+			app.salesprefecture,
+			app.driverContract,
+			app.implementationcosts,
+			app.monthlyminimumcharge,
+			app.monthlyminimumcars,
+			app.remarks,
+			app.payablecommission,
+			COALESCE(to_char(app.requeststartdate, 'YYYY/MM/DD'), '') AS requeststartdate,
+			app.requestcompanyidrelation,
+			app.www as website,
+			f.sfid as fbsfid,
+			f.pickupfare,
+			f.firstsquaredistance,
+			f.firstsquarefare,
+			f.additionaldistance,
+			f.additionalfare,
+			f.reservationfee,
+			f.pickupfeeexistence,
+			f.pickupfeedescription as fbpickupfeedescription,
+			f.bookingfeeexistence,
+			f.bookingfeedescription as fbbookingfeedescription,
+			bm.bankcode as bankacc_bankcode,
+			bm.banknamekana as bankacc_banknamekana,
+			bm.branchCode as bankacc_branchCode,
+			bm.branchnamekana as bankacc_branchnamekana,
+			bankacc.accounttype as bankacc_accounttype,
+			bankacc.accountnumber as bankacc_accountnumber,
+			bankacc.accountnamekana as bankacc_accountnamekana,
+			bm2.bankcode as bankacc2_bankcode,
+			bm2.banknamekana as bankacc2_banknamekana,
+			bm2.branchCode as bankacc2_branchCode,
+			bm2.branchnamekana as bankacc2_branchnamekana,
+			bankacc2.accounttype as bankacc2_accounttype,
+			bankacc2.accountnumber as bankacc2_accountnumber,
+			bankacc2.accountnamekana as bankacc2_accountnamekana,
+			app.paymentmethoden as paymentmethoden,
+			app.salesprefectureen as salesprefectureen,
+			app.destinationprefecture as destinationprefecture,
+			app.destinationaddress as destinationaddress,
+			app.destinationpostalcode as destinationpostalcode,
+			app.destinationcontactname as destinationcontactname,
+			app.destinationcompanyname as destinationcompanyname,
+			app.carimagename1 as carimagename1,
+			app.carimagename2 as carimagename2,
+			app.carimagename3,
+			app.carimagename4,
+			app.carimagename5,
+			app.carimagename6,
+			app.carimagename7,
+			app.carimagename8,
+			app.carimagecolor1,
+			app.carimagecolor2,
+			app.carimagecolor3,
+			app.carimagecolor4,
+			app.carimagecolor5,
+			app.carimagecolor6,
+			app.carimagecolor7,
+			app.carimagecolor8
 		FROM
-		appcompany app
+			appcompany app
 		LEFT JOIN faretable f ON app.faretable = f.sfid
-		LEFT JOIN
-		bankaccountinformation bankacc ON app.bankaccount = bankacc.sfid
-		LEFT
-		OUTER JOIN bankmaster bm ON bankacc.accountbank = bm.sfid
-		LEFT JOIN
-		bankaccountinformation bankacc2 ON app.bankaccount2 = bankacc2.sfid
+		LEFT JOIN bankaccountinformation bankacc ON app.bankaccount = bankacc.sfid
+		LEFT OUTER JOIN bankmaster bm ON bankacc.accountbank = bm.sfid
+		LEFT JOIN bankaccountinformation bankacc2 ON app.bankaccount2 = bankacc2.sfid
 		LEFT JOIN bankmaster bm2 ON bankacc2.accountbank = bm2.sfid
 		WHERE
-		app.sfid=#{sfid,jdbcType=VARCHAR}
+			app.sfid=#{sfid,jdbcType=VARCHAR}
 	</select>
 	<select id="getAppCompanyCoopApprovalInfoByCompanyId"
 		parameterType="java.lang.String"
 		resultMap="AppCompanyCoopApprovalInfo">
 		SELECT
-		app.sfid as sfid,
-		appmaster.dispatchtype,
-		app.jtxcompanyid as jtxcompanyid,
-		app.appdisplayname,
-		app.acceptmajor2,
-		app.acceptminor2,
-		app.phonenumber,
-		app.phonenumbercancel,
-		app.email,
-		app.warningemail,
-		app.companylogoimage,
-		app.areacode as areaCode,
-		app.salesprefecture as salesPrefecture,
-		app.salescity,
-		app.profile,
-		app.cars,
-		app.isenableclosing,
-		app.displaysalescity,
-		app.showdest,
-		app.showmoving,
-		app.showmustarrivaltime,
-		app.showvisit,
-		app.showbookingcancel,
-		app.extendedfieldmap,
-		TO_CHAR(app.closingtimefrom:: time, 'HH24:MI:SS') as closingtimefrom,
-		TO_CHAR(app.closingtimeto:: time, 'HH24:MI:SS') as closingtimeto,
-		app.globallat as globallat,
-		app.globallng as globallng,
-		app.companynameen,
-		app.displaysalescityen,
-		app.pickupfeedescription as pickupfeedescriptionen,
-		app.bookingfeedescription as bookingfeedescriptionen,
-		app.partnerapiversion,
-		app.showemptycar,
-		app.ratingaverage,
-		app.waitforpickupdefault,
-		app.showminutestowaitforpickup,
-		app.isradionumberedit,
-		app.isexternalcancel,
-		app.showimmediatecancel,
-		app.netpaytypes,
-		app.drivercontract_dispatchmethodid as drivercontractdispatchmethodid,
-		app.drivercontract_isenabled as driverContractIsenabled,
-		app.drivercontract_ispreviewenabled as drivercontractispreviewenabled,
-		app.drivercontract_useasdefault as drivercontractuseasdefault,
-		app.drivercontract_onlyusewhennecessary as
-		drivercontractonlyusewhennecessary,
-		app.dispatchtype_isexternaldispatch as isExternalDispatchDispatchType,
-		app.dispatchtype_partnerapiversion as partnerApiVersionDispatchType,
-		app.implementationcosts as implementationCosts,
-		app.monthlyminimumcharge as monthlyMinimumCharge,
-		app.monthlyminimumcars as monthlyMinimumCars,
-		app.remarks as remarks,
-		app.payablecommission as payableCommission,
-		COALESCE(to_char(app.requeststartdate, 'YYYY/MM/DD'), '') AS requestStartDate,
-		app.requestcompanyidrelation as requestcompanyidrelation,
-		app.paymentmethod,
-		app.minutestowaitforpickup,
-		app.replywatingminute,
-		app.groupcompanies,
-		CASE WHEN appmaster.dispatchtype = 'V3.5' THEN app.communicationurl ELSE
-		'' END AS communicationurl,
-		CASE WHEN appmaster.dispatchtype = 'V3.5' THEN app.orderurl ELSE '' END AS
-		orderurl,
-		CASE WHEN appmaster.dispatchtype = 'V3.5' THEN app.ordercancelurl ELSE ''
-		END AS ordercancelurl,
-		f.sfid as fbsfid,
-		f.pickupfare,
-		f.firstsquaredistance,
-		f.firstsquarefare,
-		f.additionaldistance,
-		f.additionalfare,
-		f.reservationfee,
-		f.pickupfeeexistence::int8 as pickupfeeexistence,
-		f.pickupfeedescription as fbpickupfeedescription,
-		f.bookingfeeexistence::int8 as bookingfeeexistence,
-		f.bookingfeedescription as fbbookingfeedescription,
-		app.Www as website,
-		bm.bankcode as bankacc_bankcode,
-		bm.banknamekana as bankacc_banknamekana,
-		bm.branchCode as bankacc_branchCode,
-		bm.branchnamekana as bankacc_branchnamekana,
-		bankacc.accounttype as bankacc_accounttype,
-		bankacc.accountnumber as bankacc_accountnumber,
-		bankacc.accountnamekana as bankacc_accountnamekana,
-		bm2.bankcode as bankacc2_bankcode,
-		bm2.banknamekana as bankacc2_banknamekana,
-		bm2.branchCode as bankacc2_branchCode,
-		bm2.branchnamekana as bankacc2_branchnamekana,
-		bankacc2.accounttype as bankacc2_accounttype,
-		bankacc2.accountnumber as bankacc2_accountnumber,
-		bankacc2.accountnamekana as bankacc2_accountnamekana,
-		app.paymentmethoden as paymentmethoden,
-		app.salesprefectureen as salesprefectureen,
-		concat(app.destinationprefecture, app.destinationaddress) as destinationaddress,
-		app.destinationpostalcode as destinationpostalcode,
-		app.destinationcontactname as destinationcontactname,
-		app.destinationcompanyname as destinationcompanyname,
-		CONCAT('',
-		CASE WHEN coalesce(TRIM(app.carimagecolor1), '') != '' THEN
-		concat(app.carimagecolor1, '.', app.carimagename1, ',') ELSE '' END,
-		CASE WHEN coalesce(TRIM(app.carimagecolor2), '') != '' THEN
-		concat(app.carimagecolor2, '.', app.carimagename2, ',') ELSE '' END,
-		CASE WHEN coalesce(TRIM(app.carimagecolor3), '') != '' THEN
-		concat(app.carimagecolor3, '.', app.carimagename3, ',') ELSE '' END,
-		CASE WHEN coalesce(TRIM(app.carimagecolor4), '') != '' THEN
-		concat(app.carimagecolor4, '.', app.carimagename4, ',') ELSE '' END,
-		CASE WHEN coalesce(TRIM(app.carimagecolor5), '') != '' THEN
-		concat(app.carimagecolor5, '.', app.carimagename5, ',') ELSE '' END,
-		CASE WHEN coalesce(TRIM(app.carimagecolor6), '') != '' THEN
-		concat(app.carimagecolor6, '.', app.carimagename6, ',') ELSE '' END,
-		CASE WHEN coalesce(TRIM(app.carimagecolor7), '') != '' THEN
-		concat(app.carimagecolor7, '.', app.carimagename7, ',') ELSE '' END,
-		CASE WHEN coalesce(TRIM(app.carimagecolor8), '') != '' THEN
-		concat(app.carimagecolor8, '.', app.carimagename8, '') ELSE '' END
-		)
-		as carImage,
-		app.carimagecolor1,
-		app.carimagecolor2,
-		app.carimagecolor3,
-		app.carimagecolor4,
-		app.carimagecolor5,
-		app.carimagecolor6,
-		app.carimagecolor7,
-		app.carimagecolor8
+			app.sfid as sfid,
+			appmaster.dispatchtype,
+			app.jtxcompanyid as jtxcompanyid,
+			app.appdisplayname,
+			app.acceptmajor2,
+			app.acceptminor2,
+			app.phonenumber,
+			app.phonenumbercancel,
+			app.email,
+			app.warningemail,
+			app.companylogoimage,
+			app.areacode as areaCode,
+			app.salesprefecture as salesPrefecture,
+			app.salescity,
+			app.profile,
+			app.cars,
+			app.isenableclosing,
+			app.displaysalescity,
+			app.showdest,
+			app.showmoving,
+			app.showmustarrivaltime,
+			app.showvisit,
+			app.showbookingcancel,
+			app.extendedfieldmap,
+			TO_CHAR(app.closingtimefrom:: time, 'HH24:MI:SS') as closingtimefrom,
+			TO_CHAR(app.closingtimeto:: time, 'HH24:MI:SS') as closingtimeto,
+			app.globallat as globallat,
+			app.globallng as globallng,
+			app.companynameen,
+			app.displaysalescityen,
+			app.pickupfeedescription as pickupfeedescriptionen,
+			app.bookingfeedescription as bookingfeedescriptionen,
+			app.partnerapiversion,
+			app.showemptycar,
+			app.ratingaverage,
+			app.waitforpickupdefault,
+			app.showminutestowaitforpickup,
+			app.isradionumberedit,
+			app.isexternalcancel,
+			app.showimmediatecancel,
+			app.netpaytypes,
+			app.drivercontract_dispatchmethodid as drivercontractdispatchmethodid,
+			app.drivercontract_isenabled as driverContractIsenabled,
+			app.drivercontract_ispreviewenabled as drivercontractispreviewenabled,
+			app.drivercontract_useasdefault as drivercontractuseasdefault,
+			app.drivercontract_onlyusewhennecessary as drivercontractonlyusewhennecessary,
+			app.dispatchtype_isexternaldispatch as isExternalDispatchDispatchType,
+			app.dispatchtype_partnerapiversion as partnerApiVersionDispatchType,
+			app.implementationcosts as implementationCosts,
+			app.monthlyminimumcharge as monthlyMinimumCharge,
+			app.monthlyminimumcars as monthlyMinimumCars,
+			app.remarks as remarks,
+			app.payablecommission as payableCommission,
+			COALESCE(to_char(app.requeststartdate, 'YYYY/MM/DD'), '') AS requestStartDate,
+			app.requestcompanyidrelation as requestcompanyidrelation,
+			app.paymentmethod,
+			app.minutestowaitforpickup,
+			app.replywatingminute,
+			app.groupcompanies,
+			CASE WHEN appmaster.dispatchtype = 'V3.5' THEN app.communicationurl ELSE '' END AS communicationurl,
+			CASE WHEN appmaster.dispatchtype = 'V3.5' THEN app.orderurl ELSE '' END AS orderurl,
+			CASE WHEN appmaster.dispatchtype = 'V3.5' THEN app.ordercancelurl ELSE '' END AS ordercancelurl,
+			f.sfid as fbsfid,
+			f.pickupfare,
+			f.firstsquaredistance,
+			f.firstsquarefare,
+			f.additionaldistance,
+			f.additionalfare,
+			f.reservationfee,
+			f.pickupfeeexistence::int8 as pickupfeeexistence,
+			f.pickupfeedescription as fbpickupfeedescription,
+			f.bookingfeeexistence::int8 as bookingfeeexistence,
+			f.bookingfeedescription as fbbookingfeedescription,
+			app.Www as website,
+			bm.bankcode as bankacc_bankcode,
+			bm.banknamekana as bankacc_banknamekana,
+			bm.branchCode as bankacc_branchCode,
+			bm.branchnamekana as bankacc_branchnamekana,
+			bankacc.accounttype as bankacc_accounttype,
+			bankacc.accountnumber as bankacc_accountnumber,
+			bankacc.accountnamekana as bankacc_accountnamekana,
+			bm2.bankcode as bankacc2_bankcode,
+			bm2.banknamekana as bankacc2_banknamekana,
+			bm2.branchCode as bankacc2_branchCode,
+			bm2.branchnamekana as bankacc2_branchnamekana,
+			bankacc2.accounttype as bankacc2_accounttype,
+			bankacc2.accountnumber as bankacc2_accountnumber,
+			bankacc2.accountnamekana as bankacc2_accountnamekana,
+			app.paymentmethoden as paymentmethoden,
+			app.salesprefectureen as salesprefectureen,
+			concat(app.destinationprefecture, app.destinationaddress) as destinationaddress,
+			app.destinationpostalcode as destinationpostalcode,
+			app.destinationcontactname as destinationcontactname,
+			app.destinationcompanyname as destinationcompanyname,
+			CONCAT('',
+				CASE WHEN coalesce(TRIM(app.carimagecolor1), '') != '' THEN concat(app.carimagecolor1, '.', app.carimagename1, ',') ELSE '' END,
+				CASE WHEN coalesce(TRIM(app.carimagecolor2), '') != '' THEN concat(app.carimagecolor2, '.', app.carimagename2, ',') ELSE '' END,
+				CASE WHEN coalesce(TRIM(app.carimagecolor3), '') != '' THEN concat(app.carimagecolor3, '.', app.carimagename3, ',') ELSE '' END,
+				CASE WHEN coalesce(TRIM(app.carimagecolor4), '') != '' THEN concat(app.carimagecolor4, '.', app.carimagename4, ',') ELSE '' END,
+				CASE WHEN coalesce(TRIM(app.carimagecolor5), '') != '' THEN concat(app.carimagecolor5, '.', app.carimagename5, ',') ELSE '' END,
+				CASE WHEN coalesce(TRIM(app.carimagecolor6), '') != '' THEN concat(app.carimagecolor6, '.', app.carimagename6, ',') ELSE '' END,
+				CASE WHEN coalesce(TRIM(app.carimagecolor7), '') != '' THEN concat(app.carimagecolor7, '.', app.carimagename7, ',') ELSE '' END,
+				CASE WHEN coalesce(TRIM(app.carimagecolor8), '') != '' THEN concat(app.carimagecolor8, '.', app.carimagename8, '') ELSE '' END
+			)
+			as carImage,
+			app.carimagecolor1,
+			app.carimagecolor2,
+			app.carimagecolor3,
+			app.carimagecolor4,
+			app.carimagecolor5,
+			app.carimagecolor6,
+			app.carimagecolor7,
+			app.carimagecolor8
 		FROM
 		appcompanysync app
-		LEFT JOIN appcompany appmaster ON app.sfid =
-		appmaster.sfid
+		LEFT JOIN appcompany appmaster ON app.sfid = appmaster.sfid
 		LEFT JOIN faretablesync f ON app.faretable = f.sfid
-		LEFT
-		JOIN bankaccountinformationsync bankacc ON app.bankaccount =
-		bankacc.sfid AND bankacc.accountcategory = '口座引落'
-		LEFT OUTER JOIN
-		bankmastersync bm ON bankacc.accountbank = bm.sfid
-		LEFT JOIN
-		bankaccountinformationsync bankacc2 ON app.bankaccount2 =
-		bankacc2.sfid AND bankacc2.accountcategory = 'その他（空転補填・タクエボ等）支払'
-		LEFT
-		OUTER JOIN bankmastersync bm2 ON bankacc2.accountbank = bm2.sfid
+		LEFT JOIN bankaccountinformationsync bankacc ON app.bankaccount = bankacc.sfid AND bankacc.accountcategory = '口座引落'
+		LEFT OUTER JOIN bankmastersync bm ON bankacc.accountbank = bm.sfid
+		LEFT JOIN bankaccountinformationsync bankacc2 ON app.bankaccount2 = bankacc2.sfid AND bankacc2.accountcategory = 'その他（空転補填・タクエボ等）支払'
+		LEFT OUTER JOIN bankmastersync bm2 ON bankacc2.accountbank = bm2.sfid
 		WHERE
-		app.sfid=#{sfid,jdbcType=VARCHAR}
+			app.sfid=#{sfid,jdbcType=VARCHAR}
 	</select>
-	<resultMap id="AppCompanyCoopApprovalInfo"
-		type="jp.co.japantaxi.response.AppCompanyCoopApprovalBrooklyn"
-		autoMapping="true">
-		<result property="sfid" column="sfid" />
-		<result property="pickupFeeDescriptionEn"
-			column="pickupfeedescriptionen"
-			typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-		<result property="bookingFeeDescriptionEn"
-			column="bookingfeedescriptionen"
-			typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-		<result property="dispatchMethodIdDriverContract"
-			column="drivercontractdispatchmethodid"
-			typeHandler="jp.co.japantaxi.utils.EmptyIntegerIfNull" />
-		<result property="isPreviewEnabledDriverContract"
-			column="drivercontractispreviewenabled" />
-		<result property="isEnabledDriverContract"
-			column="driverContractIsenabled" />
-		<result property="useAsDefaultDriverContract"
-			column="drivercontractuseasdefault" />
-		<result property="onlyUseWhenNecessaryDriverContract"
-			column="drivercontractonlyusewhennecessary" />
-		<result property="website" column="website"
-			typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-		<result property="globalLat" column="globallat" />
-		<result property="globalLng" column="globallng" />
-		<collection property="faretables"
-			ofType="jp.co.japantaxi.response.AppCompanyCoopApprovalBrooklyn$FareTableCoopApproval"
-			notNullColumn="fbsfid">
-			<result property="pickupFare" column="pickupfare" />
-			<result property="firstSquareDistance"
-				column="firstsquaredistance" />
-			<result property="firstSquareFare" column="firstsquarefare" />
-			<result property="additionalDistance"
-				column="additionaldistance" />
-			<result property="additionalFare" column="additionalfare" />
-			<result property="reservationFee" column="reservationfee" />
-			<result property="pickupFeeExistence"
-				column="pickupfeeexistence" />
-			<result property="bookingFeeExistence"
-				column="bookingfeeexistence" />
-			<result property="pickupFeeDescription"
-				column="fbpickupfeedescription"
-				typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-			<result property="bookingFeeDescription"
-				column="fbbookingfeedescription"
-				typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+	<resultMap id="AppCompanyCoopApprovalInfo" type="jp.co.japantaxi.response.AppCompanyCoopApprovalBrooklyn" autoMapping="true">
+		<result property="sfid" column="sfid"/>
+		<result property="pickupFeeDescriptionEn" column="pickupfeedescriptionen" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="bookingFeeDescriptionEn" column="bookingfeedescriptionen" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="dispatchMethodIdDriverContract" column="drivercontractdispatchmethodid" typeHandler="jp.co.japantaxi.utils.EmptyIntegerIfNull"/>
+		<result property="isPreviewEnabledDriverContract" column="drivercontractispreviewenabled"/>
+		<result property="isEnabledDriverContract" column="driverContractIsenabled"/>
+		<result property="useAsDefaultDriverContract" column="drivercontractuseasdefault"/>
+		<result property="onlyUseWhenNecessaryDriverContract" column="drivercontractonlyusewhennecessary"/>
+		<result property="website" column="website" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="globalLat" column="globallat"/>
+		<result property="globalLng" column="globallng"/>
+		<collection property="faretables" ofType="jp.co.japantaxi.response.AppCompanyCoopApprovalBrooklyn$FareTableCoopApproval" notNullColumn="fbsfid">
+			<result property="pickupFare" column="pickupfare"/>
+			<result property="firstSquareDistance" column="firstsquaredistance"/>
+			<result property="firstSquareFare" column="firstsquarefare"/>
+			<result property="additionalDistance" column="additionaldistance"/>
+			<result property="additionalFare" column="additionalfare"/>
+			<result property="reservationFee" column="reservationfee"/>
+			<result property="pickupFeeExistence" column="pickupfeeexistence"/>
+			<result property="bookingFeeExistence" column="bookingfeeexistence"/>
+			<result property="pickupFeeDescription" column="fbpickupfeedescription" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="bookingFeeDescription" column="fbbookingfeedescription" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
 		</collection>
-		<collection property="bankAccount"
-			ofType="java.util.HashMap">
-			<result property="bankCode" column="bankacc_bankcode"
-				typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-			<result property="bankNameKana" column="bankacc_banknamekana"
-				typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-			<result property="branchCode" column="bankacc_branchCode"
-				typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-			<result property="branchNameKana"
-				column="bankacc_branchnamekana"
-				typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-			<result property="accountType" column="bankacc_accounttype"
-				typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-			<result property="accountNumber"
-				column="bankacc_accountnumber"
-				typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-			<result property="accountNameKana"
-				column="bankacc_accountnamekana"
-				typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<collection property="bankAccount" ofType="java.util.HashMap">
+			<result property="bankCode" column="bankacc_bankcode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="bankNameKana" column="bankacc_banknamekana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="branchCode" column="bankacc_branchCode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="branchNameKana" column="bankacc_branchnamekana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="accountType" column="bankacc_accounttype" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="accountNumber" column="bankacc_accountnumber" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="accountNameKana" column="bankacc_accountnamekana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
 		</collection>
-		<collection property="bankAccount2"
-			ofType="java.util.HashMap">
-			<result property="bankCode" column="bankacc2_bankcode"
-				typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-			<result property="bankNameKana" column="bankacc2_banknamekana"
-				typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-			<result property="branchCode" column="bankacc2_branchCode"
-				typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-			<result property="branchNameKana"
-				column="bankacc2_branchnamekana"
-				typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-			<result property="accountType" column="bankacc2_accounttype"
-				typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-			<result property="accountNumber"
-				column="bankacc2_accountnumber"
-				typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-			<result property="accountNameKana"
-				column="bankacc2_accountnamekana"
-				typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+		<collection property="bankAccount2" ofType="java.util.HashMap">
+			<result property="bankCode" column="bankacc2_bankcode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="bankNameKana" column="bankacc2_banknamekana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="branchCode" column="bankacc2_branchCode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="branchNameKana" column="bankacc2_branchnamekana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="accountType" column="bankacc2_accounttype" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="accountNumber" column="bankacc2_accountnumber" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="accountNameKana" column="bankacc2_accountnamekana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
 		</collection>
 	</resultMap>
 	<select id="getAppCompanyCoopApprovalByDetailBySfid"
-		parameterType="java.lang.String" resultMap="appCompanyCoopApprovalBK">
+		parameterType="java.lang.String"
+		resultMap="appCompanyCoopApprovalBK">
 		SELECT
-		app.sfid as sfid,
-		app.jtxcompanyid as jtxcompanyid,
-		app.appdisplayname,
-		app.acceptmajor2,
-		app.acceptminor2,
-		app.dispatchtype_isexternaldispatch as dispatchtypeisexternaldispatch,
-		app.dispatchtype_partnerapiversion as dispatchtypepartnerapiversion,
-		app.phonenumber,
-		app.phonenumbercancel,
-		app.email,
-		app.warningemail,
-		app.companylogoimage,
-		app.areacode,
-		app.salescity,
-		app.profile,
-		app.cars,
-		app.isenableclosing,
-		app.displaysalescity,
-		app.showdest,
-		app.showmoving,
-		app.showmustarrivaltime,
-		app.showvisit,
-		app.showbookingcancel,
-		app.extendedfieldmap,
-		TO_CHAR(app.closingtimefrom:: time, 'HH24:MI:SS') as closingtimefrom,
-		TO_CHAR(app.closingtimeto:: time, 'HH24:MI:SS') as closingtimeto,
-		app.globallat,
-		app.globallng,
-		app.companynameen,
-		app.displaysalescityen,
-		app.pickupfeedescription as pickupfeedescriptionen,
-		app.bookingfeedescription as bookingFeeDescriptionen,
-		app.partnerapiversion,
-		app.showemptycar,
-		app.ratingaverage,
-		app.waitforpickupdefault,
-		app.showminutestowaitforpickup,
-		app.isradionumberedit,
-		app.isexternalcancel,
-		app.showimmediatecancel,
-		app.netpaytypes,
-		app.paymentmethod as paymentmethod,
-		app.minutestowaitforpickup,
-		app.logoimage,
-		app.replywatingminute,
-		app.groupcompanies,
-		app.communicationurl,
-		app.orderurl,
-		app.ordercancelurl,
-		app.payablecommission,
-		app.implementationcosts,
-		app.monthlyMinimumCharge,
-		app.monthlyMinimumCars,
-		COALESCE(to_char(app.requeststartdate, 'YYYY/MM/DD'), '') AS requestStartDate,
-		app.remarks,
-		app.requestcompanyidrelation,
-		app.drivercontract_dispatchmethodid as drivercontractdispatchmethodid,
-		app.drivercontract_isenabled as driverContractIsenabled,
-		app.drivercontract_ispreviewenabled as drivercontractispreviewenabled,
-		app.drivercontract_useasdefault as drivercontractuseasdefault,
-		app.drivercontract_onlyusewhennecessary as
-		drivercontractonlyusewhennecessary,
-		app.dispatchtype_isexternaldispatch as isExternalDispatchDispatchType,
-		app.dispatchtype_partnerapiversion as partnerApiVersionDispatchType,
-		app.areacode as areaCode,
-		app.salesprefecture as salesPrefecture,
-		app.www as website,
-		app.paymentmethoden as paymentmethoden,
-		app.salesprefectureen as salesprefectureen,
-		f.sfid as fbsfid,
-		f.pickupfare as pickupfee,
-		f.firstsquaredistance as uponentrymeter,
-		f.firstsquarefare as uponentryfare,
-		f.additionaldistance as unitmeter,
-		f.additionalfare as unitfare,
-		f.reservationfee as bookingfee,
-		f.pickupfeeexistence as pickupFeeExistence,
-		f.pickupfeedescription as pickupfeedescription,
-		f.bookingfeeexistence as bookingfeeexistence,
-		f.bookingfeedescription as bookingfeedescription,
-		app.destinationprefecture as destinationprefecture,
-		app.destinationaddress as destinationaddress,
-		app.destinationpostalcode as destinationpostalcode,
-		app.destinationcontactname as destinationcontactname,
-		app.destinationcompanyname as destinationcompanyname,
-		bm.banknamekana as bankacc_bankNameKana,
-		bm.bankcode as bankacc_bankCode,
-		bm.branchnamekana AS bankacc_branchNameKana,
-		bm.branchcode as bankacc_branchCode,
-		bankacc.sfid as bankaccsfid,
-		bankacc.accountname as bankacc_accountName,
-		bankacc.accountnumber AS bankacc_accountNumber,
-		bankacc.accountnamekana AS bankacc_accountNameKana,
-		bankacc.accounttype as bankacc_accountType,
-		bm2.banknamekana as bankacc2_bankNameKana,
-		bm2.bankcode as bankacc2_bankCode,
-		bm2.branchnamekana AS bankacc2_branchNameKana,
-		bm2.branchcode as bankacc2_branchCode,
-		bankacc2.sfid as bankacc2sfid,
-		bankacc2.accountname as bankacc2_accountName,
-		bankacc2.accountnumber AS bankacc2_accountNumber,
-		bankacc2.accountnamekana AS bankacc2_accountNameKana,
-		bankacc2.accounttype as bankacc2_accountType,
-		acc.mertermno as mertermno,
-		apps.dispatchtype as dispatchtype,
-		apps.driverContract as drivercontract,
-		CONCAT('',
-		CASE WHEN coalesce(TRIM(app.carimagecolor1), '') != '' THEN
-		concat(app.carimagecolor1, '.', app.carimagename1, ',') ELSE '' END,
-		CASE WHEN coalesce(TRIM(app.carimagecolor2), '') != '' THEN
-		concat(app.carimagecolor2, '.', app.carimagename2, ',') ELSE '' END,
-		CASE WHEN coalesce(TRIM(app.carimagecolor3), '') != '' THEN
-		concat(app.carimagecolor3, '.', app.carimagename3, ',') ELSE '' END,
-		CASE WHEN coalesce(TRIM(app.carimagecolor4), '') != '' THEN
-		concat(app.carimagecolor4, '.', app.carimagename4, ',') ELSE '' END,
-		CASE WHEN coalesce(TRIM(app.carimagecolor5), '') != '' THEN
-		concat(app.carimagecolor5, '.', app.carimagename5, ',') ELSE '' END,
-		CASE WHEN coalesce(TRIM(app.carimagecolor6), '') != '' THEN
-		concat(app.carimagecolor6, '.', app.carimagename6, ',') ELSE '' END,
-		CASE WHEN coalesce(TRIM(app.carimagecolor7), '') != '' THEN
-		concat(app.carimagecolor7, '.', app.carimagename7, ',') ELSE '' END,
-		CASE WHEN coalesce(TRIM(app.carimagecolor8), '') != '' THEN
-		concat(app.carimagecolor8, '.', app.carimagename8, '') ELSE '' END
-		)
-		as carImage
+			app.sfid as sfid,
+			app.jtxcompanyid as jtxcompanyid,
+			app.appdisplayname,
+			app.acceptmajor2,
+			app.acceptminor2,
+			app.dispatchtype_isexternaldispatch as dispatchtypeisexternaldispatch,
+			app.dispatchtype_partnerapiversion as dispatchtypepartnerapiversion,
+			app.phonenumber,
+			app.phonenumbercancel,
+			app.email,
+			app.warningemail,
+			app.companylogoimage,
+			app.areacode,
+			app.salescity,
+			app.profile,
+			app.cars,
+			app.isenableclosing,
+			app.displaysalescity,
+			app.showdest,
+			app.showmoving,
+			app.showmustarrivaltime,
+			app.showvisit,
+			app.showbookingcancel,
+			app.extendedfieldmap,
+			TO_CHAR(app.closingtimefrom:: time, 'HH24:MI:SS') as closingtimefrom,
+			TO_CHAR(app.closingtimeto:: time, 'HH24:MI:SS') as closingtimeto,
+			app.globallat,
+			app.globallng,
+			app.companynameen,
+			app.displaysalescityen,
+			app.pickupfeedescription as pickupfeedescriptionen,
+			app.bookingfeedescription as bookingFeeDescriptionen,
+			app.partnerapiversion,
+			app.showemptycar,
+			app.ratingaverage,
+			app.waitforpickupdefault,
+			app.showminutestowaitforpickup,
+			app.isradionumberedit,
+			app.isexternalcancel,
+			app.showimmediatecancel,
+			app.netpaytypes,
+			app.paymentmethod as paymentmethod,
+			app.minutestowaitforpickup,
+			app.logoimage,
+			app.replywatingminute,
+			app.groupcompanies,
+			app.communicationurl,
+			app.orderurl,
+			app.ordercancelurl,
+			app.payablecommission,
+			app.implementationcosts,
+			app.monthlyMinimumCharge,
+			app.monthlyMinimumCars,
+			COALESCE(to_char(app.requeststartdate, 'YYYY/MM/DD'), '') AS requestStartDate,
+			app.remarks,
+			app.requestcompanyidrelation,
+			app.drivercontract_dispatchmethodid as drivercontractdispatchmethodid,
+			app.drivercontract_isenabled as driverContractIsenabled,
+			app.drivercontract_ispreviewenabled as drivercontractispreviewenabled,
+			app.drivercontract_useasdefault as drivercontractuseasdefault,
+			app.drivercontract_onlyusewhennecessary as drivercontractonlyusewhennecessary,
+			app.dispatchtype_isexternaldispatch as isExternalDispatchDispatchType,
+			app.dispatchtype_partnerapiversion as partnerApiVersionDispatchType,
+			app.areacode as areaCode,
+			app.salesprefecture as salesPrefecture,
+			app.www as website,
+			app.paymentmethoden as paymentmethoden,
+			app.salesprefectureen as salesprefectureen,
+			f.sfid as fbsfid,
+			f.pickupfare as pickupfee,
+			f.firstsquaredistance as uponentrymeter,
+			f.firstsquarefare as uponentryfare,
+			f.additionaldistance as unitmeter,
+			f.additionalfare as unitfare,
+			f.reservationfee as bookingfee,
+			f.pickupfeeexistence as pickupFeeExistence,
+			f.pickupfeedescription as pickupfeedescription,
+			f.bookingfeeexistence as bookingfeeexistence,
+			f.bookingfeedescription as bookingfeedescription,
+			app.destinationprefecture as destinationprefecture,
+			app.destinationaddress as destinationaddress,
+			app.destinationpostalcode as destinationpostalcode,
+			app.destinationcontactname as destinationcontactname,
+            app.destinationcompanyname as destinationcompanyname,
+            bm.banknamekana as bankacc_bankNameKana,
+            bm.bankcode as bankacc_bankCode,
+            bm.branchnamekana AS bankacc_branchNameKana,
+            bm.branchcode as bankacc_branchCode,
+            bankacc.sfid as bankaccsfid,
+            bankacc.accountname as bankacc_accountName,
+            bankacc.accountnumber AS bankacc_accountNumber,
+            bankacc.accountnamekana AS bankacc_accountNameKana,
+            bankacc.accounttype as bankacc_accountType,
+            bm2.banknamekana as bankacc2_bankNameKana,
+            bm2.bankcode as bankacc2_bankCode,
+            bm2.branchnamekana AS bankacc2_branchNameKana,
+            bm2.branchcode as bankacc2_branchCode,
+            bankacc2.sfid as bankacc2sfid,
+            bankacc2.accountname as bankacc2_accountName,
+            bankacc2.accountnumber AS bankacc2_accountNumber,
+            bankacc2.accountnamekana AS bankacc2_accountNameKana,
+            bankacc2.accounttype as bankacc2_accountType,
+            acc.mertermno as mertermno,
+            apps.dispatchtype as dispatchtype,
+            apps.driverContract as drivercontract,
+            CONCAT('',
+                CASE WHEN coalesce(TRIM(app.carimagecolor1), '') != '' THEN concat(app.carimagecolor1, '.', app.carimagename1, ',') ELSE '' END,
+                CASE WHEN coalesce(TRIM(app.carimagecolor2), '') != '' THEN concat(app.carimagecolor2, '.', app.carimagename2, ',') ELSE '' END,
+                CASE WHEN coalesce(TRIM(app.carimagecolor3), '') != '' THEN concat(app.carimagecolor3, '.', app.carimagename3, ',') ELSE '' END,
+                CASE WHEN coalesce(TRIM(app.carimagecolor4), '') != '' THEN concat(app.carimagecolor4, '.', app.carimagename4, ',') ELSE '' END,
+                CASE WHEN coalesce(TRIM(app.carimagecolor5), '') != '' THEN concat(app.carimagecolor5, '.', app.carimagename5, ',') ELSE '' END,
+                CASE WHEN coalesce(TRIM(app.carimagecolor6), '') != '' THEN concat(app.carimagecolor6, '.', app.carimagename6, ',') ELSE '' END,
+                CASE WHEN coalesce(TRIM(app.carimagecolor7), '') != '' THEN concat(app.carimagecolor7, '.', app.carimagename7, ',') ELSE '' END,
+                CASE WHEN coalesce(TRIM(app.carimagecolor8), '') != '' THEN concat(app.carimagecolor8, '.', app.carimagename8, '') ELSE '' END
+				)
+			as carImage
 		FROM
 		appcompanysync app
-		LEFT JOIN faretablesync f ON app.faretable = f.sfid
-		LEFT JOIN bankaccountinformationsync bankacc ON app.bankaccount =
-		bankacc.sfid AND bankacc.accountcategory = '口座引落'
-		LEFT OUTER JOIN bankmastersync bm ON bankacc.accountbank = bm.sfid
-		LEFT JOIN bankaccountinformationsync bankacc2 ON app.bankaccount2 =
-		bankacc2.sfid AND bankacc2.accountcategory = 'その他（空転補填・タクエボ等）支払'
-		LEFT OUTER JOIN bankmastersync bm2 ON bankacc2.accountbank = bm2.sfid
-		LEFT JOIN accountsync acc ON app.account = acc.sfid
-		LEFT JOIN appcompany apps On app.sfid = apps.sfid
+			LEFT JOIN faretablesync f ON app.faretable = f.sfid
+			LEFT JOIN bankaccountinformationsync bankacc ON app.bankaccount = bankacc.sfid AND bankacc.accountcategory = '口座引落'
+			LEFT OUTER JOIN bankmastersync bm ON bankacc.accountbank = bm.sfid
+			LEFT JOIN bankaccountinformationsync bankacc2 ON app.bankaccount2 = bankacc2.sfid AND bankacc2.accountcategory = 'その他（空転補填・タクエボ等）支払'
+			LEFT OUTER JOIN bankmastersync bm2 ON bankacc2.accountbank = bm2.sfid
+			LEFT JOIN accountsync acc ON app.account = acc.sfid
+			LEFT JOIN appcompany apps On app.sfid = apps.sfid
 		WHERE
-		app.sfid=#{sfid,jdbcType=VARCHAR}
+			app.sfid=#{sfid,jdbcType=VARCHAR}
 	</select>
-	<resultMap id="appCompanyCoopApprovalBK"
-		type="jp.co.japantaxi.response.AppCompanyResponse$AppCompanyCoopApproval"
-		autoMapping="true">
-		<result property="sfid" column="sfid" />
-		<result property="pickupFeeDescriptionEn"
-			column="pickupfeedescriptionen"
-			typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-		<result property="bookingFeeDescriptionEn"
-			column="bookingFeeDescriptionen"
-			typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-		<result property="dispatchType" column="dispatchtype" />
-		<result property="driverContract" column="drivercontract" />
-		<result property="accountMerTermNo" column="mertermno" />
-		<collection property="faretables"
-			ofType="java.util.HashMap" notNullColumn="fbsfid">
-			<result property="sfid" column="fbsfid" />
-			<result property="pickupfare" column="pickupfare"
-				typeHandler="jp.co.japantaxi.utils.EmptyIntegerIfNull" />
-			<result property="firstsquaredistance"
-				column="firstsquaredistance"
-				typeHandler="jp.co.japantaxi.utils.EmptyIntegerIfNull" />
-			<result property="firstsquarefare" column="firstsquarefare"
-				typeHandler="jp.co.japantaxi.utils.EmptyIntegerIfNull" />
-			<result property="additionaldistance"
-				column="additionaldistance"
-				typeHandler="jp.co.japantaxi.utils.EmptyIntegerIfNull" />
-			<result property="additionalfare" column="additionalfare"
-				typeHandler="jp.co.japantaxi.utils.EmptyIntegerIfNull" />
-			<result property="reservationfee" column="reservationfee"
-				typeHandler="jp.co.japantaxi.utils.EmptyIntegerIfNull" />
-			<result property="pickupfeeexistence"
-				column="pickupfeeexistence"
-				typeHandler="jp.co.japantaxi.utils.BooleanTypeHandler" />
-			<result property="pickupfeedescription"
-				column="fbpickupfeedescription"
-				typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-			<result property="bookingfeeexistence"
-				column="bookingfeeexistence"
-				typeHandler="jp.co.japantaxi.utils.BooleanTypeHandler" />
-			<result property="bookingfeedescription"
-				column="fbbookingfeedescription"
-				typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
+	<resultMap id="appCompanyCoopApprovalBK" type="jp.co.japantaxi.response.AppCompanyResponse$AppCompanyCoopApproval" autoMapping="true">
+		<result property="sfid" column="sfid"/>
+		<result property="pickupFeeDescriptionEn" column="pickupfeedescriptionen" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="bookingFeeDescriptionEn" column="bookingFeeDescriptionen" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+		<result property="dispatchType" column="dispatchtype"/>
+		<result property="driverContract" column="drivercontract"/>
+		<result property="accountMerTermNo" column="mertermno"/>
+		<collection property="faretables" ofType="java.util.HashMap" notNullColumn="fbsfid">
+			<result property="sfid" column="fbsfid"/>
+			<result property="pickupfare" column="pickupfare" typeHandler="jp.co.japantaxi.utils.EmptyIntegerIfNull"/>
+			<result property="firstsquaredistance" column="firstsquaredistance" typeHandler="jp.co.japantaxi.utils.EmptyIntegerIfNull"/>
+			<result property="firstsquarefare" column="firstsquarefare" typeHandler="jp.co.japantaxi.utils.EmptyIntegerIfNull"/>
+			<result property="additionaldistance" column="additionaldistance" typeHandler="jp.co.japantaxi.utils.EmptyIntegerIfNull"/>
+			<result property="additionalfare" column="additionalfare" typeHandler="jp.co.japantaxi.utils.EmptyIntegerIfNull"/>
+			<result property="reservationfee" column="reservationfee" typeHandler="jp.co.japantaxi.utils.EmptyIntegerIfNull"/>
+			<result property="pickupfeeexistence" column="pickupfeeexistence" typeHandler="jp.co.japantaxi.utils.BooleanTypeHandler"/>
+			<result property="pickupfeedescription" column="fbpickupfeedescription" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
+			<result property="bookingfeeexistence" column="bookingfeeexistence" typeHandler="jp.co.japantaxi.utils.BooleanTypeHandler"/>
+			<result property="bookingfeedescription" column="fbbookingfeedescription" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
 		</collection>
-		<collection property="bankAccountbk"
-			ofType="jp.co.japantaxi.response.AppCompanyResponse$BankAccountFiels"
-			autoMapping="true">
-			<result property="sfid" column="bankaccsfid" />
-			<result property="merTermNo" column="mertermno" />
-			<result property="bankCode" column="bankacc_bankcode" />
-			<result property="bankCode" column="bankacc_bankcode" />
-			<result property="bankNameKana" column="bankacc_banknamekana" />
-			<result property="branchCode" column="bankacc_branchCode" />
-			<result property="branchNameKana"
-				column="bankacc_branchnamekana" />
-			<result property="accountType" column="bankacc_accounttype" />
-			<result property="accountNumber"
-				column="bankacc_accountnumber" />
-			<result property="accountNameKana"
-				column="bankacc_accountnamekana" />
-			<result property="accountName" column="bankacc_accountName" />
-		</collection>
-		<collection property="bankAccountbk2"
-			ofType="jp.co.japantaxi.response.AppCompanyResponse$BankAccountFiels"
-			autoMapping="true">
-			<result property="sfid" column="bankacc2sfid" />
-			<result property="merTermNo" column="mertermno" />
-			<result property="bankCode" column="bankacc2_bankcode" />
-			<result property="bankNameKana" column="bankacc2_banknamekana" />
-			<result property="branchCode" column="bankacc2_branchCode" />
-			<result property="branchNameKana"
-				column="bankacc2_branchnamekana" />
-			<result property="accountType" column="bankacc2_accounttype" />
-			<result property="accountNumber"
-				column="bankacc2_accountnumber" />
-			<result property="accountNameKana"
-				column="bankacc2_accountnamekana" />
-			<result property="accountName" column="bankacc2_accountName" />
-		</collection>
+        <collection property="bankAccountbk" ofType="jp.co.japantaxi.response.AppCompanyResponse$BankAccountFiels" autoMapping="true">
+        	<result property="sfid" column="bankaccsfid"/>
+        	<result property="merTermNo" column="mertermno"/>
+        	<result property="bankCode" column="bankacc_bankcode"/>
+            <result property="bankCode" column="bankacc_bankcode"/>
+            <result property="bankNameKana" column="bankacc_banknamekana"/>
+            <result property="branchCode" column="bankacc_branchCode"/>
+            <result property="branchNameKana" column="bankacc_branchnamekana"/>
+            <result property="accountType" column="bankacc_accounttype"/>
+            <result property="accountNumber" column="bankacc_accountnumber"/>
+            <result property="accountNameKana" column="bankacc_accountnamekana"/>
+            <result property="accountName" column="bankacc_accountName"/>
+        </collection>
+        <collection property="bankAccountbk2" ofType="jp.co.japantaxi.response.AppCompanyResponse$BankAccountFiels" autoMapping="true">
+        	<result property="sfid" column="bankacc2sfid"/>
+       		<result property="merTermNo" column="mertermno"/>
+            <result property="bankCode" column="bankacc2_bankcode"/>
+            <result property="bankNameKana" column="bankacc2_banknamekana"/>
+            <result property="branchCode" column="bankacc2_branchCode"/>
+            <result property="branchNameKana" column="bankacc2_branchnamekana"/>
+            <result property="accountType" column="bankacc2_accounttype"/>
+            <result property="accountNumber" column="bankacc2_accountnumber"/>
+            <result property="accountNameKana" column="bankacc2_accountnamekana"/>
+            <result property="accountName" column="bankacc2_accountName"/>
+        </collection>
 	</resultMap>
 </mapper>

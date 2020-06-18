@@ -12,16 +12,16 @@ public interface BankAccountInformationMapper {
 
   BankAccountInformation getBankAccountInformationById(ParameterRequest id);
 
-  List<BankAccountInformation> getListBankAccountInformationFromStockholm(ParameterRequest ids);
-  
-  List<BankAccountInformation> getListBankAccountInformationSyncFromStockholm(ParameterRequest ids);
-  
-  List<BankAccountInformation> getListBankAccountInformation2Sync(ParameterRequest startTime);
-
   List<String> getListBankAccountInformationIdFromStockholm(ParameterRequest ids);
 
-  List<String> getListBankAccountInformationSyncIdFromStockholm();
+  List<String> getListBankAccountInformationIds(ParameterRequest request);
 
+  List<BankAccountInformation> getListBankAccountInformation(ParameterRequest request);
+
+  List<BankAccountInformation> getListBankAccountInformationSync(ParameterRequest request);
+
+  Integer countBankAccountInformation(ParameterRequest request);
+  
   void insertBankAccountInformation(BankAccountInformation bankAccountInformation);
 
   void updateBankAccountInformation(BankAccountInformation bankAccountInformation);

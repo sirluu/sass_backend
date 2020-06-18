@@ -122,8 +122,6 @@ public class MerchantResponse implements Serializable{
 		private String merchantOperInforGuaranteeEndDate;
 		private String merchantOperInforContractEndDate;
 		private String merchantOperInforMemo;
-		private String thincacloudMertermno;
-		private String linkMertermno;
 		public int appCompanyId;
 		public String jppOrganizationId;
 		@JsonInclude(JsonInclude.Include.NON_NULL)
@@ -163,7 +161,6 @@ public class MerchantResponse implements Serializable{
 	@Setter
 	public static class MerchantCoopApproval{
 		
-//		private Integer aformid;
 		private String affiliationStoreNameAlphabetic;
 		@JsonInclude(JsonInclude.Include.NON_NULL)
 		private Integer appcompanyid; // field map data BK
@@ -258,8 +255,6 @@ public class MerchantResponse implements Serializable{
 		private String merchantOperInforGuaranteeEndDate; // string ‎yyyy/MM/dd
 		private String merchantOperInforContractEndDate; // string ‎yyyy/MM/dd
 		private String merchantOperInforMemo;
-		private String thincacloudMertermno;
-		private String linkMertermno;
 		private String sfid;
 
 		private NetBankAccount netBankAccount;

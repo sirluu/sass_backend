@@ -16,6 +16,9 @@ public class ParameterRequest implements Serializable {
 	private String startMode;
 	private String processMode;
 	private String id;
+	private Boolean checked;
 	private Integer jtxcompanyid;
 	private String mertermno;
+    private Integer limit;
+    private Integer offset;
 }

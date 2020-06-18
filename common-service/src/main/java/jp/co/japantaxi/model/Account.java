@@ -99,8 +99,6 @@ public class Account extends ObjectSync{
   private Date merchantoperinforguaranteeenddate;
   private Date merchantoperinforcontractenddate;
   private String merchantoperinformemo;
-  private String thincacloudmertermno;
-  private String linkmertermno;
   private Date invaliddate;
   private String invalidreason;
   private String invaliddetailreason;

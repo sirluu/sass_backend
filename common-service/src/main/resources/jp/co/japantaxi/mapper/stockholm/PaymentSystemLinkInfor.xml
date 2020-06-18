@@ -8,6 +8,62 @@
 		TRUNCATE TABLE paymentsystemlinkinfor
 	</select>
 
+	<select id="countPaymentSystemLinkInfor"
+		parameterType="jp.co.japantaxi.model.ParameterRequest"
+		resultType="java.lang.Integer">
+		SELECT count(p.sfid) AS rows FROM paymentsystemlinkinfor p
+		WHERE (date_trunc('second', p.lastmodifieddate) >= ${startTime})
+	</select>
+
+	<select id="getListPaymentSystemLinkInfor"
+		parameterType="jp.co.japantaxi.model.ParameterRequest"
+		resultType="jp.co.japantaxi.model.PaymentSystemLinkInfor">
+		SELECT p.sfid, p.internetpaymerstore, p.linepaychannelid,
+		p.linepaychannelsecret, p.aupaystoreid, p.serviceid,
+		p.tofacemerchantid, p.nontofacemerchantid,
+		p.tofacehashkey,
+		p.nontofacehashkey, p.tofaceencryptkey, p.nontofaceencryptkey,
+		p.tofaceencryptiv, p.nontofaceencryptiv, p.tofacebasicauthid,
+		p.nontofacebasicauthid,
+		p.tofacebasicauthpassword,
+		p.nontofacebasicauthpassword, p.tofacecardtype, p.nontofacecardtype,
+		p.tofacepaymentrouteid, p.nontofacepaymentrouteid, p.lastmodifieddate
+		FROM paymentsystemlinkinfor p
+		WHERE(date_trunc('second',p.lastmodifieddate) >=${startTime})
+		ORDER BY
+		p.sfid DESC OFFSET ${offset} LIMIT ${limit}
+	</select>
+
+	<select id="getListPaymentSystemLinkInforSync"
+		parameterType="jp.co.japantaxi.model.ParameterRequest"
+		resultType="jp.co.japantaxi.model.PaymentSystemLinkInfor">
+		SELECT p.sfid, p.internetpaymerstore,
+		p.linepaychannelsecret,
+		p.aupaystoreid, p.serviceid,
+		p.linepaychannelid, p.tofacemerchantid,
+		p.tofacehashkey,
+		p.tofaceencryptkey, p.tofaceencryptiv,
+		p.tofacebasicauthid,
+		p.tofacebasicauthpassword, p.tofacecardtype,
+		p.tofacepaymentrouteid,
+		p.nontofacemerchantid, p.nontofacehashkey,
+		p.nontofaceencryptkey,
+		p.nontofaceencryptiv, p.nontofacebasicauthid,
+		p.nontofacebasicauthpassword, p.nontofacecardtype,
+		p.nontofacepaymentrouteid
+		FROM paymentsystemlinkinforsync p WHERE
+		p.sfid IN (${ids}) ORDER BY p.sfid DESC
+	</select>
+
+	<select id="getListPaymentSystemLinkInforIds"
+		parameterType="jp.co.japantaxi.model.ParameterRequest"
+		resultType="java.lang.String">
+		SELECT sfid FROM (WITH TO_CHECK (sfid) AS (VALUES ${ids})
+		SELECT tc.sfid, NOT EXISTS (SELECT sfid FROM paymentsystemlinkinforsync p
+		WHERE p.sfid = tc.sfid) AS checked FROM to_check tc) AS t
+		WHERE t.checked = #{checked}
+	</select>
+
 	<select id="getPaymentSystemLinkInforById"
 		parameterType="jp.co.japantaxi.model.ParameterRequest"
 		resultType="jp.co.japantaxi.model.PaymentSystemLinkInfor">
@@ -26,73 +82,6 @@
 		p.sfid=#{id}
 	</select>
 
-	<select id="getListPaymentSystemLinkInforFromStockholm"
-		parameterType="jp.co.japantaxi.model.ParameterRequest"
-		resultType="jp.co.japantaxi.model.PaymentSystemLinkInfor">
-		SELECT p.sfid, p.internetpaymerstore, p.linepaychannelid,
-		p.linepaychannelsecret, p.aupaystoreid, p.serviceid,
-		p.tofacemerchantid, p.nontofacemerchantid,
-		p.tofacehashkey,
-		p.nontofacehashkey, p.tofaceencryptkey, p.nontofaceencryptkey,
-		p.tofaceencryptiv, p.nontofaceencryptiv, p.tofacebasicauthid,
-		p.nontofacebasicauthid,
-		p.tofacebasicauthpassword,
-		p.nontofacebasicauthpassword, p.tofacecardtype, p.nontofacecardtype,
-		p.tofacepaymentrouteid, p.nontofacepaymentrouteid, p.lastmodifieddate
-		FROM
-		paymentsystemlinkinfor p WHERE
-		p.sfid IN
-		(${ids}) ORDER BY
-		p.sfid
-		DESC
-	</select>
-
-	<select id="getListPaymentSystemLinkInforSyncFromStockholm"
-		parameterType="jp.co.japantaxi.model.ParameterRequest"
-		resultType="jp.co.japantaxi.model.PaymentSystemLinkInfor">
-		SELECT p.sfid, p.internetpaymerstore,
-		p.linepaychannelsecret,
-		p.aupaystoreid, p.serviceid,
-		p.linepaychannelid, p.tofacemerchantid,
-		p.tofacehashkey,
-		p.tofaceencryptkey, p.tofaceencryptiv,
-		p.tofacebasicauthid,
-		p.tofacebasicauthpassword, p.tofacecardtype,
-		p.tofacepaymentrouteid,
-		p.nontofacemerchantid, p.nontofacehashkey,
-		p.nontofaceencryptkey,
-		p.nontofaceencryptiv, p.nontofacebasicauthid,
-		p.nontofacebasicauthpassword, p.nontofacecardtype,
-		p.nontofacepaymentrouteid
-		FROM
-		paymentsystemlinkinforsync p WHERE
-		p.sfid
-		IN
-		(${ids}) ORDER BY
-		p.sfid
-		DESC
-	</select>
-
-	<select id="getListPaymentSystemLinkInfor2Sync"
-		parameterType="jp.co.japantaxi.model.ParameterRequest"
-		resultType="jp.co.japantaxi.model.PaymentSystemLinkInfor">
-		SELECT p.sfid, p.internetpaymerstore, p.linepaychannelid,
-		p.linepaychannelsecret, p.aupaystoreid, p.serviceid,
-		p.tofacemerchantid, p.nontofacemerchantid,
-		p.tofacehashkey,
-		p.nontofacehashkey, p.tofaceencryptkey, p.nontofaceencryptkey,
-		p.tofaceencryptiv, p.nontofaceencryptiv, p.tofacebasicauthid,
-		p.nontofacebasicauthid,
-		p.tofacebasicauthpassword,
-		p.nontofacebasicauthpassword, p.tofacecardtype, p.nontofacecardtype,
-		p.tofacepaymentrouteid, p.nontofacepaymentrouteid, p.lastmodifieddate
-		FROM
-		paymentsystemlinkinfor p
-		WHERE(date_trunc('second',p.lastmodifieddate) >=${startTime})
-		ORDER BY
-		p.sfid DESC
-	</select>
-
 	<select id="getListPaymentSystemLinkInforIdFromStockholm"
 		parameterType="jp.co.japantaxi.model.ParameterRequest"
 		resultType="java.lang.String">
@@ -103,11 +92,6 @@
 		(${ids}) ORDER BY
 		p.sfid
 		DESC
-	</select>
-
-	<select id="getListPaymentSystemLinkInforSyncIdFromStockholm"
-		resultType="java.lang.String">
-		SELECT p.sfid FROM paymentsystemlinkinforsync p
 	</select>
 
 	<insert id="insertPaymentSystemLinkInfor"

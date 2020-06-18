@@ -1,14 +1,11 @@
 package jp.co.japantaxi.config;
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -20,10 +17,6 @@ public class CacheManagerConfig {
   private static Logger LOGGER = LoggerFactory.getLogger(CacheManagerConfig.class);
 
   public static Map<String, String> store = new HashMap<>();
-
-  private static Map<String, Integer> errorStore = new HashMap<>();
-
-  private static Map<String, List<String>> listStore = new HashMap<>();
 
   @Autowired
   private SalesforceConfig salesforceConfig;
@@ -101,38 +94,7 @@ public class CacheManagerConfig {
     store.put(Constant.TO_DATETIME, todatetime);
   }
 
-  @Cacheable(cacheNames = {"list"}, key = "#listid")
-  public List<String> getListObjectId(String context) {
-    List<String> res = listStore.get(context.toLowerCase(Locale.ENGLISH));
-    if (res != null) {
-      return res;
-    }
-    return null;
-  }
-
-  @Cacheable
-  public void setListObjectId(String context, List<String> ids) {
-    listStore.put(context.toLowerCase(), ids);
-  }
-
-  @Cacheable(cacheNames = {"error"}, key = "#erid")
-  public Integer getErrorCode(String context) {
-    Integer res = errorStore.get(context.toLowerCase(Locale.ENGLISH));
-    if (res != null) {
-      return res;
-    }
-    return HttpStatus.OK.value();
-  }
-
-  @Cacheable
-  public void setErrorCode(String context, int code) {
-    errorStore.put(context.toLowerCase(Locale.ENGLISH), code);
-  }
-
-  public void clearMap(String context) {
+  public void clearNextPageToken() {
     setNextPageToken(null);
-    setListObjectId(context, null);
-    setErrorCode(context, HttpStatus.OK.value());
   }
-
 }

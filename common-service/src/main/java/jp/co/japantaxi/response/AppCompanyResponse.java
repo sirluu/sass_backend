@@ -155,14 +155,7 @@ public class AppCompanyResponse {
 		private String invalidDate;
 		private String invalidReason;
 	}
-	@Getter
-	@Setter
-	public static class AppCompanyDetailResponse {
-		private Integer statusCode;
-		private String message;
-		private ResultDetail result;
-	}
-	
+
 	@Getter
 	@Setter
 	public static class ResultDetail {

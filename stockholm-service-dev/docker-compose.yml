@@ -10,14 +10,14 @@ services:
     - 3102:8888
     volumes:
     - ./data/:/var/lib/docker/volumes/data
-    deploy:
-      resources:
-        limits:
-          cpus: 100m
-          memory: 512Mi
-        reservations:
-          cpus: 100m
-          memory: 512Mi
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: 100m
+#          memory: 512Mi
+#        reservations:
+#          cpus: 100m
+#          memory: 512Mi
 volumes:
   data:
     external: true

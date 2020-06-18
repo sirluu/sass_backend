@@ -8,6 +8,59 @@
 		TRUNCATE TABLE faretable
 	</select>
 
+	<select id="getListFareTableIds"
+		parameterType="jp.co.japantaxi.model.ParameterRequest"
+		resultType="java.lang.String">
+		SELECT sfid FROM (WITH TO_CHECK (sfid) AS (VALUES ${ids})
+		SELECT tc.sfid, NOT EXISTS (SELECT sfid FROM faretablesync f WHERE
+		f.sfid =
+		tc.sfid) AS
+		checked FROM to_check tc
+		) AS t WHERE t.checked =
+		#{checked}
+	</select>
+
+	<select id="getListFareTable"
+		parameterType="jp.co.japantaxi.model.ParameterRequest"
+		resultType="jp.co.japantaxi.model.FareTable">
+		SELECT f.sfid, f.appcompany,
+		f.pickupfare,
+		f.firstsquaredistance, f.firstsquarefare,
+		f.additionaldistance,
+		f.additionalfare,
+		f.latenightearlymorningextra, f.reservationfee,
+		f.pickupfeeexistence, f.pickupfeedescription, f.bookingfeeexistence,
+		f.bookingfeedescription, f.lastmodifieddate
+		FROM faretable f
+		WHERE(date_trunc('second', f.lastmodifieddate) >=${startTime})
+		ORDER BY
+		f.sfid DESC OFFSET ${offset} LIMIT ${limit}
+	</select>
+
+	<select id="getListFareTableSync"
+		parameterType="jp.co.japantaxi.model.ParameterRequest"
+		resultType="jp.co.japantaxi.model.FareTable">
+		SELECT f.sfid, f.appcompany, f.pickupfare,
+		f.firstsquaredistance,
+		f.firstsquarefare, f.additionaldistance,
+		f.additionalfare,
+		f.latenightearlymorningextra, f.reservationfee,
+		f.pickupfeeexistence,
+		f.pickupfeedescription, f.bookingfeeexistence,
+		f.bookingfeedescription
+		FROM faretablesync f WHERE
+		f.sfid IN (${ids})
+		ORDER BY f.sfid DESC
+	</select>
+
+	<select id="countFareTable"
+		parameterType="jp.co.japantaxi.model.ParameterRequest"
+		resultType="java.lang.Integer">
+		SELECT count(f.sfid) AS rows FROM faretable f
+		WHERE
+		(date_trunc('second', f.lastmodifieddate) >= ${startTime})
+	</select>
+
 	<select id="getFareTableById"
 		parameterType="jp.co.japantaxi.model.ParameterRequest"
 		resultType="jp.co.japantaxi.model.FareTable">
@@ -23,67 +76,12 @@
 		WHERE f.sfid=#{id}
 	</select>
 
-	<select id="getListFareTableFromStockholm"
-		parameterType="jp.co.japantaxi.model.ParameterRequest"
-		resultType="jp.co.japantaxi.model.FareTable">
-		SELECT f.sfid, f.appcompany,
-		f.pickupfare,
-		f.firstsquaredistance, f.firstsquarefare,
-		f.additionaldistance,
-		f.additionalfare,
-		f.latenightearlymorningextra, f.reservationfee,
-		f.pickupfeeexistence, f.pickupfeedescription, f.bookingfeeexistence,
-		f.bookingfeedescription, f.lastmodifieddate
-		FROM faretable f
-		WHERE
-		f.sfid IN (${ids})
-		ORDER BY f.sfid DESC
-	</select>
-
-	<select id="getListFareTableSyncFromStockholm"
-		parameterType="jp.co.japantaxi.model.ParameterRequest"
-		resultType="jp.co.japantaxi.model.FareTable">
-		SELECT f.sfid, f.appcompany, f.pickupfare,
-		f.firstsquaredistance,
-		f.firstsquarefare, f.additionaldistance,
-		f.additionalfare,
-		f.latenightearlymorningextra, f.reservationfee,
-		f.pickupfeeexistence,
-		f.pickupfeedescription, f.bookingfeeexistence,
-		f.bookingfeedescription
-		FROM faretablesync f
-		WHERE f.sfid IN (${ids})
-		ORDER BY f.sfid DESC
-	</select>
-
-	<select id="getListFareTable2Sync"
-		parameterType="jp.co.japantaxi.model.ParameterRequest"
-		resultType="jp.co.japantaxi.model.FareTable">
-		SELECT f.sfid, f.appcompany,
-		f.pickupfare,
-		f.firstsquaredistance, f.firstsquarefare,
-		f.additionaldistance,
-		f.additionalfare,
-		f.latenightearlymorningextra, f.reservationfee,
-		f.pickupfeeexistence, f.pickupfeedescription, f.bookingfeeexistence,
-		f.bookingfeedescription, f.lastmodifieddate
-		FROM faretable f
-		WHERE(date_trunc('second',f.lastmodifieddate) >=${startTime})
-		ORDER BY
-		f.sfid DESC
-	</select>
-
 	<select id="getListFareTableIdFromStockholm"
 		parameterType="jp.co.japantaxi.model.ParameterRequest"
 		resultType="java.lang.String">
 		SELECT f.sfid FROM faretable f
 		WHERE f.sfid IN (${ids})
 		ORDER BY f.sfid DESC
-	</select>
-
-	<select id="getListFareTableSyncIdFromStockholm"
-		resultType="java.lang.String">
-		SELECT f.sfid FROM faretablesync f
 	</select>
 
 	<insert id="insertFareTable"

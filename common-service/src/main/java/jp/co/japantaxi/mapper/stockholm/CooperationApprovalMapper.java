@@ -25,9 +25,7 @@ public interface CooperationApprovalMapper {
 			"	bankacc.accounttype as paymentdeposittype,\r\n" + 
 			"	bankacc.accountnumber as  paymentaccountno,\r\n" + 
 			"	bankacc.accountnamekana as paymentdepositor,\r\n" + 
-			"  acc.mertermno as mertermno,\r\n" + 
-			"	acc.ThincacloudMertermno as thincacloudmertermno,\r\n" + 
-			"	acc.LinkMertermno as linkmertermno\r\n" + 
+			"  acc.mertermno as mertermno,\r\n" +
 			"FROM accountsync acc\r\n" + 
 			"LEFT JOIN bankaccountinformationsync bankacc ON acc.sfid = bankacc.account\r\n" + 
 			"LEFT JOIN bankmastersync bm ON bankacc.accountbank = bm.sfid\r\n" + 

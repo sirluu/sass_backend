@@ -14,15 +14,15 @@ public interface AccountMapper {
 
 	Account getAccountById(@Param("sfid") String sfid);
 
-	List<Account> getListAccountFromStockholm(ParameterRequest ids);
-
-    List<Account> getListAccountSyncFromStockholm(ParameterRequest ids);
-
-	List<Account> getListAccount2Sync(ParameterRequest startTime);
-
 	List<String> getListAccountIdFromStockholm(ParameterRequest ids);
 
-	List<String> getListAccountSyncIdFromStockholm();
+    List<String> getListAccountIds(ParameterRequest request);
+  
+    List<Account> getListAccount(ParameterRequest request);
+  
+    List<Account> getListAccountSync(ParameterRequest request);
+  
+    Integer countAccount(ParameterRequest request);
 
 	void insertAccount(Account account);
 

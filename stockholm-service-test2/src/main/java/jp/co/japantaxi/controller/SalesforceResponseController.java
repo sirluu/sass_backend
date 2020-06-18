@@ -31,7 +31,6 @@ import jp.co.japantaxi.model.BankAccountInformation;
 import jp.co.japantaxi.model.BankMaster;
 import jp.co.japantaxi.model.BatchStatus;
 import jp.co.japantaxi.model.FareTable;
-import jp.co.japantaxi.model.ParameterRequest;
 import jp.co.japantaxi.model.PaymentSystemLinkInfor;
 import jp.co.japantaxi.utils.Constant;
 import jp.co.japantaxi.utils.ConvertDataUtil;
@@ -65,26 +64,6 @@ public class SalesforceResponseController {
     return new RestTemplate();
   }
 
-  public ParameterRequest parameterRequest(String context) {
-    ParameterRequest parameterRequest = new ParameterRequest();
-    parameterRequest.setIds("''");
-    List<String> listResponse = new ArrayList<String>();
-    try {
-      listResponse = cacheManagerConfig.getListObjectId(context);
-      if (!listResponse.isEmpty()) {
-        String ids = "";
-        for (String sfid : listResponse) {
-          ids = ids + "'" + sfid + "',";
-        }
-        ids = ids.substring(0, ids.length() - 1);
-        parameterRequest.setIds(ids);
-      }
-     } catch (Exception e) {
-       LOGGER.info("List Object Id from cache >>> is empty");
-     }
-    return parameterRequest;
-  }
-
   /**
    * @param context
    * @param batchStatus
@@ -111,7 +90,6 @@ public class SalesforceResponseController {
 		cacheManagerConfig.setToken(null);
 	    LOGGER.warn("Token expired or invalid >>> need reset token !!!");
       }
-      cacheManagerConfig.setErrorCode(context, e.getRawStatusCode());
       // 内容：コード(E00)、取得オブジェクト名、SFエラーコード、SFエラー内容 400,404,415,500
 	  LOGGER.error(String.format("%s >>> %s >>> ErrorCode: %s >>> Error: %s",
 	      	Constant.NORMALCODE.E00, Constant.API_GET + context, e.getRawStatusCode(), e.getMessage()));
@@ -152,24 +130,10 @@ public class SalesforceResponseController {
    */
   public List<Object> getListObjectFromSalesforce(String context, BatchStatus batchStatus) {
     List<Object> listObj = new ArrayList<>();
-    int error = cacheManagerConfig.getErrorCode(context.toLowerCase());
-    if (Constant.checkError(error) == null) {
-      JSONArray jsonArray = callSalesforce(context, batchStatus);
-      if (jsonArray != null) {
-          listObj = JsonMapper.toList(jsonArray);
-          batchController.updateBatchStatus(batchStatus, false, false, false, true);
-          cacheManagerConfig.setListObjectId(context, getListObjectIdFromSalesforce(context, listObj));
-      }
-    } else {
-        // 内容：コード(E00)、取得オブジェクト名、SFエラーコード、SFエラー内容 400,404,415,500
-      LOGGER.error(String.format("%s >>> %s >>> error at %s >>> ErrorCode: %s",
-          	Constant.NORMALCODE.E00, Constant.API_GET, context, error));
-  	  StringBuilder sb = new StringBuilder();
-      sb.append(batchStatus.getStatusinfo());
-      sb.append("\n");
-      sb.append(Constant.API_GET + context);
-      batchStatus.setStatusinfo(sb.toString());
-      batchController.updateBatchStatus(batchStatus, false, false, true, false);
+    JSONArray jsonArray = callSalesforce(context, batchStatus);
+    if (jsonArray != null) {
+      listObj = JsonMapper.toList(jsonArray);
+      batchController.updateBatchStatus(batchStatus, false, false, false, true);
     }
     return listObj;
   }

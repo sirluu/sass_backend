@@ -43,11 +43,6 @@ public class SalesforceResponseControllerTest {
 		cacheManagerConfig.setFromDateTime("2020-01-01 01:01:01");
 		cacheManagerConfig.setToDateTime("2020-04-04 01:01:01");
 		cacheManagerConfig.setNextPageToken(null);
-		cacheManagerConfig.setErrorCode(Constant.APPCOMPANY, 200);
-		cacheManagerConfig.setErrorCode(Constant.BANKACCOUNTINFORMATION, 200);
-		cacheManagerConfig.setErrorCode(Constant.BANKMASTER, 200);
-		cacheManagerConfig.setErrorCode(Constant.FARETABLE, 200);
-		cacheManagerConfig.setErrorCode(Constant.PAYMENTSYSTEMLINKINFOR, 200);
 		salesforceResponseController.callSalesforce("context", batchStatus);
 	}
 	
@@ -74,7 +69,6 @@ public class SalesforceResponseControllerTest {
 		test_callsalesforce();
 		BatchStatus batchStatus = BatchControllerTest.getBatchControl();
 		Mockito.when(batchController.getBatchStatus()).thenReturn(batchStatus);
-		cacheManagerConfig.setErrorCode("context", 400);
 		salesforceResponseController.getListObjectFromSalesforce("context", batchStatus);
 	}
 	

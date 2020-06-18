@@ -121,6 +121,13 @@ public class Utility {
     return b.toString();
   }
 
+  public static String convertList(List<String> list) {
+    StringBuilder b = new StringBuilder("('");
+    b.append(String.join("'),('", list));
+    b.append("')");
+    return b.toString();
+  }
+  
   public static <T> List<String> compare(List<T> leftList, List<T> rightList) {
 	List<String> list = new ArrayList<String>();
 	try {
@@ -158,4 +165,15 @@ public class Utility {
 	return list;
   }
 
+  public static <T> List<String> getIdListFromObjectList(List<T> list) {
+    List<String> listId = new ArrayList<>();
+    JSONObject leftObject = new JSONObject();
+    leftObject.put("list", list);
+    JSONArray leftArray = leftObject.getJSONArray("list");
+    for (int i = 0; i < leftArray.length(); i++) {
+      listId.add(leftArray.getJSONObject(i).getString("sfid").toString());
+    }
+    return listId;
+  }
+  
 }

@@ -8,16 +8,16 @@ public interface PaymentSystemLinkInforMapper {
 
   PaymentSystemLinkInfor getPaymentSystemLinkInforById(ParameterRequest id);
 
-  List<PaymentSystemLinkInfor> getListPaymentSystemLinkInforFromStockholm(ParameterRequest ids);
-
-  List<PaymentSystemLinkInfor> getListPaymentSystemLinkInforSyncFromStockholm(ParameterRequest ids);
-
-  List<PaymentSystemLinkInfor> getListPaymentSystemLinkInfor2Sync(ParameterRequest startTime);
-
   List<String> getListPaymentSystemLinkInforIdFromStockholm(ParameterRequest ids);
 
-  List<String> getListPaymentSystemLinkInforSyncIdFromStockholm();
+  List<String> getListPaymentSystemLinkInforIds(ParameterRequest request);
 
+  List<PaymentSystemLinkInfor> getListPaymentSystemLinkInfor(ParameterRequest request);
+
+  List<PaymentSystemLinkInfor> getListPaymentSystemLinkInforSync(ParameterRequest request);
+
+  Integer countPaymentSystemLinkInfor(ParameterRequest request);
+  
   void insertPaymentSystemLinkInfor(PaymentSystemLinkInfor linkInforc);
 
   void updatePaymentSystemLinkInfor(PaymentSystemLinkInfor linkInforc);
@@ -27,5 +27,5 @@ public interface PaymentSystemLinkInforMapper {
   void updatePaymentSystemLinkInforSync(PaymentSystemLinkInfor linkInforc);
 
   void truncatePaymentSystemLinkInfor();
-
+  
 }

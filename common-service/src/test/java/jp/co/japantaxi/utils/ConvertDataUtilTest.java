@@ -44,7 +44,6 @@ public class ConvertDataUtilTest {
 		expected.setInvalidreason("teststring");
 		expected.setIrisid("teststring");
 		expected.setKeirino(1234);
-		expected.setLinkmertermno("teststring");
 		expected.setMerchantcontrinforapplicationcars(Utility.parseInt("teststring"));
 		expected.setMerchantcontrinforapplicationdate(DateTimeUtil.getTimestampFromString("teststring", DateTimeUtil.DATE_TIME_FM));
 		expected.setMerchantcontrinforisfacetofacesettlement(Utility.parseBoolean("teststring"));
@@ -126,14 +125,12 @@ public class ConvertDataUtilTest {
 		expected.setMerchantstoreinforstorenamekanji("teststring");
 		expected.setMertermno("teststring");
 		expected.setSfid("a04N000000KgpbjIAB");
-		expected.setThincacloudmertermno("teststring");
 		expected.setWebsite("teststring");
 		expected.setAppcompanyid(Utility.parseInt("12345"));
 		expected.setJpporganizationid("teststring");
 	    
 		JSONObject actual = new JSONObject();
 		actual.put("website", "teststring");
-		actual.put("thincacloudMertermno", "teststring");
 		actual.put("sfid", "a04N000000KgpbjIAB");
 		actual.put("merTermNo", "teststring");
 		actual.put("mSIStoreNameKanji", "teststring");
@@ -209,7 +206,6 @@ public class ConvertDataUtilTest {
 		actual.put("mCIIsFacetofaceSettlement", "teststring");
 		actual.put("mCIApplicationDate", "teststring");
 		actual.put("mCIApplicationCars", "teststring");
-		actual.put("linkMertermno", "teststring");
 		actual.put("keiri_no", "1234");
 		actual.put("iris_id", "teststring");
 		actual.put("invalidReason", "teststring");
@@ -235,7 +231,6 @@ public class ConvertDataUtilTest {
         
         Assert.assertEquals(expected.getIrisid(), ConvertDataUtil.convertJsonObjectToAccount(actual).getIrisid());
         Assert.assertEquals(expected.getKeirino(), ConvertDataUtil.convertJsonObjectToAccount(actual).getKeirino());
-        Assert.assertEquals(expected.getLinkmertermno(), ConvertDataUtil.convertJsonObjectToAccount(actual).getLinkmertermno());
         Assert.assertEquals(expected.getMerchantcontrinforapplicationcars(), ConvertDataUtil.convertJsonObjectToAccount(actual).getMerchantcontrinforapplicationcars());
         Assert.assertEquals(expected.getMerchantcontrinforapplicationdate(), ConvertDataUtil.convertJsonObjectToAccount(actual).getMerchantcontrinforapplicationdate());
         Assert.assertEquals(expected.getMerchantcontrinforisfacetofacesettlement(), ConvertDataUtil.convertJsonObjectToAccount(actual).getMerchantcontrinforisfacetofacesettlement());
@@ -311,7 +306,6 @@ public class ConvertDataUtilTest {
         Assert.assertEquals(expected.getMerchantstoreinforstorenamekanji(), ConvertDataUtil.convertJsonObjectToAccount(actual).getMerchantstoreinforstorenamekanji());
         Assert.assertEquals(expected.getMertermno(), ConvertDataUtil.convertJsonObjectToAccount(actual).getMertermno());
         Assert.assertEquals(expected.getSfid(), ConvertDataUtil.convertJsonObjectToAccount(actual).getSfid());
-        Assert.assertEquals(expected.getThincacloudmertermno(), ConvertDataUtil.convertJsonObjectToAccount(actual).getThincacloudmertermno());
         Assert.assertEquals(expected.getWebsite(), ConvertDataUtil.convertJsonObjectToAccount(actual).getWebsite());
         Assert.assertEquals(expected.getAppcompanyid(), ConvertDataUtil.convertJsonObjectToAccount(actual).getAppcompanyid());
         Assert.assertEquals(expected.getJpporganizationid(), ConvertDataUtil.convertJsonObjectToAccount(actual).getJpporganizationid());

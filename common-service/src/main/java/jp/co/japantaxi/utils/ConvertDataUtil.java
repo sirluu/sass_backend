@@ -30,7 +30,6 @@ public class ConvertDataUtil {
     account.setInvalidreason(jsonObject.get("invalidReason").toString().replace("{}", "").trim());
     account.setIrisid(jsonObject.get("iris_id").toString().replace("{}", "").trim());
     account.setKeirino(Utility.parseInt(jsonObject.get("keiri_no").toString().replace("{}", "").trim()));
-    account.setLinkmertermno(jsonObject.get("linkMertermno").toString().replace("{}", "").trim());
     account.setMerchantcontrinforapplicationcars(
         Utility.parseInt(jsonObject.get("mCIApplicationCars").toString().replace("{}", "").trim()));
     account.setMerchantcontrinforapplicationdate(DateTimeUtil.getTimestampFromString(
@@ -167,8 +166,7 @@ public class ConvertDataUtil {
     account.setLastmodifieddate(DateTimeUtil.getTimestampFromString(
         jsonObject.get("lastMDate").toString().replace("{}", "").trim(), DateTimeUtil.DATE_TIME_FM));
     account.setSfid(jsonObject.get("sfid").toString().replace("{}", "").trim());
-    account.setThincacloudmertermno(
-        jsonObject.get("thincacloudMertermno").toString().replace("{}", "").trim());
+    
     account.setWebsite(jsonObject.get("website").toString().replace("{}", "").trim());
     account.setAppcompanyid(Utility.parseInt(jsonObject.get("appCompanyID").toString().replace("{}", "").trim()));
     account.setJpporganizationid(jsonObject.get("jppOrgID").toString().replace("{}", "").trim());

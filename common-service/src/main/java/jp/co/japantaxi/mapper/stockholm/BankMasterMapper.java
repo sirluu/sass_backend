@@ -8,16 +8,16 @@ public interface BankMasterMapper {
 
   BankMaster getBankMasterById(ParameterRequest id);
 
-  List<BankMaster> getListBankMasterFromStockholm(ParameterRequest ids);
-
-  List<BankMaster> getListBankMasterSyncFromStockholm(ParameterRequest ids);
-
-  List<BankMaster> getListBankMaster2Sync(ParameterRequest startTime);
-
   List<String> getListBankMasterIdFromStockholm(ParameterRequest ids);
 
-  List<String> getListBankMasterSyncIdFromStockholm();
+  List<String> getListBankMasterIds(ParameterRequest request);
 
+  List<BankMaster> getListBankMaster(ParameterRequest request);
+
+  List<BankMaster> getListBankMasterSync(ParameterRequest request);
+
+  Integer countBankMaster(ParameterRequest request);
+  
   void insertBankMaster(BankMaster bankMaster);
 
   void updateBankMaster(BankMaster bankMaster);
@@ -27,5 +27,5 @@ public interface BankMasterMapper {
   void updateBankMasterSync(BankMaster bankMaster);
 
   void truncateBankMaster();
-
+  
 }
