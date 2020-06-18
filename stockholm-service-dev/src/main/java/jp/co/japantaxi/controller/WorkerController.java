@@ -180,12 +180,12 @@ public class WorkerController {
         return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
       }
       if ((!Constant.PROCESSMODE.CLEAR.value.equalsIgnoreCase(pcMode.toUpperCase()) && !Constant.STARTMODE.CRON.value.equalsIgnoreCase(stMode.toUpperCase()))
-			|| (!Constant.PROCESSMODE.CLEAR.value.equalsIgnoreCase(pcMode.toUpperCase()) && !Constant.STARTMODE.USER.value.equalsIgnoreCase(stMode.toUpperCase()))) {
+			&& (!Constant.PROCESSMODE.CLEAR.value.equalsIgnoreCase(pcMode.toUpperCase()) && !Constant.STARTMODE.USER.value.equalsIgnoreCase(stMode.toUpperCase()))) {
 		return validStarttime(parameterRequest);
       }
     } catch (Exception e) {
       LOGGER.info(" >>> no request body processMode param !!!");
-      if (!Constant.STARTMODE.CRON.value.equalsIgnoreCase(stMode.toUpperCase()) || !Constant.STARTMODE.USER.value.equalsIgnoreCase(stMode.toUpperCase())) {
+      if (!Constant.STARTMODE.CRON.value.equalsIgnoreCase(stMode.toUpperCase()) && !Constant.STARTMODE.USER.value.equalsIgnoreCase(stMode.toUpperCase())) {
 		return validStarttime(parameterRequest);
       }
     }
