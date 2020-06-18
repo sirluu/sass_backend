@@ -73,7 +73,7 @@ public class BatchController {
       LOGGER.info("Update increase call SF API success !!!");
     } else {
       batchStatusMapper.updateBatchStatus(batchStatus);
-      LOGGER.info("Update new cron fromdatetime success !!!");
+      LOGGER.info("Update new fromdatetime success !!!");
     }
   }
 

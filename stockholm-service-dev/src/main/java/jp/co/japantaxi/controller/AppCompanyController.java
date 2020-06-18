@@ -143,7 +143,7 @@ public class AppCompanyController {
         objects2Update = selectAppCompanySyncList2InsertOrUpdate(hashMap, parareq, false);
         objects2Update = getAppCompanySyncListEdited(objects2Update, compareList, hashMap);
         if (!objects2Update.isEmpty()) {
-        	updateAppCompany(objects2Update);
+        	updateAppCompanySync(objects2Update);
         }
         parareq.setIds(null);
         hashMap.clear();

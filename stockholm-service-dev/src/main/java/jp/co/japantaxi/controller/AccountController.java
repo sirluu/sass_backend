@@ -253,7 +253,7 @@ public class AccountController {
         objects2Update = selectFareTableSyncList2InsertOrUpdate(hashMap, parareq, false);
         objects2Update = getFareTableSyncListEdited(objects2Update, compareList, hashMap);
         if (!objects2Update.isEmpty()) {
-          updateFareTable(objects2Update);
+          updateFareTableSync(objects2Update);
         }
         parareq.setIds(null);
         hashMap.clear();
