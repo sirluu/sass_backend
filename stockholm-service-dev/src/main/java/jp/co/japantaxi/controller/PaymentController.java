@@ -191,12 +191,12 @@ public class PaymentController {
 	 * @param linkInfors try catch: Sentry 連携しエラー通知を行う
 	 */
 	public void insertPaymentSystemLinkInforSync(List<PaymentSystemLinkInfor> linkInfors) {
-		Worker worker = workerController.setWorker(Constant.PAYMENTSYSTEMLINKINFORSYNC);
+		Worker worker = workerController.setWorker(Constant.APPCOMPANYSYNC);
 		for (int i = 0; i < linkInfors.size(); i++) {
 			try {
 				linkInforMapper.insertPaymentSystemLinkInforSync(
 						ConvertDataUtil.convertPaymentSystemLinkInfor2Sync(linkInfors.get(i), true));
-				worker.setSfid(linkInfors.get(i).getSfid());
+				worker.setSfid(linkInfors.get(i).getAppcompany());
 			} catch (Exception e) {
 				LOGGER.error(
 						Constant.NORMALCODE.E03
@@ -212,13 +212,13 @@ public class PaymentController {
 	 * @param linkInfors try catch: Sentry 連携しエラー通知を行う
 	 */
 	public void updatePaymentSystemLinkInforSync(List<PaymentSystemLinkInfor> linkInfors) {
-		Worker worker = workerController.setWorker(Constant.PAYMENTSYSTEMLINKINFORSYNC);
+		Worker worker = workerController.setWorker(Constant.APPCOMPANYSYNC);
 		for (int i = 0; i < linkInfors.size(); i++) {
 			try {
 				linkInforMapper.updatePaymentSystemLinkInforSync(
 						ConvertDataUtil.convertPaymentSystemLinkInfor2Sync(linkInfors.get(i), true));
 		        LOGGER.info("PaymentSystemLinkInforSync updating >>> " + linkInfors.get(i).getSfid());
-				worker.setSfid(linkInfors.get(i).getSfid());
+				worker.setSfid(linkInfors.get(i).getAppcompany());
 				// Syncテープルに更新場合：承認されたものは未承認変更。（Workerの「sycapproveflg」に「TRUE」→「FALSE」）
 				worker.setSycapproveflg(false);
 				workerController.updateWorker(worker);

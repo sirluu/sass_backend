@@ -305,12 +305,12 @@ public class AccountController {
    * try catch: Sentry 連携しエラー通知を行う
    */
   public void insertFareTableSync(List<FareTable> fareTableList) {
-    Worker worker = workerController.setWorker(Constant.FARETABLESYNC);
+    Worker worker = workerController.setWorker(Constant.APPCOMPANYSYNC);
     for (int i = 0; i < fareTableList.size(); i++) {
       try {
         fareTableMapper
             .insertFareTableSync(ConvertDataUtil.convertFareTable2Sync(fareTableList.get(i), true));
-        worker.setSfid(fareTableList.get(i).getSfid());
+        worker.setSfid(fareTableList.get(i).getAppcompany());
       } catch (Exception e) {
         LOGGER.error(
             Constant.NORMALCODE.E03
@@ -327,13 +327,13 @@ public class AccountController {
    * try catch: Sentry 連携しエラー通知を行う
    */
   public void updateFareTableSync(List<FareTable> fareTableList) {
-    Worker worker = workerController.setWorker(Constant.FARETABLESYNC);
+    Worker worker = workerController.setWorker(Constant.APPCOMPANYSYNC);
     for (int i = 0; i < fareTableList.size(); i++) {
       try {
         fareTableMapper
             .updateFareTableSync(ConvertDataUtil.convertFareTable2Sync(fareTableList.get(i), true));
         LOGGER.info("FareTableSync updating >>> " + fareTableList.get(i).getSfid());
-        worker.setSfid(fareTableList.get(i).getSfid());
+        worker.setSfid(fareTableList.get(i).getAppcompany());
         // Syncテープルに更新場合：承認されたものは未承認変更。（Workerの「sycapproveflg」に「TRUE」→「FALSE」）
         worker.setSycapproveflg(false);
         workerController.updateWorker(worker);
@@ -460,11 +460,11 @@ public class AccountController {
    * try catch: Sentry 連携しエラー通知を行う
    */
   public void insertAccountSync(List<Account> accountList) {
-    Worker worker = workerController.setWorker(Constant.ACCOUNTSYNC);
+    Worker worker = workerController.setWorker(Constant.APPCOMPANYSYNC);
     for (int i = 0; i < accountList.size(); i++) {
       try {
         accountMapper.insertAccountSync(ConvertDataUtil.convertAccount2Sync(accountList.get(i), true));
-        worker.setSfid(accountList.get(i).getSfid());
+        worker.setSfid(accountList.get(i).getAppcompany());
       } catch (Exception e) {
         LOGGER.error(
             Constant.NORMALCODE.E03
@@ -481,12 +481,12 @@ public class AccountController {
    * try catch: Sentry 連携しエラー通知を行う
    */
   public void updateAccountSync(List<Account> accountList) {
-    Worker worker = workerController.setWorker(Constant.ACCOUNTSYNC);
+    Worker worker = workerController.setWorker(Constant.APPCOMPANYSYNC);
     for (int i = 0; i < accountList.size(); i++) {
       try {
         accountMapper.updateAccountSync(ConvertDataUtil.convertAccount2Sync(accountList.get(i), true));
         LOGGER.info("AccountSync updating >>> " + accountList.get(i).getSfid());
-        worker.setSfid(accountList.get(i).getSfid());
+        worker.setSfid(accountList.get(i).getAppcompany());
         // Syncテープルに更新場合：承認されたものは未承認変更。（Workerの「sycapproveflg」に「TRUE」→「FALSE」）
         worker.setSycapproveflg(false);
         workerController.updateWorker(worker);

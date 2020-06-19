@@ -41,6 +41,7 @@ public class PaymentSystemLinkInfor extends ObjectSync {
   private String tofacecardtype;
   private Integer nontofacepaymentrouteid;
   private Integer tofacepaymentrouteid;
+  private String appcompany;
 
   private Timestamp lastmodifieddate;
 }

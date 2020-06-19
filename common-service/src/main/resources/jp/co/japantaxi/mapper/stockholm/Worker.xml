@@ -5,12 +5,12 @@
 
 	<insert id="insertWorker"
 		parameterType="jp.co.japantaxi.model.Worker">
-		INSERT INTO worker
-		(sfid, tablename, sycapproveflg,
-		syncstatus, deleteflg, syncedtime)
-		VALUES(#{sfid}, #{tablename},
-		#{sycapproveflg}, #{syncstatus},
-		#{deleteflg}, #{syncedtime})
+		INSERT INTO worker(sfid, tablename,
+		sycapproveflg, syncstatus, deleteflg, syncedtime)
+		SELECT #{sfid}, #{tablename}, #{sycapproveflg}, #{syncstatus}, #{deleteflg}, #{syncedtime}
+		WHERE NOT EXISTS (
+		SELECT 1 FROM worker WHERE sfid=#{sfid}
+		)
 	</insert>
 
 	<update id="updateWorker"

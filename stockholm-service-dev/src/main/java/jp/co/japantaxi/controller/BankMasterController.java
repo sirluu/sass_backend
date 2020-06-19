@@ -306,13 +306,18 @@ public class BankMasterController {
    * try catch: Sentry 連携しエラー通知を行う
    */
   public void insertBankMasterSync(List<BankMaster> bankMasterList) {
-    Worker worker = workerController.setWorker(Constant.BANKMASTERSYNC);
+	  List<BankAccountInformation> accountInformations = new ArrayList<BankAccountInformation>();
+    ParameterRequest request = new ParameterRequest();
+    Worker worker = workerController.setWorker(Constant.APPCOMPANYSYNC);
     for (int i = 0; i < bankMasterList.size(); i++) {
       try {
-        bankMasterMapper
-            .insertBankMasterSync(ConvertDataUtil.convertBankMaster2Sync(bankMasterList.get(i), true));
-        worker.setSfid(bankMasterList.get(i).getSfid());
-        workerController.insertWorker(worker);
+        bankMasterMapper.insertBankMasterSync(ConvertDataUtil.convertBankMaster2Sync(bankMasterList.get(i), true));
+        request.setId(bankMasterList.get(i).getSfid());
+        accountInformations = bankAccountInforMapper.getBankAccountByBankId(request);
+        for (int j = 0; j < accountInformations.size(); j++) {
+            worker.setSfid(accountInformations.get(i).getAppcompany());
+            workerController.insertWorker(worker);
+		}
       } catch (Exception e) {
         LOGGER.error(
             Constant.NORMALCODE.E03
@@ -327,26 +332,29 @@ public class BankMasterController {
    * @param bankMasterList
    * try catch: Sentry 連携しエラー通知を行う
    */
-  public void updateBankMasterSync(List<BankMaster> bankMasterList) {
-    Worker worker = workerController.setWorker(Constant.BANKMASTERSYNC);
-    for (int i = 0; i < bankMasterList.size(); i++) {
-      try {
-        bankMasterMapper
-            .updateBankMasterSync(ConvertDataUtil.convertBankMaster2Sync(bankMasterList.get(i), true));
-        LOGGER.info("BankMasterSync updating >>> " + bankMasterList.get(i).getSfid());
-        worker.setSfid(bankMasterList.get(i).getSfid());
-        // Syncテープルに更新場合：承認されたものは未承認変更。（Workerの「syncapproveflg 」に「TRUE」→「FALSE」）
-        worker.setSycapproveflg(false);
-        workerController.updateWorker(worker);
-      } catch (Exception e) {
-        LOGGER.error(
-            Constant.NORMALCODE.E03
-                + " >>> error update bankmastersync record with id: {} with error => {} ",
-            bankMasterList.get(i).getSfid(), e.getMessage());
-        Collections.swap(bankMasterList, i + 1, bankMasterList.size() - 1);
-      }
-    }
-  }
+	public void updateBankMasterSync(List<BankMaster> bankMasterList) {
+		ParameterRequest request = new ParameterRequest();
+		List<BankAccountInformation> accountInformations = new ArrayList<BankAccountInformation>();
+		Worker worker = workerController.setWorker(Constant.APPCOMPANYSYNC);
+		for (int i = 0; i < bankMasterList.size(); i++) {
+			try {
+				bankMasterMapper.updateBankMasterSync(ConvertDataUtil.convertBankMaster2Sync(bankMasterList.get(i), true));
+				LOGGER.info("BankMasterSync updating >>> " + bankMasterList.get(i).getSfid());
+				request.setId(bankMasterList.get(i).getSfid());
+				accountInformations = bankAccountInforMapper.getBankAccountByBankId(request);
+				for (int j = 0; j < accountInformations.size(); j++) {
+					worker.setSfid(accountInformations.get(i).getAppcompany());
+					// Syncテープルに更新場合：承認されたものは未承認変更。（Workerの「syncapproveflg 」に「TRUE」→「FALSE」）
+					worker.setSycapproveflg(false);
+					workerController.updateWorker(worker);
+				}
+			} catch (Exception e) {
+				LOGGER.error(Constant.NORMALCODE.E03 + " >>> error update bankmastersync record with id: {} with error => {} ",
+						bankMasterList.get(i).getSfid(), e.getMessage());
+				Collections.swap(bankMasterList, i + 1, bankMasterList.size() - 1);
+			}
+		}
+	}
 
   public List<String> getListBankMasterIdFromStockholm(List<String> objectIds) {
     ParameterRequest parareq = new ParameterRequest();
@@ -378,6 +386,7 @@ public class BankMasterController {
     }
     return list;
   }
+
   public List<BankMaster> selectBankMasterSyncList2InsertOrUpdate(Map<String, BankMaster> hashMap,
 		  ParameterRequest parareq, boolean rmFlg ) {
 	List<String> listIdToInUp= new ArrayList<>();
@@ -451,12 +460,12 @@ public class BankMasterController {
 
   public void insertBankAccountInformationSync(
       List<BankAccountInformation> bankAccountInformationList) {
-    Worker worker = workerController.setWorker(Constant.BANKACCOUNTINFORMATIONSYNC);
+    Worker worker = workerController.setWorker(Constant.APPCOMPANYSYNC);
     for (int i = 0; i < bankAccountInformationList.size(); i++) {
       try {
         bankAccountInforMapper.insertBankAccountInformationSync(
             ConvertDataUtil.convertBankAccountInformation2Sync(bankAccountInformationList.get(i), true));
-        worker.setSfid(bankAccountInformationList.get(i).getSfid());
+        worker.setSfid(bankAccountInformationList.get(i).getAppcompany());
         workerController.insertWorker(worker);
       } catch (Exception e) {
         LOGGER.error(Constant.NORMALCODE.E03
@@ -469,13 +478,13 @@ public class BankMasterController {
 
   public void updateBankAccountInformationSync(
       List<BankAccountInformation> bankAccountInformationList) {
-    Worker worker = workerController.setWorker(Constant.BANKACCOUNTINFORMATIONSYNC);
+    Worker worker = workerController.setWorker(Constant.APPCOMPANYSYNC);
     for (int i = 0; i < bankAccountInformationList.size(); i++) {
       try {
         bankAccountInforMapper.updateBankAccountInformationSync(
             ConvertDataUtil.convertBankAccountInformation2Sync(bankAccountInformationList.get(i), true));
         LOGGER.info("BankAccountInformationSync updating >>> " + bankAccountInformationList.get(i).getSfid());
-        worker.setSfid(bankAccountInformationList.get(i).getSfid());
+        worker.setSfid(bankAccountInformationList.get(i).getAppcompany());
         // Syncテープルに更新場合：承認されたものは未承認変更。（Workerの「syncapproveflg」に「TRUE」→「FALSE」）
         worker.setSycapproveflg(false);
         workerController.updateWorker(worker);

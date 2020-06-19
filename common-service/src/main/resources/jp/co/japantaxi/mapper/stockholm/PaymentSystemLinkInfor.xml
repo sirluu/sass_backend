@@ -27,7 +27,7 @@
 		p.nontofacebasicauthid,
 		p.tofacebasicauthpassword,
 		p.nontofacebasicauthpassword, p.tofacecardtype, p.nontofacecardtype,
-		p.tofacepaymentrouteid, p.nontofacepaymentrouteid, p.lastmodifieddate
+		p.tofacepaymentrouteid, p.nontofacepaymentrouteid, p.appcompany, p.lastmodifieddate
 		FROM paymentsystemlinkinfor p
 		WHERE(date_trunc('second',p.lastmodifieddate) >=${startTime})
 		ORDER BY
@@ -50,7 +50,7 @@
 		p.nontofaceencryptkey,
 		p.nontofaceencryptiv, p.nontofacebasicauthid,
 		p.nontofacebasicauthpassword, p.nontofacecardtype,
-		p.nontofacepaymentrouteid
+		p.nontofacepaymentrouteid, p.appcompany
 		FROM paymentsystemlinkinforsync p WHERE
 		p.sfid IN (${ids}) ORDER BY p.sfid DESC
 	</select>
@@ -76,7 +76,7 @@
 		p.nontofacebasicauthid,
 		p.tofacebasicauthpassword,
 		p.nontofacebasicauthpassword, p.tofacecardtype, p.nontofacecardtype,
-		p.tofacepaymentrouteid, p.nontofacepaymentrouteid, p.lastmodifieddate
+		p.tofacepaymentrouteid, p.nontofacepaymentrouteid, p.appcompany, p.lastmodifieddate
 		FROM
 		paymentsystemlinkinfor p WHERE
 		p.sfid=#{id}
@@ -110,7 +110,7 @@
 		tofacebasicauthpassword,
 		nontofacebasicauthpassword,
 		tofacecardtype, nontofacecardtype,
-		tofacepaymentrouteid, nontofacepaymentrouteid,
+		tofacepaymentrouteid, nontofacepaymentrouteid, appcompany,
 		lastmodifieddate)
 		VALUES(#{sfid}, #{internetpaymerstore}, #{linepaychannelid},
 		#{linepaychannelsecret}, #{aupaystoreid}, #{serviceid},
@@ -124,7 +124,7 @@
 		#{tofacebasicauthpassword},
 		#{nontofacebasicauthpassword},
 		#{tofacecardtype}, #{nontofacecardtype},
-		#{tofacepaymentrouteid}, #{nontofacepaymentrouteid},
+		#{tofacepaymentrouteid}, #{nontofacepaymentrouteid}, #{appcompany},
 		#{lastmodifieddate})
 	</insert>
 
@@ -151,6 +151,7 @@
 		nontofacecardtype=#{nontofacecardtype},
 		tofacepaymentrouteid=#{tofacepaymentrouteid},
 		nontofacepaymentrouteid=#{nontofacepaymentrouteid},
+		appcompany=#{appcompany},
 		lastmodifieddate=#{lastmodifieddate}
 		WHERE sfid =
 		#{sfid}
@@ -172,7 +173,7 @@
 		tofacebasicauthpassword,
 		nontofacebasicauthpassword,
 		tofacecardtype, nontofacecardtype,
-		tofacepaymentrouteid, nontofacepaymentrouteid,
+		tofacepaymentrouteid, nontofacepaymentrouteid, appcompany,
 		syncedtime)
 		VALUES(#{sfid},
 		#{internetpaymerstore}, #{linepaychannelid},
@@ -187,7 +188,7 @@
 		#{tofacebasicauthpassword},
 		#{nontofacebasicauthpassword},
 		#{tofacecardtype}, #{nontofacecardtype},
-		#{tofacepaymentrouteid}, #{nontofacepaymentrouteid},
+		#{tofacepaymentrouteid}, #{nontofacepaymentrouteid}, #{appcompany},
 		#{syncedtime})
 	</insert>
 
@@ -214,6 +215,7 @@
 		nontofacecardtype=#{nontofacecardtype},
 		tofacepaymentrouteid=#{tofacepaymentrouteid},
 		nontofacepaymentrouteid=#{nontofacepaymentrouteid},
+		appcompany=#{appcompany},
 		syncedtime=#{syncedtime}
 		WHERE sfid =
 		#{sfid}

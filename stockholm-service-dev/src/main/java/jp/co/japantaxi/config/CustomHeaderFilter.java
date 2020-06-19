@@ -31,11 +31,14 @@ public class CustomHeaderFilter implements Filter {
   @Override
   public void destroy() {}
  
+  @Value("${domain.allowed}")
+  private String domainAllowed;
+  
   @Autowired
   Properties properties; 
   
   // List of domains allowed to access the server
-  private static final String[] flowers = { "http://localhost:2000", "https://companies-integrations.dev-partner.japantaxi.jp" };
+  private static final String[] flowers = { "https://companies-integrations.dev-partner.japantaxi.jp" };
   @Override
   public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
       throws IOException, ServletException {
@@ -51,6 +54,9 @@ public class CustomHeaderFilter implements Filter {
       if(origin != null && !origin.isEmpty()) {
     	  allowedOrigins.add(origin); // always right.
       }
+      if(domainAllowed != null && !domainAllowed.isEmpty()) {
+    	  allowedOrigins.add(domainAllowed);
+      }
       response.setHeader("Access-Control-Allow-Origin", allowedOrigins.contains(origin) ? origin : "");
       response.setHeader("Vary", "Origin");
       // Access-Control-Max-Age
@@ -60,8 +66,7 @@ public class CustomHeaderFilter implements Filter {
       // Access-Control-Allow-Methods
       response.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
       // Access-Control-Allow-Headers
-      response.setHeader("Access-Control-Allow-Headers",
-          "Origin, Content-Type, Accept, Authorization, Language");
+      response.setHeader("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization, Language, x-xsrf-token");
     }
     chain.doFilter(req, res);
   }

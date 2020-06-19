@@ -65,6 +65,18 @@
 		bankaccountinformation b
 		WHERE b.sfid=#{id}
 	</select>
+
+	<select id="getBankAccountByBankId"
+		parameterType="jp.co.japantaxi.model.ParameterRequest"
+		resultType="jp.co.japantaxi.model.BankAccountInformation">
+		select ba.sfid, ba.account, ba.appcompany,
+		ba.accountcategory, ba.accountbank, ba.accountnumber, ba.accountname,
+		ba.accountnamekana, ba.accounttype, ba.invaliddate, ba.invalidreason,
+		ba.lastmodifieddate, ba.appcompanyid
+		from bankaccountinformation ba join bankmaster bm on
+		ba.accountbank = bm.sfid
+		where bm.sfid =#{id} ORDER BY ba.sfid DESC
+	</select>
 	
 	<select id="getListBankAccountInformationIdFromStockholm"
 		parameterType="jp.co.japantaxi.model.ParameterRequest"

@@ -526,6 +526,7 @@
 	
 	<!-- Singapore -->
 	<select id="getListAppCompanys" resultMap="appCompanyList">
+		<!-- 
 		SELECT
 			A.sfid,
 			A.phonenumber,
@@ -556,9 +557,25 @@
 				<foreach item="item" index="index" collection="sfids" open="(" separator="," close=")">
 					#{item}
 				</foreach>
-			</if>
+			</if> 
 		ORDER BY
 		jtxCompanyId DESC
+		-->
+        select a.sfid, a.phonenumber, a.jtxcompanyid, a.dispatchtype as dispatchtype,
+        a.appdisplayname, a.salesprefecture, CASE
+            WHEN w.sycapproveflg = 'T' THEN 0
+            ELSE 1
+        END 
+        AS isneedapproval
+        FROM appcompany a
+        INNER JOIN worker w on a.sfid = w.sfid
+        <if test='sfids != null'>
+            where sfid IN
+            <foreach item="item" index="index" collection="sfids" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+         ORDER BY jtxCompanyId DESC
 	</select>
 	<resultMap type="jp.co.japantaxi.response.AppCompanyResponse$AppCompanyList" id="appCompanyList" autoMapping="true">
 		<result property="jtxCompanyId" column="jtxcompanyid"/>

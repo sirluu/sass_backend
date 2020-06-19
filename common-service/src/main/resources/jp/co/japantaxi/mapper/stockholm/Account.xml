@@ -888,7 +888,7 @@
 			LEFT JOIN bankaccountinformationsync netpaybankacc ON a.sfid = netpaybankacc.account AND netpaybankacc.accountcategory = 'ネット決済支払'
 			LEFT JOIN bankmastersync netpaybm ON netpaybankacc.accountbank = netpaybm.sfid
 		WHERE
-		a.appcompany=#{appCompany,jdbcType=VARCHAR} AND appcompanyid is not null ORDER BY sfid DESC
+		a.appcompany=#{appCompany,jdbcType=VARCHAR} AND a.appcompanyid is not null ORDER BY a.sfid DESC
 	</select>
 	<resultMap type="jp.co.japantaxi.model.AccountSync" id="merchantCoopApprovalInfoList">
 		<result property="appcompanyid" column="appcompanyid"/>
