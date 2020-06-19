@@ -480,6 +480,8 @@ public class ConvertDataUtil {
 
     linkInforc.setServiceid(jsonObject.get("serviceId").toString().replace("{}", "").trim());
     linkInforc.setSfid(jsonObject.get("id").toString().replace("{}", "").trim());
+    linkInforc.setAppcompany(jsonObject.get("appCompany").toString().replace("{}", "").trim());
+
     return linkInforc;
   }
   

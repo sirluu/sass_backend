@@ -54,18 +54,7 @@ public class Utility {
     }
     return intersection;
   }
-
-  public static <T> List<String> getIdListFromObjetcList(List<T> list) {
-    List<String> listId = new ArrayList<>();
-    JSONObject leftObject = new JSONObject();
-    leftObject.put("list", list);
-    JSONArray leftArray = leftObject.getJSONArray("list");
-    for (int i = 0; i < leftArray.length(); i++) {
-      listId.add(leftArray.getJSONObject(i).getString("sfid").toString());
-    }
-    return listId;
-  }
-  
+ 
   public static Float parseFloat(String value) {
     try {
       return Float.parseFloat(value);

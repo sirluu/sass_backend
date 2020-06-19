@@ -170,7 +170,6 @@ public class MerchantResponse implements Serializable{
 		private String affiliationStoreNameKana;
 		private String netpayMerchantsAffiliationStoreNameKanji;
 		private String applicationFormAffiliationStoreNameKanji;
-		private String companiesAffiliationStoreNameKanji;
 		private String keiriNo;
 		private String corporateNumber;
 		private String netpayMerchantsMerTermNo;
@@ -241,12 +240,9 @@ public class MerchantResponse implements Serializable{
 		private String merchantDeliveryInforMemo;
 		private String netpayMerchantsMerchantPayInfoName;
 		private String applicationFormMerchantPayInfoName;
-		private String companiesMerchantPayInfoName;
 		private String netpayMerchantsMerchantPayInfoPostalCode;
 		private String applicationFormMerchantPayInfoPostalCode;
-		private String companiesMerchantPayInfoPostalCode;
 		private String netpayMerchantsMerchantPayInfoAddress1;
-		private String companiesMerchantPayInfoAddress1;
 		private String netpayMerchantsMerchantPayInfoAddress2;
 		private String applicationFormMerchantPayInfoAddress2;
 		private String merchantPayInfoContactName;
@@ -267,19 +263,13 @@ public class MerchantResponse implements Serializable{
 	@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 	public static class ItabBankAccount {
 		public String applicationFormPaymentBankNameKana;
-		public String companiesBankNameKana;
 		public String applicationFormPaymentBankCode;
-		public String companiesBankCode;
 		public String applicationFormPaymentBranchCode;
-		public String companiesBranchCode;
 		public String applicationFormPaymentBranchNameKana;
-		public String companiesBranchNameKana;
 		public String applicationFormPaymentAccountNumber;
 		public String companiesAccountNumber;
 		public String applicationFormPaymentAccountNameKana;
-		public String companiesAccountNameKana;
 		public String applicationFormPaymentAccountType;
-		public String companiesAccountType;
 	}
 	
 	

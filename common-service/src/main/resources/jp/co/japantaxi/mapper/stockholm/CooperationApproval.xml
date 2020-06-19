@@ -143,7 +143,6 @@
 		<result property="affiliationStoreNameKana" column="affiliationstorenamekana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
 		<result property="netpayMerchantsAffiliationStoreNameKanji" column="affiliationStoreNameKanji" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
 		<result property="applicationFormAffiliationStoreNameKanji" column="affiliationStoreNameKanji" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-		<result property="companiesAffiliationStoreNameKanji" column="affiliationStoreNameKanji" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
 		<result property="keiriNo" column="keirino" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
 		<result property="corporateNumber" column="corporatenumber" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
 		<result property="netpayMerchantsMerTermNo" column="mertermno" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
@@ -214,12 +213,9 @@
 		<result property="merchantDeliveryInforMemo" column="merchantdeliveryinformemo" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
 		<result property="netpayMerchantsMerchantPayInfoName" column="merchantpayinfoname" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
 		<result property="applicationFormMerchantPayInfoName" column="merchantpayinfoname" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-		<result property="companiesMerchantPayInfoName" column="merchantpayinfoname" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
 		<result property="netpayMerchantsMerchantPayInfoPostalCode" column="merchantpayinfopostalcode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
 		<result property="applicationFormMerchantPayInfoPostalCode" column="merchantpayinfopostalcode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-		<result property="companiesMerchantPayInfoPostalCode" column="merchantpayinfopostalcode" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
 		<result property="netpayMerchantsMerchantPayInfoAddress1" column="merchantpayinfoaddress1" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
-		<result property="companiesMerchantPayInfoAddress1" column="companiesmerchantpayinfoaddress" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
 		<result property="netpayMerchantsMerchantPayInfoAddress2" column="merchantpayinfoaddress2" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
 		<result property="applicationFormMerchantPayInfoAddress2" column="merchantpayinfoaddress2" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
 		<result property="merchantPayInfoContactName" column="merchantpayinfocontactname" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull" />
@@ -241,19 +237,13 @@
 		</collection>
 		<collection property="itabBankAccount" ofType="jp.co.japantaxi.response.MerchantResponse$ItabBankAccount">
 			<result property="applicationFormPaymentBankNameKana" column="itabbanknamekana"/>
-			<result property="companiesBankNameKana" column="itabbanknamekana"/>
 			<result property="applicationFormPaymentBankCode" column="itabbankcode"/>
-			<result property="companiesBankCode" column="itabbankcode"/>
 			<result property="applicationFormPaymentBranchCode" column="itabbranchcode"/>
-			<result property="companiesBranchCode" column="itabbranchcode"/>
 			<result property="applicationFormPaymentBranchNameKana" column="itabbranchnamekana"/>
-			<result property="companiesBranchNameKana" column="itabbranchnamekana"/>
 			<result property="applicationFormPaymentAccountNumber" column="itabaccountnumber" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
 			<result property="companiesAccountNumber" column="itabaccountnumber" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
 			<result property="applicationFormPaymentAccountNameKana" column="itabaccountnamekana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
-			<result property="companiesAccountNameKana" column="itabaccountnamekana" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
 			<result property="applicationFormPaymentAccountType" column="itabaccounttype" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
-			<result property="companiesAccountType" column="itabaccounttype" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
 		</collection>
 	</resultMap>
 </mapper>

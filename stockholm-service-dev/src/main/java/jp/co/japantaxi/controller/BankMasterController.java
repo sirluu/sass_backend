@@ -135,6 +135,7 @@ public class BankMasterController {
         objects2Insert = selectBankMasterSyncList2InsertOrUpdate(hashMap, parareq, true);
         if (!objects2Insert.isEmpty()) {
         	insertBankMasterSync(objects2Insert);
+        	insertWorker(objects2Insert, parareq);
         }
         //Reduce SFID to query
         objectIds = new ArrayList<String>(hashMap.keySet());
@@ -146,6 +147,7 @@ public class BankMasterController {
         objects2Update = getBankMasterSyncListEdited(objects2Update, compareList, hashMap);
         if (!objects2Update.isEmpty()) {
         	updateBankMasterSync(objects2Update);
+        	updateWorker(objects2Update, parareq);
         }
         parareq.setIds(null);
         hashMap.clear();
@@ -306,18 +308,9 @@ public class BankMasterController {
    * try catch: Sentry 連携しエラー通知を行う
    */
   public void insertBankMasterSync(List<BankMaster> bankMasterList) {
-	List<BankAccountInformation> accountInformations = new ArrayList<BankAccountInformation>();
-    ParameterRequest request = new ParameterRequest();
-    Worker worker = workerController.setWorker(Constant.APPCOMPANYSYNC);
     for (int i = 0; i < bankMasterList.size(); i++) {
       try {
         bankMasterMapper.insertBankMasterSync(ConvertDataUtil.convertBankMaster2Sync(bankMasterList.get(i), true));
-        request.setId(bankMasterList.get(i).getSfid());
-        accountInformations = bankAccountInforMapper.getBankAccountByBankId(request);
-        for (int j = 0; j < accountInformations.size(); j++) {
-            worker.setSfid(accountInformations.get(j).getAppcompany());
-            workerController.insertWorker(worker);
-		}
       } catch (Exception e) {
         LOGGER.error(
             Constant.NORMALCODE.E03
@@ -328,26 +321,27 @@ public class BankMasterController {
     }
   }
 
+  public void insertWorker(List<BankMaster> bankMasterList, ParameterRequest request) {
+	List<BankAccountInformation> accountInformations = new ArrayList<BankAccountInformation>();
+	Worker worker = workerController.setWorker(Constant.APPCOMPANYSYNC);
+	List<String> ids = Utility.getIdListFromObjectList(bankMasterList);
+	request.setIds(Utility.parseList(ids));
+	accountInformations = bankAccountInforMapper.getBankAccountByBankIds(request);
+	for (int j = 0; j < accountInformations.size(); j++) {
+		worker.setSfid(accountInformations.get(j).getAppcompany());
+		workerController.insertWorker(worker);
+	}
+  }
+  
   /**
    * @param bankMasterList
    * try catch: Sentry 連携しエラー通知を行う
    */
   public void updateBankMasterSync(List<BankMaster> bankMasterList) {
-	ParameterRequest request = new ParameterRequest();
-	List<BankAccountInformation> accountInformations = new ArrayList<BankAccountInformation>();
-	Worker worker = workerController.setWorker(Constant.APPCOMPANYSYNC);
 	for (int i = 0; i < bankMasterList.size(); i++) {
 		try {
 			bankMasterMapper.updateBankMasterSync(ConvertDataUtil.convertBankMaster2Sync(bankMasterList.get(i), true));
 			LOGGER.info("BankMasterSync updating >>> " + bankMasterList.get(i).getSfid());
-			request.setId(bankMasterList.get(i).getSfid());
-			accountInformations = bankAccountInforMapper.getBankAccountByBankId(request);
-			for (int j = 0; j < accountInformations.size(); j++) {
-				worker.setSfid(accountInformations.get(j).getAppcompany());
-				// Syncテープルに更新場合：承認されたものは未承認変更。（Workerの「syncapproveflg 」に「TRUE」→「FALSE」）
-				worker.setSycapproveflg(false);
-				workerController.updateWorker(worker);
-			}
 		} catch (Exception e) {
 			LOGGER.error(Constant.NORMALCODE.E03 + " >>> error update bankmastersync record with id: {} with error => {} ",
 					bankMasterList.get(i).getSfid(), e.getMessage());
@@ -458,6 +452,20 @@ public class BankMasterController {
     }
   }
 
+  public void updateWorker(List<BankMaster> bankMasterList, ParameterRequest request) {
+	List<BankAccountInformation> accountInformations = new ArrayList<BankAccountInformation>();
+	Worker worker = workerController.setWorker(Constant.APPCOMPANYSYNC);
+    List<String> ids = Utility.getIdListFromObjectList(bankMasterList);
+    request.setIds(Utility.parseList(ids));
+    accountInformations = bankAccountInforMapper.getBankAccountByBankIds(request);
+	for (int j = 0; j < accountInformations.size(); j++) {
+		worker.setSfid(accountInformations.get(j).getAppcompany());
+		// Syncテープルに更新場合：承認されたものは未承認変更。（Workerの「syncapproveflg 」に「TRUE」→「FALSE」）
+		worker.setSycapproveflg(false);
+		workerController.updateWorker(worker);
+	}
+  }
+  
   public void insertBankAccountInformationSync(
       List<BankAccountInformation> bankAccountInformationList) {
     Worker worker = workerController.setWorker(Constant.APPCOMPANYSYNC);

@@ -12,7 +12,7 @@ public interface BankAccountInformationMapper {
 
   BankAccountInformation getBankAccountInformationById(ParameterRequest id);
 
-  List<BankAccountInformation> getBankAccountByBankId(ParameterRequest id);
+  List<BankAccountInformation> getBankAccountByBankIds(ParameterRequest ids);
 
   List<String> getListBankAccountInformationIdFromStockholm(ParameterRequest ids);
 
