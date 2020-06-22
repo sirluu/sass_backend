@@ -94,7 +94,7 @@
 		appcompany,
 		accountcategory, accountbank, accountnumber, accountname,
 		accountnamekana, accounttype, invaliddate, invalidreason,
-		lastmodifieddate)
+		lastmodifieddate, appcompanyid)
 		VALUES(#{sfid}, #{account}, #{appcompany},
 		#{accountcategory},
 		#{accountbank},
@@ -102,7 +102,7 @@
 		#{accountnamekana},
 		#{accounttype},
 		#{invaliddate}, #{invalidreason},
-		#{lastmodifieddate})
+		#{lastmodifieddate}, #{appcompanyid})
 	</insert>
 
 	<update id="updateBankAccountInformation"
@@ -118,7 +118,8 @@
 		accounttype=#{accounttype},
 		invaliddate=#{invaliddate},
 		invalidreason=#{invalidreason},
-		lastmodifieddate=#{lastmodifieddate}
+		lastmodifieddate=#{lastmodifieddate},
+		appcompanyid=#{appcompanyid}
 		WHERE sfid=#{sfid}
 	</update>
 
@@ -127,12 +128,12 @@
 		INSERT INTO bankaccountinformationsync
 		(sfid, account,
 		appcompany, accountcategory, accountbank, accountnumber, accountname,
-		accountnamekana, accounttype, invaliddate, invalidreason, syncedtime)
+		accountnamekana, accounttype, invaliddate, invalidreason, appcompanyid, syncedtime)
 		VALUES(#{sfid}, #{account}, #{appcompany}, #{accountcategory},
 		#{accountbank},
 		#{accountnumber}, #{accountname}, #{accountnamekana},
 		#{accounttype},
-		#{invaliddate}, #{invalidreason}, #{syncedtime})
+		#{invaliddate}, #{invalidreason}, #{appcompanyid}, #{syncedtime})
 	</insert>
 
 	<update id="updateBankAccountInformationSync"
@@ -145,6 +146,7 @@
 		accountnamekana=#{accountnamekana}, accounttype=#{accounttype},
 		invaliddate=#{invaliddate},
 		invalidreason=#{invalidreason},
+		appcompanyid=#{appcompanyid},
 		syncedtime=#{syncedtime}
 		WHERE sfid=#{sfid}
 	</update>
