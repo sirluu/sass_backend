@@ -21,6 +21,7 @@ public class BankAccountInformation extends ObjectSync {
    * 9 fields + sfid + account
    */
   private String appcompany;
+  private String appcompanyid;
   private String accountcategory;
   private String accountbank;
   private String accountnumber;

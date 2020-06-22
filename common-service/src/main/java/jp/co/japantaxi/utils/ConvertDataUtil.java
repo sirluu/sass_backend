@@ -359,6 +359,7 @@ public class ConvertDataUtil {
     bankAccountInformation.setLastmodifieddate(DateTimeUtil.getTimestampFromString(
         jsonObject.get("lastMDate").toString().replace("{}", "").trim(), DateTimeUtil.DATE_TIME_FM));
     bankAccountInformation.setSfid(jsonObject.get("id").toString().replace("{}", "").trim());
+    bankAccountInformation.setAppcompanyid(jsonObject.get("compnayID").toString().replace("{}", "").trim());
     return bankAccountInformation;
   }
 
