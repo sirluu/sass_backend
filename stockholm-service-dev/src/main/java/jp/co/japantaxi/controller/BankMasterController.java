@@ -328,7 +328,7 @@ public class BankMasterController {
 	request.setIds(Utility.parseList(ids));
 	accountInformations = bankAccountInforMapper.getBankAccountByBankIds(request);
 	for (int j = 0; j < accountInformations.size(); j++) {
-		worker.setSfid(accountInformations.get(j).getAppcompany());
+		worker.setSfid(accountInformations.get(j).getAppcompanyid());
 		workerController.insertWorker(worker);
 	}
   }
@@ -459,7 +459,7 @@ public class BankMasterController {
     request.setIds(Utility.parseList(ids));
     accountInformations = bankAccountInforMapper.getBankAccountByBankIds(request);
 	for (int j = 0; j < accountInformations.size(); j++) {
-		worker.setSfid(accountInformations.get(j).getAppcompany());
+		worker.setSfid(accountInformations.get(j).getAppcompanyid());
 		// Syncテープルに更新場合：承認されたものは未承認変更。（Workerの「syncapproveflg 」に「TRUE」→「FALSE」）
 		worker.setSycapproveflg(false);
 		workerController.updateWorker(worker);
