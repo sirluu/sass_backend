@@ -118,7 +118,7 @@ public class DateTimeUtil {
     public static Date trim(Date date) {
       Calendar calendar = Calendar.getInstance();
       calendar.setTime(date);
-      calendar.set(Calendar.HOUR_OF_DAY, date.getHours() + 2);
+      calendar.set(Calendar.HOUR_OF_DAY, date.getHours() + 4);
       return calendar.getTime();
     }
     
