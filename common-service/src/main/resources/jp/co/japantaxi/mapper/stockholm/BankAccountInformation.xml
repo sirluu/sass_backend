@@ -35,7 +35,7 @@
 
 	<select id="getListBankAccountInformationSync"
 		parameterType="jp.co.japantaxi.model.ParameterRequest"
-		resultType="jp.co.japantaxi.model.PaymentSystemLinkInfor">
+		resultType="jp.co.japantaxi.model.BankAccountInformation">
 		SELECT b.sfid, b.account, b.appcompany, b.accountcategory,
 		b.accountbank, b.accountnumber, b.accountname, b.accountnamekana,
 		b.accounttype, b.invaliddate, b.invalidreason
