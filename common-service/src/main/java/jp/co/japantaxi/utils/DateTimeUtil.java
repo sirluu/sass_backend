@@ -5,7 +5,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.TimeZone;
@@ -19,7 +18,6 @@ public class DateTimeUtil {
 
 	public static final TimeZone TIMEZONE_TOKYO = TimeZone.getTimeZone("Asia/Tokyo");
 	public static final TimeZone TIMEZONE_UTC = TimeZone.getTimeZone("UTC");
-	public static final TimeZone TIMEZONE_GMT = TimeZone.getTimeZone("GMT");
 	public static final String DATE_FM_S = "EEE MMM dd HH:mm:ss zzz yyyy";
 	public static final String TIME_FM_S = "HH:mm:ss.SSSSSS";
 	public static final String DATE_TIME_FM = "yyyy-MM-dd HH:mm:ss";
@@ -115,9 +113,5 @@ public class DateTimeUtil {
 		}
 		return true;
 	}
-	
-    public static Date convertToDateViaInstant(LocalDate dateToConvert) {
-      return Date.from(dateToConvert.atStartOfDay(TIMEZONE_TOKYO.toZoneId()).toInstant());
-    }
-
+    
 }

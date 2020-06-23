@@ -107,7 +107,7 @@ public class WorkerController {
   }
 
   /**
-   * try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
+   * try catch: Sentry 鬨ｾ�ｽ｣隰ｳ�ｽｺ邵ｺ蜉ｱ縺顔ｹ晢ｽｩ郢晢ｽｼ鬨ｾ螟り｡咲ｹｧ螳夲ｽ｡蠕娯鴬
    * 
    * @param parameterRequest
    * @return ResponseEntity<Object>
@@ -132,7 +132,7 @@ public class WorkerController {
   }
 
   /**
-   * try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
+   * try catch: Sentry 鬨ｾ�ｽ｣隰ｳ�ｽｺ邵ｺ蜉ｱ縺顔ｹ晢ｽｩ郢晢ｽｼ鬨ｾ螟り｡咲ｹｧ螳夲ｽ｡蠕娯鴬
    * 
    * @param parameterRequest
    * @return ResponseEntity<Object>
@@ -154,7 +154,7 @@ public class WorkerController {
     }
     String stMode = "";
     try {
-      // 繝代Λ繝｡繝ｼ繧ｿ縺ｫstart_mode縺後↑縺�蝣ｴ蜷医�ｯ繝ｭ繧ｰ縺ｫ螳溯｡梧ュ蝣ｱ繧貞�ｺ蜉帙＠縺ｦ縲�ｼ薙∈驕ｷ遘ｻ
+      // 郢昜ｻ｣ﾎ帷ｹ晢ｽ｡郢晢ｽｼ郢ｧ�ｽｿ邵ｺ�ｽｫstart_mode邵ｺ蠕娯�醍ｸｺ�ｿｽ陜｣�ｽｴ陷ｷ蛹ｻ�ｿｽ�ｽｯ郢晢ｽｭ郢ｧ�ｽｰ邵ｺ�ｽｫ陞ｳ貅ｯ�ｽ｡譴ｧ繝･陜｣�ｽｱ郢ｧ雋橸ｿｽ�ｽｺ陷牙ｸ呻ｼ�邵ｺ�ｽｦ邵ｲ�ｿｽ�ｽｼ阮吮�磯ｩ包ｽｷ驕假ｽｻ
       stMode = parameterRequest.getStartMode();
       if (!Constant.STARTMODE.MANUAL.value.equalsIgnoreCase(stMode.toUpperCase())
     	  && !Constant.STARTMODE.CRON.value.equalsIgnoreCase(stMode.toUpperCase())
@@ -194,17 +194,17 @@ public class WorkerController {
 
   /**
    * @param parameterRequest
-   * @return ResponseEntity<Object> try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
+   * @return ResponseEntity<Object> try catch: Sentry 鬨ｾ�ｽ｣隰ｳ�ｽｺ邵ｺ蜉ｱ縺顔ｹ晢ｽｩ郢晢ｽｼ鬨ｾ螟り｡咲ｹｧ螳夲ｽ｡蠕娯鴬
    */
   @PostMapping(value = "/synchronize", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Object> synchronize(@RequestBody ParameterRequest parameterRequest) {
     List<String> res = new ArrayList<>();
 
-    // 1-1 繝ｪ繧ｯ繧ｨ繧ｹ繝医ヱ繝ｩ繝｡繝ｼ繧ｿ繝ｼ繝√ぉ繝�繧ｯ
+    // 1-1 郢晢ｽｪ郢ｧ�ｽｯ郢ｧ�ｽｨ郢ｧ�ｽｹ郢晏現繝ｱ郢晢ｽｩ郢晢ｽ｡郢晢ｽｼ郢ｧ�ｽｿ郢晢ｽｼ郢昶�壹♂郢晢ｿｽ郢ｧ�ｽｯ
     ResponseEntity<Object> response = validParameter(parameterRequest);
     if (response.getStatusCode().value() == HttpStatus.OK.value()) {
       res.add("Sync process begin at : " + LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
-      // 1-2 繝舌ャ繝∫憾諷九ユ繝ｼ繝悶Ν縺ｮ繝舌ャ繝√さ繝ｼ繝峨メ繧ｧ繝�繧ｯ
+      // 1-2 郢晁�後Ε郢昶悪諞ｾ隲ｷ荵昴Θ郢晢ｽｼ郢晄じﾎ晉ｸｺ�ｽｮ郢晁�後Ε郢昶�壹＆郢晢ｽｼ郢晏ｳｨ繝｡郢ｧ�ｽｧ郢晢ｿｽ郢ｧ�ｽｯ
       BatchStatus batchStatus = batchController.getBatchStatus();
       if (batchStatus == null) {
         res.add(Constant.NORMALCODE.E04 + " >>> batchcode SBAT-001 don't exits !!!");
@@ -212,10 +212,10 @@ public class WorkerController {
   			  "batchcode SBAT-001 don't exits !!!"));
         return new ResponseEntity<>(res, HttpStatus.NOT_FOUND);
       }
-      // 1-3 繝舌ャ繝∫憾諷九ユ繝ｼ繝悶Ν縺ｮ繧ｹ繝�繝ｼ繧ｿ繧ｹ縺君ULL縺ｧ縺ゅｋ遒ｺ隱阪☆繧�
+      // 1-3 郢晁�後Ε郢昶悪諞ｾ隲ｷ荵昴Θ郢晢ｽｼ郢晄じﾎ晉ｸｺ�ｽｮ郢ｧ�ｽｹ郢晢ｿｽ郢晢ｽｼ郢ｧ�ｽｿ郢ｧ�ｽｹ邵ｺ蜷婉LL邵ｺ�ｽｧ邵ｺ繧��ｽ矩￡�ｽｺ髫ｱ髦ｪ笘�郢ｧ�ｿｽ
       if (batchStatus.getStatus() != null && !"".equalsIgnoreCase(batchStatus.getStatus())
           && !batchStatus.getStatus().isEmpty()) {
-        // null莉･螟悶�ｮ蝣ｴ蜷医�ｯ繝ｭ繧ｰ縺ｫ螳溯｡梧ュ蝣ｱ繧貞�ｺ蜉帙＠縺ｦ縲�ｼ薙∈驕ｷ遘ｻ
+        // null闔会ｽ･陞滓じ�ｿｽ�ｽｮ陜｣�ｽｴ陷ｷ蛹ｻ�ｿｽ�ｽｯ郢晢ｽｭ郢ｧ�ｽｰ邵ｺ�ｽｫ陞ｳ貅ｯ�ｽ｡譴ｧ繝･陜｣�ｽｱ郢ｧ雋橸ｿｽ�ｽｺ陷牙ｸ呻ｼ�邵ｺ�ｽｦ邵ｲ�ｿｽ�ｽｼ阮吮�磯ｩ包ｽｷ驕假ｽｻ
         res.add(Constant.NORMALCODE.E02 + " >>> batch status is error !!!");
   	    LOGGER.error(String.format("%s >>> %s", Constant.NORMALCODE.E02,
   			  "batch status is error !!!"));
@@ -223,7 +223,7 @@ public class WorkerController {
       }
       // Set start_mode to Property
       System.setProperty(Constant.START_MODE, parameterRequest.getStartMode().toUpperCase());
-      // 繝舌ャ繝∫憾諷九ユ繝ｼ繝悶Ν縺ｮ襍ｷ蜍輔Δ繝ｼ繝峨ｒ譖ｴ譁ｰ縺吶ｋ
+      // 郢晁�後Ε郢昶悪諞ｾ隲ｷ荵昴Θ郢晢ｽｼ郢晄じﾎ晉ｸｺ�ｽｮ隘搾ｽｷ陷崎ｼ釆皮ｹ晢ｽｼ郢晏ｳｨ�ｽ定ｭ厄ｽｴ隴�ｽｰ邵ｺ蜷ｶ�ｽ�
       String startMode = System.getProperty(Constant.START_MODE).toUpperCase();
       batchController.updateBatchStatus(batchStatus, true, false, false, false);
 
@@ -235,8 +235,8 @@ public class WorkerController {
       } catch (Exception e) {
         LOGGER.info(" >>> no request process_mode param !!!");
       }
-      // 繝ｭ繧ｰ縺ｫ螳溯｡梧ュ蝣ｱ繧貞�ｺ蜉帙☆繧九�ょ��螳ｹ�ｼ壹さ繝ｼ繝�(N00)縲∬ｵｷ蜍輔Δ繝ｼ繝峨�∝�ｦ逅�繝｢繝ｼ繝峨��髢句ｧ区律譎�
-      // 髢句ｧ区律譎�
+      // 郢晢ｽｭ郢ｧ�ｽｰ邵ｺ�ｽｫ陞ｳ貅ｯ�ｽ｡譴ｧ繝･陜｣�ｽｱ郢ｧ雋橸ｿｽ�ｽｺ陷牙ｸ吮�郢ｧ荵晢ｿｽ繧�ｿｽ�ｿｽ陞ｳ�ｽｹ�ｿｽ�ｽｼ螢ｹ縺慕ｹ晢ｽｼ郢晢ｿｽ(N00)邵ｲ竏ｬ�ｽｵ�ｽｷ陷崎ｼ釆皮ｹ晢ｽｼ郢晏ｳｨ�ｿｽ竏晢ｿｽ�ｽｦ騾��ｿｽ郢晢ｽ｢郢晢ｽｼ郢晏ｳｨ�ｿｽ�ｿｽ鬮｢蜿･�ｽｧ蛹ｺ蠕玖ｭ趣ｿｽ
+      // 鬮｢蜿･�ｽｧ蛹ｺ蠕玖ｭ趣ｿｽ
 	  LOGGER.info(String.format("%s >>> Start mode: %s >>> Process mode: %s >>> Sync process begin at: %s", 
 			  Constant.NORMALCODE.N00,	startMode, processMode, LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId())));
       // If cron, set back start time to parameterRequest
@@ -257,28 +257,28 @@ public class WorkerController {
 		}
       }
       cacheManagerConfig.setFromDateTime(parameterRequest.getStartTime());
-      String toDateTime = DateTimeUtil.getStringFromDate(DateTimeUtil.getDateFromString(DateTimeUtil.getStringFromDate(new Date(), DateTimeUtil.DATE_TIME_FM), DateTimeUtil.DATE_TIME_FM, DateTimeUtil.TIMEZONE_GMT) , DateTimeUtil.DATE_TIME_FM);
+      String toDateTime = DateTimeUtil.getStringFromDate(DateTimeUtil.getDateFromString(DateTimeUtil.getStringFromDate(new Date(), DateTimeUtil.DATE_TIME_FM), DateTimeUtil.DATE_TIME_FM, DateTimeUtil.TIMEZONE_UTC) , DateTimeUtil.DATE_TIME_FM);
       cacheManagerConfig.setToDateTime(toDateTime);
 
-      // 2.SFDC騾｣謳ｺ蜃ｦ逅�
+      // 2.SFDC鬨ｾ�ｽ｣隰ｳ�ｽｺ陷�ｽｦ騾��ｿｽ
       if (Constant.STARTMODE.CRON.value.equalsIgnoreCase(startMode) || Constant.STARTMODE.USER.value.equalsIgnoreCase(startMode) || Constant.STARTMODE.MANUAL.value.equalsIgnoreCase(startMode)) {
-        // cron�ｼ壹け繝ｼ繝ｭ繝ｳ縺ｫ繧医ｋ閾ｪ蜍戊ｵｷ蜍�
-        // manual�ｼ壽焔蜍募ｮ溯｡�
+        // cron�ｿｽ�ｽｼ螢ｹ縺醍ｹ晢ｽｼ郢晢ｽｭ郢晢ｽｳ邵ｺ�ｽｫ郢ｧ蛹ｻ�ｽ矩明�ｽｪ陷肴�奇ｽｵ�ｽｷ陷搾ｿｽ
+        // manual�ｿｽ�ｽｼ螢ｽ辟碑恪蜍滂ｽｮ貅ｯ�ｽ｡�ｿｽ
         if (Constant.PROCESSMODE.GETSF.equals(processMode)) {
-          // cron+getSF�ｼ售F蜿門ｾ怜�ｦ逅�縺ｮ縺ｿ縺ｧ襍ｷ蜍包ｼ�2竏�1縺ｮ縺ｿ螳溯｡鯉ｼ会ｼ郁�ｪ蜍戊ｵｷ蜍包ｼ�
-          // manual+getSF�ｼ售F蜿門ｾ怜�ｦ逅�縺ｮ縺ｿ縺ｧ襍ｷ蜍包ｼ�2竏�1縺ｮ縺ｿ螳溯｡鯉ｼ会ｼ域焔蜍戊ｵｷ蜍包ｼ�
+          // cron+getSF�ｿｽ�ｽｼ蜚ｮF陷ｿ髢��ｽｾ諤懶ｿｽ�ｽｦ騾��ｿｽ邵ｺ�ｽｮ邵ｺ�ｽｿ邵ｺ�ｽｧ隘搾ｽｷ陷榊桁�ｽｼ�ｿｽ2遶擾ｿｽ1邵ｺ�ｽｮ邵ｺ�ｽｿ陞ｳ貅ｯ�ｽ｡魃会ｽｼ莨夲ｽｼ驛�ｿｽ�ｽｪ陷肴�奇ｽｵ�ｽｷ陷榊桁�ｽｼ�ｿｽ
+          // manual+getSF�ｿｽ�ｽｼ蜚ｮF陷ｿ髢��ｽｾ諤懶ｿｽ�ｽｦ騾��ｿｽ邵ｺ�ｽｮ邵ｺ�ｽｿ邵ｺ�ｽｧ隘搾ｽｷ陷榊桁�ｽｼ�ｿｽ2遶擾ｿｽ1邵ｺ�ｽｮ邵ｺ�ｽｿ陞ｳ貅ｯ�ｽ｡魃会ｽｼ莨夲ｽｼ蝓溽�碑恪謌奇ｽｵ�ｽｷ陷榊桁�ｽｼ�ｿｽ
           getSF(parameterRequest, batchStatus);
         } else if (Constant.PROCESSMODE.COREDATECREAT.equals(processMode)) {
-          // cron+coreDateCreat�ｼ壼渕蟷ｹDB逕ｨ繝�繝ｼ繧ｿ蜉�蟾･縺ｧ縺ｮ襍ｷ蜍包ｼ�2-2縺ｮ縺ｿ螳溯｡鯉ｼ会ｼ郁�ｪ蜍戊ｵｷ蜍包ｼ�
-          // manual+coreDateCreat�ｼ壼渕蟷ｹDB逕ｨ繝�繝ｼ繧ｿ蜉�蟾･縺ｧ縺ｮ襍ｷ蜍包ｼ�2-2縺ｮ縺ｿ螳溯｡鯉ｼ会ｼ郁�ｪ蜍戊ｵｷ蜍包ｼ�
+          // cron+coreDateCreat�ｿｽ�ｽｼ螢ｼ貂戊濤�ｽｹDB騾包ｽｨ郢晢ｿｽ郢晢ｽｼ郢ｧ�ｽｿ陷会ｿｽ陝ｾ�ｽ･邵ｺ�ｽｧ邵ｺ�ｽｮ隘搾ｽｷ陷榊桁�ｽｼ�ｿｽ2-2邵ｺ�ｽｮ邵ｺ�ｽｿ陞ｳ貅ｯ�ｽ｡魃会ｽｼ莨夲ｽｼ驛�ｿｽ�ｽｪ陷肴�奇ｽｵ�ｽｷ陷榊桁�ｽｼ�ｿｽ
+          // manual+coreDateCreat�ｿｽ�ｽｼ螢ｼ貂戊濤�ｽｹDB騾包ｽｨ郢晢ｿｽ郢晢ｽｼ郢ｧ�ｽｿ陷会ｿｽ陝ｾ�ｽ･邵ｺ�ｽｧ邵ｺ�ｽｮ隘搾ｽｷ陷榊桁�ｽｼ�ｿｽ2-2邵ｺ�ｽｮ邵ｺ�ｽｿ陞ｳ貅ｯ�ｽ｡魃会ｽｼ莨夲ｽｼ驛�ｿｽ�ｽｪ陷肴�奇ｽｵ�ｽｷ陷榊桁�ｽｼ�ｿｽ
           coreDateCreat(parameterRequest, batchStatus);
         } else if (Constant.PROCESSMODE.CLEAR.equals(processMode)) {
-          // cron+clear�ｼ壽ｴ励＞譖ｿ縺域ｩ溯�ｽ縺ｧ螳溯｡鯉ｼ郁�ｪ蜍戊ｵｷ蜍包ｼ�
-          // manual+clear�ｼ壽ｴ励＞譖ｿ縺域ｩ溯�ｽ縺ｧ螳溯｡鯉ｼ郁�ｪ蜍戊ｵｷ蜍包ｼ�
+          // cron+clear�ｿｽ�ｽｼ螢ｽ�ｽｴ蜉ｱ�ｼ櫁ｭ厄ｽｿ邵ｺ蝓滂ｽｩ貅ｯ�ｿｽ�ｽｽ邵ｺ�ｽｧ陞ｳ貅ｯ�ｽ｡魃会ｽｼ驛�ｿｽ�ｽｪ陷肴�奇ｽｵ�ｽｷ陷榊桁�ｽｼ�ｿｽ
+          // manual+clear�ｿｽ�ｽｼ螢ｽ�ｽｴ蜉ｱ�ｼ櫁ｭ厄ｽｿ邵ｺ蝓滂ｽｩ貅ｯ�ｿｽ�ｽｽ邵ｺ�ｽｧ陞ｳ貅ｯ�ｽ｡魃会ｽｼ驛�ｿｽ�ｽｪ陷肴�奇ｽｵ�ｽｷ陷榊桁�ｽｼ�ｿｽ
           clearRawData();
         } else if (Constant.PROCESSMODE.NULL.equals(processMode)) {
-          // cron�ｼ壹け繝ｼ繝ｭ繝ｳ縺ｫ繧医ｋ閾ｪ蜍戊ｵｷ蜍�
-          // manual�ｼ壹け繝ｼ繝ｭ繝ｳ縺ｫ繧医ｋ閾ｪ蜍戊ｵｷ蜍�
+          // cron�ｿｽ�ｽｼ螢ｹ縺醍ｹ晢ｽｼ郢晢ｽｭ郢晢ｽｳ邵ｺ�ｽｫ郢ｧ蛹ｻ�ｽ矩明�ｽｪ陷肴�奇ｽｵ�ｽｷ陷搾ｿｽ
+          // manual�ｿｽ�ｽｼ螢ｹ縺醍ｹ晢ｽｼ郢晢ｽｭ郢晢ｽｳ邵ｺ�ｽｫ郢ｧ蛹ｻ�ｽ矩明�ｽｪ陷肴�奇ｽｵ�ｽｷ陷搾ｿｽ
           getSF(parameterRequest, batchStatus);
           coreDateCreat(parameterRequest, batchStatus);
         }
@@ -292,14 +292,14 @@ public class WorkerController {
       if (processMode != null) {
 		batchStatus.setStartupmode(startMode.toLowerCase() + "+" + processMode.value.toLowerCase());
 	  }
-      // 3.繧ｸ繝ｧ繝門�ｦ逅�邨ゆｺ�
-      // 3-1繝舌ャ繝∫憾諷九ユ繝ｼ繝悶Ν縺ｮ譖ｴ譁ｰ譌･譎ゅｒ縲檎樟蝨ｨ譌･譎ゅ�阪〒譖ｴ譁ｰ縺吶ｋ
+      // 3.郢ｧ�ｽｸ郢晢ｽｧ郢晞摩�ｿｽ�ｽｦ騾��ｿｽ驍ｨ繧��ｽｺ�ｿｽ
+      // 3-1郢晁�後Ε郢昶悪諞ｾ隲ｷ荵昴Θ郢晢ｽｼ郢晄じﾎ晉ｸｺ�ｽｮ隴厄ｽｴ隴�ｽｰ隴鯉ｽ･隴弱ｅ�ｽ堤ｸｲ讙取ｨ溯舉�ｽｨ隴鯉ｽ･隴弱ｅ�ｿｽ髦ｪ縲定ｭ厄ｽｴ隴�ｽｰ邵ｺ蜷ｶ�ｽ�
       if (!batchStatus.getStatusinfo().isEmpty()) {
         batchController.updateBatchStatus(batchStatus, false, false, true, false);
       } else {
         batchController.updateBatchStatus(batchStatus, false, true, false, false);
       }
-      // 3-2 繧ｸ繝ｧ繝也ｵゆｺ�縺ｮ迥ｶ豕√ｒ繝ｭ繧ｰ縺ｫ蜃ｺ蜉帙☆繧� 蜀�螳ｹ�ｼ壹さ繝ｼ繝�(N02)縲∬ｵｷ蜍輔Δ繝ｼ繝峨�∝�ｦ逅�繝｢繝ｼ繝峨��髢句ｧ区律譎ゅ�∫ｵゆｺ�譌･譎�
+      // 3-2 郢ｧ�ｽｸ郢晢ｽｧ郢昜ｹ滂ｽｵ繧��ｽｺ�ｿｽ邵ｺ�ｽｮ霑･�ｽｶ雎補�夲ｽ堤ｹ晢ｽｭ郢ｧ�ｽｰ邵ｺ�ｽｫ陷�ｽｺ陷牙ｸ吮�郢ｧ�ｿｽ 陷��ｿｽ陞ｳ�ｽｹ�ｿｽ�ｽｼ螢ｹ縺慕ｹ晢ｽｼ郢晢ｿｽ(N02)邵ｲ竏ｬ�ｽｵ�ｽｷ陷崎ｼ釆皮ｹ晢ｽｼ郢晏ｳｨ�ｿｽ竏晢ｿｽ�ｽｦ騾��ｿｽ郢晢ｽ｢郢晢ｽｼ郢晏ｳｨ�ｿｽ�ｿｽ鬮｢蜿･�ｽｧ蛹ｺ蠕玖ｭ弱ｅ�ｿｽ竏ｫ�ｽｵ繧��ｽｺ�ｿｽ隴鯉ｽ･隴趣ｿｽ
 	  LOGGER.info(String.format("%s >>> Start mode: %s >>> Process mode: %s >>> Sync process end at: %s", 
 			  Constant.NORMALCODE.N02,	startMode, processMode, LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId())));
       res.add("Sync process end at : " + LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
@@ -308,7 +308,7 @@ public class WorkerController {
     return response;
   }
 
-  // 2-1�ｼ遺�ｻ2-2縺ｮ縺ｿ螳溯｡後〒襍ｷ蜍輔＠縺溷�ｴ蜷医�ｯ蜃ｦ逅�繧偵せ繧ｭ繝�繝励☆繧具ｼ�
+  // 2-1�ｿｽ�ｽｼ驕ｺ�ｿｽ�ｽｻ2-2邵ｺ�ｽｮ邵ｺ�ｽｿ陞ｳ貅ｯ�ｽ｡蠕後�定･搾ｽｷ陷崎ｼ費ｼ�邵ｺ貅ｷ�ｿｽ�ｽｴ陷ｷ蛹ｻ�ｿｽ�ｽｯ陷�ｽｦ騾��ｿｽ郢ｧ蛛ｵ縺帷ｹｧ�ｽｭ郢晢ｿｽ郢晏干笘�郢ｧ蜈ｷ�ｽｼ�ｿｽ
   public void getSF(ParameterRequest parameterRequest, BatchStatus batchStatus) {
     LOGGER.info("Account getSF process begin at : {} ",
         LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
@@ -342,7 +342,7 @@ public class WorkerController {
         LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
   }
 
-  // 2-2 蝓ｺ蟷ｹDB逕ｨ繝�繝ｼ繧ｿ蜉�蟾･縺ｧ縺ｮ襍ｷ蜍包ｼ�2-2縺ｮ縺ｿ螳溯｡鯉ｼ�
+  // 2-2 陜難ｽｺ陝ｷ�ｽｹDB騾包ｽｨ郢晢ｿｽ郢晢ｽｼ郢ｧ�ｽｿ陷会ｿｽ陝ｾ�ｽ･邵ｺ�ｽｧ邵ｺ�ｽｮ隘搾ｽｷ陷榊桁�ｽｼ�ｿｽ2-2邵ｺ�ｽｮ邵ｺ�ｽｿ陞ｳ貅ｯ�ｽ｡魃会ｽｼ�ｿｽ
   public void coreDateCreat(ParameterRequest parameterRequest, BatchStatus batchStatus) {
 	//Convert time
 	parameterRequest.setStartTime(Utility.parseString(parameterRequest.getStartTime()));
@@ -378,7 +378,7 @@ public class WorkerController {
         LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
   }
 
-  // 豢励＞譖ｿ縺域ｩ溯�ｽ縺ｧ螳溯｡�
+  // 雎｢蜉ｱ�ｼ櫁ｭ厄ｽｿ邵ｺ蝓滂ｽｩ貅ｯ�ｿｽ�ｽｽ邵ｺ�ｽｧ陞ｳ貅ｯ�ｽ｡�ｿｽ
   public void clearRawData() {
     accountMapper.truncateAccount();
     appCompanyMapper.truncateAppCompany();
@@ -388,12 +388,12 @@ public class WorkerController {
     systemLinkInforMapper.truncatePaymentSystemLinkInfor();
   }
 
-  // 4.蜈ｱ騾壹お繝ｩ繝ｼ蜃ｦ逅�
-  // 繝舌ャ繝∫憾諷九ユ繝ｼ繝悶Ν縺ｮ繧ｹ繝�繝ｼ繧ｿ繧ｹ繧偵�憩rror縲阪↓譖ｴ譁ｰ縺吶ｋ
-  // 繝舌ャ繝∫憾諷九ユ繝ｼ繝悶Ν縺ｮ繧ｹ繝�繝ｼ繧ｿ繧ｹ諠�蝣ｱ縺ｫ繧ｨ繝ｩ繝ｼ蜀�螳ｹ繧堤匳骭ｲ縺吶ｋ
-  // �ｼ医せ繝�繝ｼ繧ｿ繧ｹ諠�蝣ｱ縺後☆縺ｧ縺ｫ蟄伜惠縺吶ｋ蝣ｴ蜷医�ｯ霑ｽ險倥☆繧具ｼ�
+  // 4.陷茨ｽｱ鬨ｾ螢ｹ縺顔ｹ晢ｽｩ郢晢ｽｼ陷�ｽｦ騾��ｿｽ
+  // 郢晁�後Ε郢昶悪諞ｾ隲ｷ荵昴Θ郢晢ｽｼ郢晄じﾎ晉ｸｺ�ｽｮ郢ｧ�ｽｹ郢晢ｿｽ郢晢ｽｼ郢ｧ�ｽｿ郢ｧ�ｽｹ郢ｧ蛛ｵ�ｿｽ諞ｩrror邵ｲ髦ｪ竊楢ｭ厄ｽｴ隴�ｽｰ邵ｺ蜷ｶ�ｽ�
+  // 郢晁�後Ε郢昶悪諞ｾ隲ｷ荵昴Θ郢晢ｽｼ郢晄じﾎ晉ｸｺ�ｽｮ郢ｧ�ｽｹ郢晢ｿｽ郢晢ｽｼ郢ｧ�ｽｿ郢ｧ�ｽｹ隲��ｿｽ陜｣�ｽｱ邵ｺ�ｽｫ郢ｧ�ｽｨ郢晢ｽｩ郢晢ｽｼ陷��ｿｽ陞ｳ�ｽｹ郢ｧ蝣､蛹ｳ鬪ｭ�ｽｲ邵ｺ蜷ｶ�ｽ�
+  // �ｿｽ�ｽｼ蛹ｻ縺帷ｹ晢ｿｽ郢晢ｽｼ郢ｧ�ｽｿ郢ｧ�ｽｹ隲��ｿｽ陜｣�ｽｱ邵ｺ蠕娯�邵ｺ�ｽｧ邵ｺ�ｽｫ陝�莨懈Β邵ｺ蜷ｶ�ｽ玖撻�ｽｴ陷ｷ蛹ｻ�ｿｽ�ｽｯ髴托ｽｽ髫ｪ蛟･笘�郢ｧ蜈ｷ�ｽｼ�ｿｽ
   public void commonError(String content, BatchStatus batchStatus, Exception ex) {
-    // 蜀�螳ｹ�ｼ壹さ繝ｼ繝�(E03)縲√お繝ｩ繝ｼ譌･譎ゅ�√お繝ｩ繝ｼ蜀�螳ｹ�ｼ�Exception蜀�螳ｹ�ｼ�
+    // 陷��ｿｽ陞ｳ�ｽｹ�ｿｽ�ｽｼ螢ｹ縺慕ｹ晢ｽｼ郢晢ｿｽ(E03)邵ｲ竏壹♀郢晢ｽｩ郢晢ｽｼ隴鯉ｽ･隴弱ｅ�ｿｽ竏壹♀郢晢ｽｩ郢晢ｽｼ陷��ｿｽ陞ｳ�ｽｹ�ｿｽ�ｽｼ�ｿｽException陷��ｿｽ陞ｳ�ｽｹ�ｿｽ�ｽｼ�ｿｽ
     LOGGER.error(String.format("%s >>> %s >>> exception: %s",
     	  Constant.NORMALCODE.E03, content, ex.getMessage()));
     StringBuilder sb = new StringBuilder();
