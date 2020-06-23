@@ -25,7 +25,7 @@
 		b.accountnumber, b.accountname, b.accountnamekana,
 		b.accounttype,
 		b.invaliddate,
-		b.invalidreason, b.lastmodifieddate
+		b.invalidreason, b.appcompanyid, b.lastmodifieddate
 		FROM
 		bankaccountinformation b
 		WHERE(date_trunc('second', b.lastmodifieddate)
@@ -38,7 +38,7 @@
 		resultType="jp.co.japantaxi.model.BankAccountInformation">
 		SELECT b.sfid, b.account, b.appcompany, b.accountcategory,
 		b.accountbank, b.accountnumber, b.accountname, b.accountnamekana,
-		b.accounttype, b.invaliddate, b.invalidreason
+		b.accounttype, b.invaliddate, b.invalidreason, b.appcompanyid
 		FROM
 		bankaccountinformationsync b WHERE
 		b.sfid IN (${ids}) ORDER BY b.sfid
@@ -60,7 +60,7 @@
 		b.accountnumber, b.accountname, b.accountnamekana,
 		b.accounttype,
 		b.invaliddate,
-		b.invalidreason, b.lastmodifieddate
+		b.invalidreason, b.appcompanyid, b.lastmodifieddate
 		FROM
 		bankaccountinformation b
 		WHERE b.sfid=#{id}
