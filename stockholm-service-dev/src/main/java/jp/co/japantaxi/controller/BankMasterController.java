@@ -313,7 +313,7 @@ public class BankMasterController {
       try {
         bankMasterMapper.insertBankMasterSync(ConvertDataUtil.convertBankMaster2Sync(bankMasterList.get(i), true));
         request.setId(bankMasterList.get(i).getSfid());
-        accountInformations = bankAccountInforMapper.getBankAccountByBankId(request);
+        accountInformations = bankAccountInforMapper.getBankAccountByBankIds(request);
         for (int j = 0; j < accountInformations.size(); j++) {
             worker.setSfid(accountInformations.get(j).getAppcompany());
             workerController.insertWorker(worker);
@@ -341,7 +341,7 @@ public class BankMasterController {
 				bankMasterMapper.updateBankMasterSync(ConvertDataUtil.convertBankMaster2Sync(bankMasterList.get(i), true));
 				LOGGER.info("BankMasterSync updating >>> " + bankMasterList.get(i).getSfid());
 				request.setId(bankMasterList.get(i).getSfid());
-				accountInformations = bankAccountInforMapper.getBankAccountByBankId(request);
+				accountInformations = bankAccountInforMapper.getBankAccountByBankIds(request);
 				for (int j = 0; j < accountInformations.size(); j++) {
 					worker.setSfid(accountInformations.get(j).getAppcompany());
 					// Syncテープルに更新場合：承認されたものは未承認変更。（Workerの「syncapproveflg 」に「TRUE」→「FALSE」）
