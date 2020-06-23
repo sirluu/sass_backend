@@ -120,11 +120,7 @@ public class DateTimeUtil {
       calendar.setTime(date);
       calendar.set(Calendar.SECOND, 0);
       calendar.set(Calendar.MINUTE, 0);
-      if (date.getHours() >= 12) {
-        calendar.set(Calendar.HOUR, -12);
-      } else {
-        calendar.set(Calendar.HOUR, 0);
-      }
+      calendar.set(Calendar.HOUR_OF_DAY, date.getHours() -1);
       return calendar.getTime();
     }
 
