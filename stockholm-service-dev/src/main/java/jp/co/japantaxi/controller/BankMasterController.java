@@ -315,7 +315,7 @@ public class BankMasterController {
         request.setId(bankMasterList.get(i).getSfid());
         accountInformations = bankAccountInforMapper.getBankAccountByBankIds(request);
         for (int j = 0; j < accountInformations.size(); j++) {
-            worker.setSfid(accountInformations.get(j).getAppcompany());
+            worker.setSfid(accountInformations.get(j).getAppcompanyid());
             workerController.insertWorker(worker);
 		}
       } catch (Exception e) {
@@ -343,7 +343,7 @@ public class BankMasterController {
 				request.setId(bankMasterList.get(i).getSfid());
 				accountInformations = bankAccountInforMapper.getBankAccountByBankIds(request);
 				for (int j = 0; j < accountInformations.size(); j++) {
-					worker.setSfid(accountInformations.get(j).getAppcompany());
+					worker.setSfid(accountInformations.get(j).getAppcompanyid());
 					// Syncテープルに更新場合：承認されたものは未承認変更。（Workerの「syncapproveflg 」に「TRUE」→「FALSE」）
 					worker.setSycapproveflg(false);
 					workerController.updateWorker(worker);
@@ -465,7 +465,7 @@ public class BankMasterController {
       try {
         bankAccountInforMapper.insertBankAccountInformationSync(
             ConvertDataUtil.convertBankAccountInformation2Sync(bankAccountInformationList.get(i), true));
-        worker.setSfid(bankAccountInformationList.get(i).getAppcompany());
+        worker.setSfid(bankAccountInformationList.get(i).getAppcompanyid());
         workerController.insertWorker(worker);
       } catch (Exception e) {
         LOGGER.error(Constant.NORMALCODE.E03
@@ -484,7 +484,7 @@ public class BankMasterController {
         bankAccountInforMapper.updateBankAccountInformationSync(
             ConvertDataUtil.convertBankAccountInformation2Sync(bankAccountInformationList.get(i), true));
         LOGGER.info("BankAccountInformationSync updating >>> " + bankAccountInformationList.get(i).getSfid());
-        worker.setSfid(bankAccountInformationList.get(i).getAppcompany());
+        worker.setSfid(bankAccountInformationList.get(i).getAppcompanyid());
         // Syncテープルに更新場合：承認されたものは未承認変更。（Workerの「syncapproveflg」に「TRUE」→「FALSE」）
         worker.setSycapproveflg(false);
         workerController.updateWorker(worker);
