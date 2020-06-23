@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -113,5 +114,18 @@ public class DateTimeUtil {
 		}
 		return true;
 	}
+
+    public static Date trim(Date date) {
+      Calendar calendar = Calendar.getInstance();
+      calendar.setTime(date);
+      calendar.set(Calendar.SECOND, 0);
+      calendar.set(Calendar.MINUTE, 0);
+      if (date.getHours() >= 12) {
+        calendar.set(Calendar.HOUR, -12);
+      } else {
+        calendar.set(Calendar.HOUR, 0);
+      }
+      return calendar.getTime();
+    }
 
 }

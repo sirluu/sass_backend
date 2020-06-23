@@ -242,8 +242,10 @@ public class WorkerController {
       // If cron, set back start time to parameterRequest
 	  if (Constant.STARTMODE.CRON.value.equalsIgnoreCase(startMode) || Constant.STARTMODE.USER.value.equalsIgnoreCase(startMode)) {
 		try {
-			String fromDateTime = DateTimeUtil.getStringFromTimestamp(batchStatus.getFromdatetime(), DateTimeUtil.DATE_TIME_FM);
-		  if (DateTimeUtil.isValid(fromDateTime)) {
+			String dateTime = DateTimeUtil.getStringFromTimestamp(batchStatus.getFromdatetime(), DateTimeUtil.DATE_TIME_FM);
+			dateTime = DateTimeUtil.getStringFromDate(DateTimeUtil.trim(DateTimeUtil.getDateFromString(dateTime, DateTimeUtil.DATE_TIME_FM, DateTimeUtil.TIMEZONE_TOKYO)), DateTimeUtil.DATE_TIME_FM);
+			String fromDateTime = DateTimeUtil.getStringFromTimestamp(DateTimeUtil.getTimestampFromString(dateTime, DateTimeUtil.DATE_TIME_FM), DateTimeUtil.DATE_TIME_FM);
+			if (DateTimeUtil.isValid(fromDateTime)) {
 			parameterRequest.setStartTime(fromDateTime);
 		  } else {
 		     res.add(String.format("%s >>> %s", "Error startime format", fromDateTime));
