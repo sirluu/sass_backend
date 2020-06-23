@@ -10,8 +10,8 @@ services:
     - 3102:8888
     volumes:
     - ./data/:/var/lib/docker/volumes/data
-	- /etc/localtime:/etc/localtime:ro
-	- /etc/timezone:/etc/timezone:ro
+	- "/etc/localtime:/etc/localtime:ro"
+	- "/etc/timezone:/etc/timezone:ro"
 volumes:
   data:
     external: true
