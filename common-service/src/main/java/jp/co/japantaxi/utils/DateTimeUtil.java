@@ -19,7 +19,7 @@ public class DateTimeUtil {
 
 	public static final TimeZone TIMEZONE_TOKYO = TimeZone.getTimeZone("Asia/Tokyo");
 	public static final TimeZone TIMEZONE_UTC = TimeZone.getTimeZone("UTC");
-	public static final TimeZone TIMEZONE_GMT = TimeZone.getTimeZone("GMT+6");
+	public static final TimeZone TIMEZONE_GMT = TimeZone.getTimeZone("GMT");
 	public static final String DATE_FM_S = "EEE MMM dd HH:mm:ss zzz yyyy";
 	public static final String TIME_FM_S = "HH:mm:ss.SSSSSS";
 	public static final String DATE_TIME_FM = "yyyy-MM-dd HH:mm:ss";
