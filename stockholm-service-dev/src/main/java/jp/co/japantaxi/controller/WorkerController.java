@@ -107,7 +107,7 @@ public class WorkerController {
   }
 
   /**
-   * try catch: Sentry 連携しエラー通知を行う
+   * try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
    * 
    * @param parameterRequest
    * @return ResponseEntity<Object>
@@ -132,7 +132,7 @@ public class WorkerController {
   }
 
   /**
-   * try catch: Sentry 連携しエラー通知を行う
+   * try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
    * 
    * @param parameterRequest
    * @return ResponseEntity<Object>
@@ -154,7 +154,7 @@ public class WorkerController {
     }
     String stMode = "";
     try {
-      // パラメータにstart_modeがない場合はログに実行情報を出力して、３へ遷移
+      // 繝代Λ繝｡繝ｼ繧ｿ縺ｫstart_mode縺後↑縺�蝣ｴ蜷医�ｯ繝ｭ繧ｰ縺ｫ螳溯｡梧ュ蝣ｱ繧貞�ｺ蜉帙＠縺ｦ縲�ｼ薙∈驕ｷ遘ｻ
       stMode = parameterRequest.getStartMode();
       if (!Constant.STARTMODE.MANUAL.value.equalsIgnoreCase(stMode.toUpperCase())
     	  && !Constant.STARTMODE.CRON.value.equalsIgnoreCase(stMode.toUpperCase())
@@ -194,17 +194,17 @@ public class WorkerController {
 
   /**
    * @param parameterRequest
-   * @return ResponseEntity<Object> try catch: Sentry 連携しエラー通知を行う
+   * @return ResponseEntity<Object> try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
    */
   @PostMapping(value = "/synchronize", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Object> synchronize(@RequestBody ParameterRequest parameterRequest) {
     List<String> res = new ArrayList<>();
 
-    // 1-1 リクエストパラメーターチェック
+    // 1-1 繝ｪ繧ｯ繧ｨ繧ｹ繝医ヱ繝ｩ繝｡繝ｼ繧ｿ繝ｼ繝√ぉ繝�繧ｯ
     ResponseEntity<Object> response = validParameter(parameterRequest);
     if (response.getStatusCode().value() == HttpStatus.OK.value()) {
       res.add("Sync process begin at : " + LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
-      // 1-2 バッチ状態テーブルのバッチコードチェック
+      // 1-2 繝舌ャ繝∫憾諷九ユ繝ｼ繝悶Ν縺ｮ繝舌ャ繝√さ繝ｼ繝峨メ繧ｧ繝�繧ｯ
       BatchStatus batchStatus = batchController.getBatchStatus();
       if (batchStatus == null) {
         res.add(Constant.NORMALCODE.E04 + " >>> batchcode SBAT-001 don't exits !!!");
@@ -212,10 +212,10 @@ public class WorkerController {
   			  "batchcode SBAT-001 don't exits !!!"));
         return new ResponseEntity<>(res, HttpStatus.NOT_FOUND);
       }
-      // 1-3 バッチ状態テーブルのステータスがNULLである確認する
+      // 1-3 繝舌ャ繝∫憾諷九ユ繝ｼ繝悶Ν縺ｮ繧ｹ繝�繝ｼ繧ｿ繧ｹ縺君ULL縺ｧ縺ゅｋ遒ｺ隱阪☆繧�
       if (batchStatus.getStatus() != null && !"".equalsIgnoreCase(batchStatus.getStatus())
           && !batchStatus.getStatus().isEmpty()) {
-        // null以外の場合はログに実行情報を出力して、３へ遷移
+        // null莉･螟悶�ｮ蝣ｴ蜷医�ｯ繝ｭ繧ｰ縺ｫ螳溯｡梧ュ蝣ｱ繧貞�ｺ蜉帙＠縺ｦ縲�ｼ薙∈驕ｷ遘ｻ
         res.add(Constant.NORMALCODE.E02 + " >>> batch status is error !!!");
   	    LOGGER.error(String.format("%s >>> %s", Constant.NORMALCODE.E02,
   			  "batch status is error !!!"));
@@ -223,7 +223,7 @@ public class WorkerController {
       }
       // Set start_mode to Property
       System.setProperty(Constant.START_MODE, parameterRequest.getStartMode().toUpperCase());
-      // バッチ状態テーブルの起動モードを更新する
+      // 繝舌ャ繝∫憾諷九ユ繝ｼ繝悶Ν縺ｮ襍ｷ蜍輔Δ繝ｼ繝峨ｒ譖ｴ譁ｰ縺吶ｋ
       String startMode = System.getProperty(Constant.START_MODE).toUpperCase();
       batchController.updateBatchStatus(batchStatus, true, false, false, false);
 
@@ -235,10 +235,10 @@ public class WorkerController {
       } catch (Exception e) {
         LOGGER.info(" >>> no request process_mode param !!!");
       }
-      // ログに実行情報を出力する。内容：コード(N00)、起動モード、処理モード、開始日時
-      // 開始日時
+      // 繝ｭ繧ｰ縺ｫ螳溯｡梧ュ蝣ｱ繧貞�ｺ蜉帙☆繧九�ょ��螳ｹ�ｼ壹さ繝ｼ繝�(N00)縲∬ｵｷ蜍輔Δ繝ｼ繝峨�∝�ｦ逅�繝｢繝ｼ繝峨��髢句ｧ区律譎�
+      // 髢句ｧ区律譎�
 	  LOGGER.info(String.format("%s >>> Start mode: %s >>> Process mode: %s >>> Sync process begin at: %s", 
-			  Constant.NORMALCODE.N00,	startMode, processMode, LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId())));
+			  Constant.NORMALCODE.N00,	startMode, processMode, LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId())));
       // If cron, set back start time to parameterRequest
 	  if (Constant.STARTMODE.CRON.value.equalsIgnoreCase(startMode) || Constant.STARTMODE.USER.value.equalsIgnoreCase(startMode)) {
 		try {
@@ -257,28 +257,28 @@ public class WorkerController {
 		}
       }
       cacheManagerConfig.setFromDateTime(parameterRequest.getStartTime());
-      String toDateTime = DateTimeUtil.getStringFromDate(new Date(), DateTimeUtil.DATE_TIME_FM);
+      String toDateTime = DateTimeUtil.getStringFromDate(DateTimeUtil.getDateFromString(DateTimeUtil.getStringFromDate(new Date(), DateTimeUtil.DATE_TIME_FM), DateTimeUtil.DATE_TIME_FM, DateTimeUtil.TIMEZONE_GMT) , DateTimeUtil.DATE_TIME_FM);
       cacheManagerConfig.setToDateTime(toDateTime);
 
-      // 2.SFDC連携処理
+      // 2.SFDC騾｣謳ｺ蜃ｦ逅�
       if (Constant.STARTMODE.CRON.value.equalsIgnoreCase(startMode) || Constant.STARTMODE.USER.value.equalsIgnoreCase(startMode) || Constant.STARTMODE.MANUAL.value.equalsIgnoreCase(startMode)) {
-        // cron：クーロンによる自動起動
-        // manual：手動実行
+        // cron�ｼ壹け繝ｼ繝ｭ繝ｳ縺ｫ繧医ｋ閾ｪ蜍戊ｵｷ蜍�
+        // manual�ｼ壽焔蜍募ｮ溯｡�
         if (Constant.PROCESSMODE.GETSF.equals(processMode)) {
-          // cron+getSF：SF取得処理のみで起動（2−1のみ実行）（自動起動）
-          // manual+getSF：SF取得処理のみで起動（2−1のみ実行）（手動起動）
+          // cron+getSF�ｼ售F蜿門ｾ怜�ｦ逅�縺ｮ縺ｿ縺ｧ襍ｷ蜍包ｼ�2竏�1縺ｮ縺ｿ螳溯｡鯉ｼ会ｼ郁�ｪ蜍戊ｵｷ蜍包ｼ�
+          // manual+getSF�ｼ售F蜿門ｾ怜�ｦ逅�縺ｮ縺ｿ縺ｧ襍ｷ蜍包ｼ�2竏�1縺ｮ縺ｿ螳溯｡鯉ｼ会ｼ域焔蜍戊ｵｷ蜍包ｼ�
           getSF(parameterRequest, batchStatus);
         } else if (Constant.PROCESSMODE.COREDATECREAT.equals(processMode)) {
-          // cron+coreDateCreat：基幹DB用データ加工での起動（2-2のみ実行）（自動起動）
-          // manual+coreDateCreat：基幹DB用データ加工での起動（2-2のみ実行）（自動起動）
+          // cron+coreDateCreat�ｼ壼渕蟷ｹDB逕ｨ繝�繝ｼ繧ｿ蜉�蟾･縺ｧ縺ｮ襍ｷ蜍包ｼ�2-2縺ｮ縺ｿ螳溯｡鯉ｼ会ｼ郁�ｪ蜍戊ｵｷ蜍包ｼ�
+          // manual+coreDateCreat�ｼ壼渕蟷ｹDB逕ｨ繝�繝ｼ繧ｿ蜉�蟾･縺ｧ縺ｮ襍ｷ蜍包ｼ�2-2縺ｮ縺ｿ螳溯｡鯉ｼ会ｼ郁�ｪ蜍戊ｵｷ蜍包ｼ�
           coreDateCreat(parameterRequest, batchStatus);
         } else if (Constant.PROCESSMODE.CLEAR.equals(processMode)) {
-          // cron+clear：洗い替え機能で実行（自動起動）
-          // manual+clear：洗い替え機能で実行（自動起動）
+          // cron+clear�ｼ壽ｴ励＞譖ｿ縺域ｩ溯�ｽ縺ｧ螳溯｡鯉ｼ郁�ｪ蜍戊ｵｷ蜍包ｼ�
+          // manual+clear�ｼ壽ｴ励＞譖ｿ縺域ｩ溯�ｽ縺ｧ螳溯｡鯉ｼ郁�ｪ蜍戊ｵｷ蜍包ｼ�
           clearRawData();
         } else if (Constant.PROCESSMODE.NULL.equals(processMode)) {
-          // cron：クーロンによる自動起動
-          // manual：クーロンによる自動起動
+          // cron�ｼ壹け繝ｼ繝ｭ繝ｳ縺ｫ繧医ｋ閾ｪ蜍戊ｵｷ蜍�
+          // manual�ｼ壹け繝ｼ繝ｭ繝ｳ縺ｫ繧医ｋ閾ｪ蜍戊ｵｷ蜍�
           getSF(parameterRequest, batchStatus);
           coreDateCreat(parameterRequest, batchStatus);
         }
@@ -292,93 +292,93 @@ public class WorkerController {
       if (processMode != null) {
 		batchStatus.setStartupmode(startMode.toLowerCase() + "+" + processMode.value.toLowerCase());
 	  }
-      // 3.ジョブ処理終了
-      // 3-1バッチ状態テーブルの更新日時を「現在日時」で更新する
+      // 3.繧ｸ繝ｧ繝門�ｦ逅�邨ゆｺ�
+      // 3-1繝舌ャ繝∫憾諷九ユ繝ｼ繝悶Ν縺ｮ譖ｴ譁ｰ譌･譎ゅｒ縲檎樟蝨ｨ譌･譎ゅ�阪〒譖ｴ譁ｰ縺吶ｋ
       if (!batchStatus.getStatusinfo().isEmpty()) {
         batchController.updateBatchStatus(batchStatus, false, false, true, false);
       } else {
         batchController.updateBatchStatus(batchStatus, false, true, false, false);
       }
-      // 3-2 ジョブ終了の状況をログに出力する 内容：コード(N02)、起動モード、処理モード、開始日時、終了日時
+      // 3-2 繧ｸ繝ｧ繝也ｵゆｺ�縺ｮ迥ｶ豕√ｒ繝ｭ繧ｰ縺ｫ蜃ｺ蜉帙☆繧� 蜀�螳ｹ�ｼ壹さ繝ｼ繝�(N02)縲∬ｵｷ蜍輔Δ繝ｼ繝峨�∝�ｦ逅�繝｢繝ｼ繝峨��髢句ｧ区律譎ゅ�∫ｵゆｺ�譌･譎�
 	  LOGGER.info(String.format("%s >>> Start mode: %s >>> Process mode: %s >>> Sync process end at: %s", 
-			  Constant.NORMALCODE.N02,	startMode, processMode, LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId())));
-      res.add("Sync process end at : " + LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
+			  Constant.NORMALCODE.N02,	startMode, processMode, LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId())));
+      res.add("Sync process end at : " + LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
       return new ResponseEntity<>(res, HttpStatus.OK);
     }
     return response;
   }
 
-  // 2-1（※2-2のみ実行で起動した場合は処理をスキップする）
+  // 2-1�ｼ遺�ｻ2-2縺ｮ縺ｿ螳溯｡後〒襍ｷ蜍輔＠縺溷�ｴ蜷医�ｯ蜃ｦ逅�繧偵せ繧ｭ繝�繝励☆繧具ｼ�
   public void getSF(ParameterRequest parameterRequest, BatchStatus batchStatus) {
     LOGGER.info("Account getSF process begin at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
+        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
     accountController.getSFAccount(parameterRequest, batchStatus);
     LOGGER.info("Account getSF process end at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
+        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
     LOGGER.info("FareTable getSF process begin at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
+        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
     accountController.getSFFareTable(parameterRequest, batchStatus);
     LOGGER.info("FareTable getSF process end at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
+        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
     LOGGER.info("BankAccountInformation getSF process begin at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
+        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
     bankMasterController.getSFBankAccountInformation(parameterRequest, batchStatus);
     LOGGER.info("BankAccountInformation getSF process end at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
+        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
     LOGGER.info("BankMaster getSF process begin at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
+        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
     bankMasterController.getSFBankMaster(parameterRequest, batchStatus);
     LOGGER.info("BankMaster getSF process end at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
+        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
     LOGGER.info("AppCompany getSF process begin at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
+        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
     appCompanyController.getSFAppCompany(parameterRequest, batchStatus);
     LOGGER.info("AppCompany getSF process end at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
+        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
     LOGGER.info("PaymentSystemLinkInfor getSF process begin at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
+        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
     paymentController.getSFPaymentSystemLinkInfor(parameterRequest, batchStatus);
     LOGGER.info("PaymentSystemLinkInfor getSF process end at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
+        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
   }
 
-  // 2-2 基幹DB用データ加工での起動（2-2のみ実行）
+  // 2-2 蝓ｺ蟷ｹDB逕ｨ繝�繝ｼ繧ｿ蜉�蟾･縺ｧ縺ｮ襍ｷ蜍包ｼ�2-2縺ｮ縺ｿ螳溯｡鯉ｼ�
   public void coreDateCreat(ParameterRequest parameterRequest, BatchStatus batchStatus) {
 	//Convert time
 	parameterRequest.setStartTime(Utility.parseString(parameterRequest.getStartTime()));
     LOGGER.info("Account coreDateCreat process begin at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
+        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
     accountController.coreDateCreatAccount(parameterRequest, batchStatus);
     LOGGER.info("Account coreDateCreat process end at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
+        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
     LOGGER.info("FareTable coreDateCreat process begin at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
+        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
     accountController.coreDateCreatFareTable(parameterRequest, batchStatus);
     LOGGER.info("FareTable coreDateCreat process end at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
+        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
     LOGGER.info("BankAccountInformation coreDateCreat process begin at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
+        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
     bankMasterController.coreDateCreatBankAccountInformation(parameterRequest, batchStatus);
     LOGGER.info("BankAccountInformation coreDateCreat process end at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
+        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
     LOGGER.info("BankMaster coreDateCreat process begin at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
+        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
     bankMasterController.coreDateCreatBankMaster(parameterRequest, batchStatus);
     LOGGER.info("BankMaster coreDateCreat process end at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
+        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
     LOGGER.info("AppCompany coreDateCreat process begin at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
+        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
     appCompanyController.coreDateCreatAppCompany(parameterRequest, batchStatus);
     LOGGER.info("AppCompany coreDateCreat process end at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
+        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
     LOGGER.info("PaymentSystemLinkInfor coreDateCreat process begin at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
+        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
     paymentController.coreDateCreatPaymentSystemLinkInfor(parameterRequest, batchStatus);
     LOGGER.info("PaymentSystemLinkInfor coreDateCreat process end at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
+        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
   }
 
-  // 洗い替え機能で実行
+  // 豢励＞譖ｿ縺域ｩ溯�ｽ縺ｧ螳溯｡�
   public void clearRawData() {
     accountMapper.truncateAccount();
     appCompanyMapper.truncateAppCompany();
@@ -388,12 +388,12 @@ public class WorkerController {
     systemLinkInforMapper.truncatePaymentSystemLinkInfor();
   }
 
-  // 4.共通エラー処理
-  // バッチ状態テーブルのステータスを「error」に更新する
-  // バッチ状態テーブルのステータス情報にエラー内容を登録する
-  // （ステータス情報がすでに存在する場合は追記する）
+  // 4.蜈ｱ騾壹お繝ｩ繝ｼ蜃ｦ逅�
+  // 繝舌ャ繝∫憾諷九ユ繝ｼ繝悶Ν縺ｮ繧ｹ繝�繝ｼ繧ｿ繧ｹ繧偵�憩rror縲阪↓譖ｴ譁ｰ縺吶ｋ
+  // 繝舌ャ繝∫憾諷九ユ繝ｼ繝悶Ν縺ｮ繧ｹ繝�繝ｼ繧ｿ繧ｹ諠�蝣ｱ縺ｫ繧ｨ繝ｩ繝ｼ蜀�螳ｹ繧堤匳骭ｲ縺吶ｋ
+  // �ｼ医せ繝�繝ｼ繧ｿ繧ｹ諠�蝣ｱ縺後☆縺ｧ縺ｫ蟄伜惠縺吶ｋ蝣ｴ蜷医�ｯ霑ｽ險倥☆繧具ｼ�
   public void commonError(String content, BatchStatus batchStatus, Exception ex) {
-    // 内容：コード(E03)、エラー日時、エラー内容（Exception内容）
+    // 蜀�螳ｹ�ｼ壹さ繝ｼ繝�(E03)縲√お繝ｩ繝ｼ譌･譎ゅ�√お繝ｩ繝ｼ蜀�螳ｹ�ｼ�Exception蜀�螳ｹ�ｼ�
     LOGGER.error(String.format("%s >>> %s >>> exception: %s",
     	  Constant.NORMALCODE.E03, content, ex.getMessage()));
     StringBuilder sb = new StringBuilder();
