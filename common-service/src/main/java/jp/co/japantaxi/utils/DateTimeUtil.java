@@ -6,7 +6,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -115,18 +114,4 @@ public class DateTimeUtil {
 		return true;
 	}
 
-    public static Date trim(Date date) {
-      Calendar calendar = Calendar.getInstance();
-      calendar.setTime(date);
-      calendar.set(Calendar.HOUR_OF_DAY, date.getHours() + 4);
-      return calendar.getTime();
-    }
-    
-    public static String resetDateTime(String time) {
-    	Date dt = getDateFromString(time, DATE_TIME_FM, TIMEZONE_TOKYO);
-	    String str = getStringFromDate(dt, DATE_TIME_FM);
-	    Date date = trim(getDateFromString(str, DATE_TIME_FM));
-	    return getStringFromDate(date, DATE_TIME_FM);
-    }
-    
 }

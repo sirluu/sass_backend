@@ -257,7 +257,7 @@ public class WorkerController {
 		}
       }
       cacheManagerConfig.setFromDateTime(parameterRequest.getStartTime());
-	  String toDateTime = DateTimeUtil.resetDateTime(DateTimeUtil.getStringFromDate(new Date(), DateTimeUtil.DATE_TIME_FM));
+      String toDateTime = DateTimeUtil.getStringFromDate(new Date(), DateTimeUtil.DATE_TIME_FM);
       cacheManagerConfig.setToDateTime(toDateTime);
 
       // 2.SFDC連携処理
