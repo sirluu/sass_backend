@@ -118,10 +118,15 @@ public class DateTimeUtil {
     public static Date trim(Date date) {
       Calendar calendar = Calendar.getInstance();
       calendar.setTime(date);
-      calendar.set(Calendar.SECOND, 0);
-      calendar.set(Calendar.MINUTE, 0);
-      calendar.set(Calendar.HOUR_OF_DAY, date.getHours() -1);
+      calendar.set(Calendar.HOUR_OF_DAY, date.getHours() + 2);
       return calendar.getTime();
     }
-
+    
+    public static String resetDateTime(String time) {
+    	Date dt = getDateFromString(time, DATE_TIME_FM, TIMEZONE_TOKYO);
+	    String str = getStringFromDate(dt, DATE_TIME_FM);
+	    Date date = trim(getDateFromString(str, DATE_TIME_FM));
+	    return getStringFromDate(date, DATE_TIME_FM);
+    }
+    
 }

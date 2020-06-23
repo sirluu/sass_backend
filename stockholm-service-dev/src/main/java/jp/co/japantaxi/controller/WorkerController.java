@@ -242,9 +242,7 @@ public class WorkerController {
       // If cron, set back start time to parameterRequest
 	  if (Constant.STARTMODE.CRON.value.equalsIgnoreCase(startMode) || Constant.STARTMODE.USER.value.equalsIgnoreCase(startMode)) {
 		try {
-			String dateTime = DateTimeUtil.getStringFromTimestamp(batchStatus.getFromdatetime(), DateTimeUtil.DATE_TIME_FM);
-			dateTime = DateTimeUtil.getStringFromDate(DateTimeUtil.trim(DateTimeUtil.getDateFromString(dateTime, DateTimeUtil.DATE_TIME_FM, DateTimeUtil.TIMEZONE_TOKYO)), DateTimeUtil.DATE_TIME_FM);
-			String fromDateTime = DateTimeUtil.getStringFromTimestamp(DateTimeUtil.getTimestampFromString(dateTime, DateTimeUtil.DATE_TIME_FM), DateTimeUtil.DATE_TIME_FM);
+			String fromDateTime = DateTimeUtil.getStringFromTimestamp(batchStatus.getFromdatetime(), DateTimeUtil.DATE_TIME_FM);
 			if (DateTimeUtil.isValid(fromDateTime)) {
 			parameterRequest.setStartTime(fromDateTime);
 		  } else {
@@ -259,7 +257,7 @@ public class WorkerController {
 		}
       }
       cacheManagerConfig.setFromDateTime(parameterRequest.getStartTime());
-      String toDateTime = DateTimeUtil.getStringFromDate(new Date(), DateTimeUtil.DATE_TIME_FM);
+	  String toDateTime = DateTimeUtil.resetDateTime(DateTimeUtil.getStringFromDate(new Date(), DateTimeUtil.DATE_TIME_FM));
       cacheManagerConfig.setToDateTime(toDateTime);
 
       // 2.SFDC連携処理
