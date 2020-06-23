@@ -113,5 +113,10 @@ public class DateTimeUtil {
 		}
 		return true;
 	}
+	
+	public static void main(String[] args) {
+	  String toDateTime = DateTimeUtil.getStringFromDate(new Date(), DateTimeUtil.DATE_TIME_FM);
+      System.out.println(toDateTime);
+    }
     
 }
