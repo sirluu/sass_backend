@@ -1,10 +1,6 @@
 package jp.co.japantaxi.utils;
 
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.Date;
 import org.junit.Assert;
 import org.junit.Test;
@@ -47,21 +43,21 @@ public class DateTimeUtilTest {
 
 	@Test
 	public void test_getDateFromStringWithTimeZone_withValueIsEmpty() {
-		Assert.assertEquals(DateTimeUtil.getDateFromString("", DateTimeUtil.DATE_TIME_FM, DateTimeUtil.TIMEZONE_UTC),
+		Assert.assertEquals(DateTimeUtil.getDateFromString("", DateTimeUtil.DATE_TIME_FM),
 				null);
 	}
 
 	@Test
 	public void test_getDateFromStringWithTimeZone_withValue() {
 		Assert.assertNotEquals(
-				DateTimeUtil.getDateFromString(fromDateString, DateTimeUtil.DATE_TIME_FM, DateTimeUtil.TIMEZONE_UTC),
+				DateTimeUtil.getDateFromString(fromDateString, DateTimeUtil.DATE_TIME_FM),
 				fromDate);
 	}
 
 	@Test
 	public void test_getDateFromStringWithTimeZone_returnException() {
 		Assert.assertNotEquals(
-				DateTimeUtil.getDateFromString(fromDateString, DateTimeUtil.DATE_TIME_FM, DateTimeUtil.TIMEZONE_UTC),
+				DateTimeUtil.getDateFromString(fromDateString, DateTimeUtil.DATE_TIME_FM),
 				toDate);
 	}
 
@@ -75,23 +71,6 @@ public class DateTimeUtilTest {
 		Assert.assertEquals(DateTimeUtil.getStringFromTimestamp(
 				DateTimeUtil.getTimestampFromString(fromDateString, DateTimeUtil.DATE_TIME_FM),
 				DateTimeUtil.DATE_TIME_FM), fromDateString);
-	}
-
-	@Test
-	public void test_convertLongToDateTime() throws ParseException {
-		DateFormat formatter = new SimpleDateFormat(DateTimeUtil.DATE_TIME_FM);
-		Date date = formatter.parse(fromDateString);
-		Timestamp timestamp = new Timestamp(date.getTime());
-		LocalDateTime localDateTime = timestamp.toLocalDateTime();
-		Assert.assertNotEquals(DateTimeUtil.convertLongToDateTime(date.getTime()), localDateTime);
-	}
-
-	@Test
-	public void test_getTimestampFromDate() throws ParseException {
-		DateFormat formatter = new SimpleDateFormat(DateTimeUtil.DATE_TIME_FM);
-		Date date = formatter.parse(fromDateString);
-		Timestamp timestamp = new Timestamp(date.getTime());
-		Assert.assertNotEquals(DateTimeUtil.getTimestampFromDate(fromDate, DateTimeUtil.DATE_TIME_FM), timestamp);
 	}
 
 	@Test

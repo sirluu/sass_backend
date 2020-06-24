@@ -203,7 +203,7 @@ public class WorkerController {
     // 1-1 リクエストパラメーターチェック
     ResponseEntity<Object> response = validParameter(parameterRequest);
     if (response.getStatusCode().value() == HttpStatus.OK.value()) {
-      res.add("Sync process begin at : " + LocalDateTime.now(DateTimeUtil.TIMEZONE_UTC.toZoneId()));
+      res.add("Sync process begin at : " + LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
       // 1-2 バッチ状態テーブルのバッチコードチェック
       BatchStatus batchStatus = batchController.getBatchStatus();
       if (batchStatus == null) {

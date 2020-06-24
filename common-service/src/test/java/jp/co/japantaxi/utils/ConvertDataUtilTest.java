@@ -39,7 +39,7 @@ public class ConvertDataUtilTest {
 		expected.setAppcompany("teststring");
 		expected.setCorporatenumber("teststring");
 		expected.setInvaliddate(
-				DateTimeUtil.getDateFromString("teststring", DateTimeUtil.DATE_TIME_FM, DateTimeUtil.TIMEZONE_UTC));
+				DateTimeUtil.getDateFromString("teststring", DateTimeUtil.DATE_TIME_FM));
 		expected.setInvaliddetailreason("teststring");
 		expected.setInvalidreason("teststring");
 		expected.setIrisid("teststring");
@@ -49,7 +49,7 @@ public class ConvertDataUtilTest {
 		expected.setMerchantcontrinforisfacetofacesettlement(Utility.parseBoolean("teststring"));
 		expected.setMerchantcontrinforisregistry(Utility.parseBoolean("teststring"));
 		expected.setMerchantcontrinforlicenseacquisitiondate(
-				DateTimeUtil.getDateFromString("teststring", DateTimeUtil.DATE_TIME_FM, DateTimeUtil.TIMEZONE_UTC));
+				DateTimeUtil.getDateFromString("teststring", DateTimeUtil.DATE_TIME_FM));
 		expected.setMerchantcontrinforlicensename("teststring");
 		expected.setMerchantcontrinforlicensenumber("teststring");
 		expected.setMerchantcontrinfortabletmodel("teststring");
@@ -89,14 +89,14 @@ public class ConvertDataUtilTest {
 		expected.setMerchantinfoserviceid("teststring");
 		expected.setMerchantinfowarningemail("teststring");
 		expected.setMerchantoperinforacceptancedate(
-				DateTimeUtil.getDateFromString("teststring", DateTimeUtil.DATE_TIME_FM, DateTimeUtil.TIMEZONE_UTC));
+				DateTimeUtil.getDateFromString("teststring", DateTimeUtil.DATE_TIME_FM));
 		expected.setMerchantoperinforcontractenddate(
-				DateTimeUtil.getDateFromString("teststring", DateTimeUtil.DATE_TIME_FM, DateTimeUtil.TIMEZONE_UTC));
+				DateTimeUtil.getDateFromString("teststring", DateTimeUtil.DATE_TIME_FM));
 		expected.setMerchantoperinforguaranteeenddate(
-				DateTimeUtil.getDateFromString("teststring", DateTimeUtil.DATE_TIME_FM, DateTimeUtil.TIMEZONE_UTC));
+				DateTimeUtil.getDateFromString("teststring", DateTimeUtil.DATE_TIME_FM));
 		expected.setMerchantoperinformemo("teststring");
 		expected.setMerchantoperinforstartdate(
-				DateTimeUtil.getDateFromString("teststring", DateTimeUtil.DATE_TIME_FM, DateTimeUtil.TIMEZONE_UTC));
+				DateTimeUtil.getDateFromString("teststring", DateTimeUtil.DATE_TIME_FM));
 		expected.setMerchantpayinfoaddress1("teststring");
 		expected.setMerchantpayinfoaddress2("teststring");
 		expected.setMerchantpayinfocontactname("teststring");
@@ -106,7 +106,7 @@ public class ConvertDataUtilTest {
 		expected.setMerchantpayinfopostalcode("teststring");
 		expected.setMerchantreprinforaddress("teststring");
 		expected.setMerchantreprinforbirthday(
-				DateTimeUtil.getDateFromString("teststring", DateTimeUtil.DATE_TIME_FM, DateTimeUtil.TIMEZONE_UTC));
+				DateTimeUtil.getDateFromString("teststring", DateTimeUtil.DATE_TIME_FM));
 		expected.setMerchantreprinforfullnamekana("teststring");
 		expected.setMerchantreprinforfullnamekanji("teststring");
 		expected.setMerchantreprinformemo("teststring");
@@ -363,7 +363,7 @@ public class ConvertDataUtilTest {
 		expected.setGloballng("teststring");
 		expected.setGroupcompanies(Utility.parseInt("teststring"));
 		expected.setInvaliddate(
-				DateTimeUtil.getDateFromString("teststring", DateTimeUtil.DATE_TIME_FM, DateTimeUtil.TIMEZONE_UTC));
+				DateTimeUtil.getDateFromString("teststring", DateTimeUtil.DATE_TIME_FM));
 		expected.setInvaliddetailreason("teststring");
 		expected.setInvalidreason("teststring");
 		expected.setIsenableclosing(Utility.parseBoolean("teststring"));
@@ -408,7 +408,7 @@ public class ConvertDataUtilTest {
 		expected.setPayablecommission(Utility.parseInt("teststring"));
 		expected.setRemarks("teststring");
 	    expected.setRequestcompanyidrelation(Utility.parseInt("teststring"));
-	    expected.setRequeststartdate(DateTimeUtil.getDateFromString("teststring", DateTimeUtil.DD_FM, DateTimeUtil.TIMEZONE_UTC));
+	    expected.setRequeststartdate(DateTimeUtil.getDateFromString("teststring", DateTimeUtil.DD_FM));
 		expected.setWww("teststring");
 		expected.setDestinationaddress("teststring");
 		expected.setDestinationcompanyname("teststring");
@@ -644,7 +644,7 @@ public class ConvertDataUtilTest {
 		expected.setGloballng("teststring");
 		expected.setGroupcompanies(Utility.parseInt("teststring"));
 		expected.setInvaliddate(
-				DateTimeUtil.getDateFromString("teststring", DateTimeUtil.DATE_TIME_FM, DateTimeUtil.TIMEZONE_UTC));
+				DateTimeUtil.getDateFromString("teststring", DateTimeUtil.DATE_TIME_FM));
 		expected.setInvaliddetailreason("teststring");
 		expected.setInvalidreason("teststring");
 		expected.setIsenableclosing(Utility.parseBoolean("teststring"));
@@ -697,7 +697,7 @@ public class ConvertDataUtilTest {
 		expected.setAccountnumber("teststring");
 		expected.setAccounttype("teststring");
 		expected.setInvaliddate(
-				DateTimeUtil.getDateFromString("", DateTimeUtil.DATE_TIME_FM, DateTimeUtil.TIMEZONE_UTC));
+				DateTimeUtil.getDateFromString("", DateTimeUtil.DATE_TIME_FM));
 		expected.setInvalidreason("teststring");
 		expected.setSfid("a04N000000KgpbjIAB");
 		JSONObject actual = new JSONObject();
@@ -744,7 +744,7 @@ public class ConvertDataUtilTest {
 		expected.setAccountnumber("teststring");
 		expected.setAccounttype("teststring");
 		expected.setInvaliddate(
-				DateTimeUtil.getDateFromString("", DateTimeUtil.DATE_TIME_FM, DateTimeUtil.TIMEZONE_UTC));
+				DateTimeUtil.getDateFromString("", DateTimeUtil.DATE_TIME_FM));
 		expected.setInvalidreason("teststring");
 		expected.setSfid("a04N000000KgpbjIAB");
 		expected.setSyncedtime(Timestamp.valueOf(LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId())));

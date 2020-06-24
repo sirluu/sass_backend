@@ -24,7 +24,7 @@ public class ConvertDataUtil {
     account.setCorporatenumber(jsonObject.get("corporateNumber").toString().replace("{}", "").trim());
     account.setInvaliddate(
         DateTimeUtil.getDateFromString(jsonObject.get("invalidDate").toString().replace("{}", "").trim(),
-            DateTimeUtil.DD_FM, DateTimeUtil.TIMEZONE_UTC));
+            DateTimeUtil.DD_FM));
     account
         .setInvaliddetailreason(jsonObject.get("invalidDetailReason").toString().replace("{}", "").trim());
     account.setInvalidreason(jsonObject.get("invalidReason").toString().replace("{}", "").trim());
@@ -40,7 +40,7 @@ public class ConvertDataUtil {
         Utility.parseBoolean(jsonObject.get("mCIIsRegistry").toString().replace("{}", "").trim()));
     account.setMerchantcontrinforlicenseacquisitiondate(DateTimeUtil.getDateFromString(
         jsonObject.get("mCILicenseAcquisitionDate").toString().replace("{}", "").trim(),
-        DateTimeUtil.DD_FM, DateTimeUtil.TIMEZONE_UTC));
+        DateTimeUtil.DD_FM));
     account.setMerchantcontrinforlicensename(
         jsonObject.get("mCILicenseName").toString().replace("{}", "").trim());
     account.setMerchantcontrinforlicensenumber(
@@ -109,18 +109,15 @@ public class ConvertDataUtil {
     account
         .setMerchantinfowarningemail(jsonObject.get("mIWarningEmail").toString().replace("{}", "").trim());
     account.setMerchantoperinforacceptancedate(DateTimeUtil.getDateFromString(
-        jsonObject.get("mOIAcceptanceDate").toString().replace("{}", "").trim(), DateTimeUtil.DD_FM,
-        DateTimeUtil.TIMEZONE_UTC));
+        jsonObject.get("mOIAcceptanceDate").toString().replace("{}", "").trim(), DateTimeUtil.DD_FM));
     account.setMerchantoperinforcontractenddate(DateTimeUtil.getDateFromString(
-        jsonObject.get("mOIContractEndDate").toString().replace("{}", "").trim(), DateTimeUtil.DD_FM,
-        DateTimeUtil.TIMEZONE_UTC));
+        jsonObject.get("mOIContractEndDate").toString().replace("{}", "").trim(), DateTimeUtil.DD_FM));
     account.setMerchantoperinforguaranteeenddate(DateTimeUtil.getDateFromString(
-        jsonObject.get("mOIGuaranteeEndDate").toString().replace("{}", "").trim(), DateTimeUtil.DD_FM,
-        DateTimeUtil.TIMEZONE_UTC));
+        jsonObject.get("mOIGuaranteeEndDate").toString().replace("{}", "").trim(), DateTimeUtil.DD_FM));
     account.setMerchantoperinformemo(jsonObject.get("mOIMemo").toString().replace("{}", "").trim());
     account.setMerchantoperinforstartdate(
         DateTimeUtil.getDateFromString(jsonObject.get("mOIStartDate").toString().replace("{}", "").trim(),
-            DateTimeUtil.DD_FM, DateTimeUtil.TIMEZONE_UTC));
+            DateTimeUtil.DD_FM));
     account.setMerchantpayinfoaddress1(
         jsonObject.get("mPayInfoAddress1").toString().replace("{}", "").trim());
     account.setMerchantpayinfoaddress2(
@@ -135,7 +132,7 @@ public class ConvertDataUtil {
     account.setMerchantreprinforaddress(jsonObject.get("mRIAddress").toString().replace("{}", "").trim());
     account.setMerchantreprinforbirthday(
         DateTimeUtil.getDateFromString(jsonObject.get("mRIBirthday").toString().replace("{}", "").trim(),
-            DateTimeUtil.DD_FM, DateTimeUtil.TIMEZONE_UTC));
+            DateTimeUtil.DD_FM));
     account.setMerchantreprinforfullnamekana(
         jsonObject.get("mRIFullNameKana").toString().replace("{}", "").trim());
     account.setMerchantreprinforfullnamekanji(
@@ -234,7 +231,7 @@ public class ConvertDataUtil {
     appCompany.setGloballng(jsonObject.get("globalLng").toString().replace("{}", "").trim());
     appCompany.setGroupcompanies(Utility.parseInt(jsonObject.get("groupCompanies").toString().replace("{}", "").trim()));
     appCompany.setInvaliddate(DateTimeUtil.getDateFromString(jsonObject.get("invalidDate").toString().replace("{}", "").trim(),
-        DateTimeUtil.DD_FM, DateTimeUtil.TIMEZONE_UTC));
+        DateTimeUtil.DD_FM));
     appCompany.setInvaliddetailreason(jsonObject.get("invalidDetailReason").toString().replace("{}", "").trim());
     appCompany.setInvalidreason(jsonObject.get("invalidReason").toString().replace("{}", "").trim());
     appCompany.setIsenableclosing(
@@ -295,7 +292,7 @@ public class ConvertDataUtil {
 	appCompany.setRemarks(jsonObject.get("remarks").toString().replace("{}", "").trim());
 	appCompany.setRequestcompanyidrelation(Utility.parseInt(jsonObject.get("requestCompanyIDRelation").toString().replace("{}", "").trim()));
 	appCompany.setRequeststartdate(DateTimeUtil.getDateFromString(jsonObject.get("requestStartDate").toString().replace("{}", "").trim(), 
-	    DateTimeUtil.DD_FM, DateTimeUtil.TIMEZONE_UTC));
+	    DateTimeUtil.DD_FM));
     return appCompany;
   }
 
@@ -353,7 +350,7 @@ public class ConvertDataUtil {
         .setAccounttype(jsonObject.get("accountType").toString().replace("{}", "").trim());
     bankAccountInformation.setInvaliddate(
         DateTimeUtil.getDateFromString(jsonObject.get("invalidDate").toString().replace("{}", "").trim(),
-            DateTimeUtil.DD_FM_S, DateTimeUtil.TIMEZONE_UTC));
+            DateTimeUtil.DD_FM_S));
     bankAccountInformation
         .setInvalidreason(jsonObject.get("invalidReason").toString().replace("{}", "").trim());
     bankAccountInformation.setLastmodifieddate(DateTimeUtil.getTimestampFromString(

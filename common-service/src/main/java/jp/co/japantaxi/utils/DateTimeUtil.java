@@ -4,8 +4,6 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -17,7 +15,6 @@ public class DateTimeUtil {
 	static Logger LOGGER = LoggerFactory.getLogger(DateTimeUtil.class);
 
 	public static final TimeZone TIMEZONE_TOKYO = TimeZone.getTimeZone("Asia/Tokyo");
-	public static final TimeZone TIMEZONE_UTC = TimeZone.getTimeZone("UTC");
 	public static final String DATE_FM_S = "EEE MMM dd HH:mm:ss zzz yyyy";
 	public static final String TIME_FM_S = "HH:mm:ss.SSSSSS";
 	public static final String DATE_TIME_FM = "yyyy-MM-dd HH:mm:ss";
@@ -67,26 +64,6 @@ public class DateTimeUtil {
 	public static String getStringFromTimestamp(Timestamp timestamp, String format) {
 		SimpleDateFormat sp = new SimpleDateFormat(format);
 		return sp.format(timestamp);
-	}
-
-	public static LocalDateTime convertLongToDateTime(long date) {
-		if (date != 0) {
-			return LocalDateTime.ofInstant(Instant.ofEpochSecond(date), TIMEZONE_UTC.toZoneId());
-		}
-		return null;
-	}
-
-	public static Timestamp getTimestampFromDate(Date date, String format) {
-		Timestamp timestamp = null;
-		if (date != null) {
-			String dateString = getStringFromDate(date, format);
-			if (!dateString.contains("{}")) {
-				long dateLong = Timestamp.valueOf(dateString).getTime();
-				LocalDateTime dateLD = convertLongToDateTime(dateLong);
-				timestamp = Timestamp.valueOf(dateLD);
-			}
-		}
-		return timestamp;
 	}
 
 	public static Timestamp getTimestampFromString(String strDate, String format) {
