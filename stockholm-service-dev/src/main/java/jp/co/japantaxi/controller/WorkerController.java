@@ -284,8 +284,12 @@ public class WorkerController {
         }
       }
 
-      if ((Constant.STARTMODE.CRON.value.equalsIgnoreCase(startMode) && !Constant.PROCESSMODE.CLEAR.equals(processMode))
-			|| (Constant.STARTMODE.USER.value.equalsIgnoreCase(startMode) && !Constant.PROCESSMODE.CLEAR.equals(processMode))) {
+      if ((Constant.STARTMODE.CRON.value.equalsIgnoreCase(startMode) 
+    		    && !Constant.PROCESSMODE.CLEAR.equals(processMode) 
+    		    && !Constant.PROCESSMODE.COREDATECREAT.equals(processMode))
+			|| (Constant.STARTMODE.USER.value.equalsIgnoreCase(startMode) 
+				&& !Constant.PROCESSMODE.CLEAR.equals(processMode) 
+				&& !Constant.PROCESSMODE.COREDATECREAT.equals(processMode))) {
 		batchStatus.setFromdatetime(DateTimeUtil.getTimestampFromString(toDateTime, DateTimeUtil.DATE_TIME_FM));
 		batchController.updateBatchStatus(batchStatus, false, false, false, false);
       }
@@ -310,30 +314,30 @@ public class WorkerController {
 
   // 2-1（※2-2のみ実行で起動した場合は処理をスキップする）
   public void getSF(ParameterRequest parameterRequest, BatchStatus batchStatus) {
+    LOGGER.info("AppCompany getSF process begin at : {} ",
+	        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
+	appCompanyController.getSFAppCompany(parameterRequest, batchStatus);
+    LOGGER.info("AppCompany getSF process end at : {} ",
+	    LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
+    LOGGER.info("FareTable getSF process begin at : {} ",
+            LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
+    accountController.getSFFareTable(parameterRequest, batchStatus);
+    LOGGER.info("FareTable getSF process end at : {} ",
+            LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
     LOGGER.info("Account getSF process begin at : {} ",
         LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
     accountController.getSFAccount(parameterRequest, batchStatus);
     LOGGER.info("Account getSF process end at : {} ",
         LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
-    LOGGER.info("FareTable getSF process begin at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
-    accountController.getSFFareTable(parameterRequest, batchStatus);
-    LOGGER.info("FareTable getSF process end at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
+    LOGGER.info("BankMaster getSF process begin at : {} ",
+            LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
+    bankMasterController.getSFBankMaster(parameterRequest, batchStatus);
+    LOGGER.info("BankMaster getSF process end at : {} ",
+            LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
     LOGGER.info("BankAccountInformation getSF process begin at : {} ",
         LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
     bankMasterController.getSFBankAccountInformation(parameterRequest, batchStatus);
     LOGGER.info("BankAccountInformation getSF process end at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
-    LOGGER.info("BankMaster getSF process begin at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
-    bankMasterController.getSFBankMaster(parameterRequest, batchStatus);
-    LOGGER.info("BankMaster getSF process end at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
-    LOGGER.info("AppCompany getSF process begin at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
-    appCompanyController.getSFAppCompany(parameterRequest, batchStatus);
-    LOGGER.info("AppCompany getSF process end at : {} ",
         LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
     LOGGER.info("PaymentSystemLinkInfor getSF process begin at : {} ",
         LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
@@ -346,30 +350,30 @@ public class WorkerController {
   public void coreDateCreat(ParameterRequest parameterRequest, BatchStatus batchStatus) {
 	//Convert time
 	parameterRequest.setStartTime(Utility.parseString(parameterRequest.getStartTime()));
-    LOGGER.info("Account coreDateCreat process begin at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
-    accountController.coreDateCreatAccount(parameterRequest, batchStatus);
-    LOGGER.info("Account coreDateCreat process end at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
+	LOGGER.info("AppCompany coreDateCreat process begin at : {} ",
+	        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
+	appCompanyController.coreDateCreatAppCompany(parameterRequest, batchStatus);
+	LOGGER.info("AppCompany coreDateCreat process end at : {} ",
+	        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
     LOGGER.info("FareTable coreDateCreat process begin at : {} ",
         LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
     accountController.coreDateCreatFareTable(parameterRequest, batchStatus);
     LOGGER.info("FareTable coreDateCreat process end at : {} ",
         LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
+    LOGGER.info("Account coreDateCreat process begin at : {} ",
+        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
+    accountController.coreDateCreatAccount(parameterRequest, batchStatus);
+    LOGGER.info("Account coreDateCreat process end at : {} ",
+        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
+    LOGGER.info("BankMaster coreDateCreat process begin at : {} ",
+            LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
+    bankMasterController.coreDateCreatBankMaster(parameterRequest, batchStatus);
+    LOGGER.info("BankMaster coreDateCreat process end at : {} ",
+            LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
     LOGGER.info("BankAccountInformation coreDateCreat process begin at : {} ",
         LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
     bankMasterController.coreDateCreatBankAccountInformation(parameterRequest, batchStatus);
     LOGGER.info("BankAccountInformation coreDateCreat process end at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
-    LOGGER.info("BankMaster coreDateCreat process begin at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
-    bankMasterController.coreDateCreatBankMaster(parameterRequest, batchStatus);
-    LOGGER.info("BankMaster coreDateCreat process end at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
-    LOGGER.info("AppCompany coreDateCreat process begin at : {} ",
-        LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
-    appCompanyController.coreDateCreatAppCompany(parameterRequest, batchStatus);
-    LOGGER.info("AppCompany coreDateCreat process end at : {} ",
         LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
     LOGGER.info("PaymentSystemLinkInfor coreDateCreat process begin at : {} ",
         LocalDateTime.now(DateTimeUtil.TIMEZONE_TOKYO.toZoneId()));
