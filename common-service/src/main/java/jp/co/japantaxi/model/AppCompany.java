@@ -15,10 +15,10 @@ import lombok.Setter;
 @RequiredArgsConstructor
 public class AppCompany extends ObjectSync {
   /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-/**
+   * 
+   */
+  private static final long serialVersionUID = 1L;
+  /**
    * 56 fields + sfid + account + syncedtime
    */
   private String name;
@@ -29,10 +29,10 @@ public class AppCompany extends ObjectSync {
   private Float acceptmajor2;
   private Float acceptminor2;
   private String dispatchtype;
-  //sync table
+  // sync table
   private Boolean dispatchtypeisexternaldispatch;
   private Integer dispatchtypepartnerapiversion;
-  //sync table
+  // sync table
   private String phonenumber;
   private String phonenumbercancel;
   private String email;
@@ -98,13 +98,13 @@ public class AppCompany extends ObjectSync {
   private Date invaliddate;
   private String invalidreason;
   private String invaliddetailreason;
-  //sync table
+  // sync table
   private Integer drivercontractdispatchmethodid;
   private Boolean drivercontractisenabled;
   private Boolean drivercontractispreviewenabled;
   private Boolean drivercontractonlyusewhennecessary;
   private Boolean drivercontractuseasdefault;
-  //sync table
+  // sync table
   private String drivercontract;
   private Integer implementationcosts;
   private Integer monthlyminimumcars;

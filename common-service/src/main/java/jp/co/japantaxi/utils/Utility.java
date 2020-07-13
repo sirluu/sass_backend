@@ -54,7 +54,7 @@ public class Utility {
     }
     return intersection;
   }
- 
+
   public static Float parseFloat(String value) {
     try {
       return Float.parseFloat(value);
@@ -72,19 +72,19 @@ public class Utility {
   }
 
   public static Double parseDouble(String value) {
-	try {
-	   return Double.parseDouble(value);
-	} catch (NumberFormatException ex) {
-	   return null;
-	}
+    try {
+      return Double.parseDouble(value);
+    } catch (NumberFormatException ex) {
+      return null;
+    }
   }
-  
+
   public static Boolean parseBoolean(String b) {
-	if ("TRUE".equalsIgnoreCase(b.toUpperCase()) || "1".equalsIgnoreCase(b)) {
-	  return true;
-	} else {
-	  return null;
-	}
+    if ("TRUE".equalsIgnoreCase(b.toUpperCase()) || "1".equalsIgnoreCase(b)) {
+      return true;
+    } else {
+      return null;
+    }
   }
 
   public static Long parseLong(String value) {
@@ -102,7 +102,7 @@ public class Utility {
     sb.append("'");
     return sb.toString();
   }
-  
+
   public static String parseList(List<String> list) {
     StringBuilder b = new StringBuilder("'");
     b.append(String.join("','", list));
@@ -116,10 +116,10 @@ public class Utility {
     b.append("')");
     return b.toString();
   }
-  
+
   public static <T> List<String> compare(List<T> leftList, List<T> rightList) {
-	List<String> list = new ArrayList<String>();
-	try {
+    List<String> list = new ArrayList<String>();
+    try {
       ObjectMapper mapper = new ObjectMapper();
       JSONObject leftObject = new JSONObject();
       leftObject.put("left", leftList);
@@ -144,14 +144,14 @@ public class Utility {
           }
         }
       }
-	} catch (JsonProcessingException e) {
-		LOGGER.error("Error JsonProcessingException: {} ", e.getMessage());
-	} catch (JSONException e) {
-		LOGGER.error("Error JSONException: {} ", e.getMessage());
-	} catch (IOException e) {
-		LOGGER.error("Error IOException: {} ", e.getMessage());
-	}
-	return list;
+    } catch (JsonProcessingException e) {
+      LOGGER.error("Error JsonProcessingException: {} ", e.getMessage());
+    } catch (JSONException e) {
+      LOGGER.error("Error JSONException: {} ", e.getMessage());
+    } catch (IOException e) {
+      LOGGER.error("Error IOException: {} ", e.getMessage());
+    }
+    return list;
   }
 
   public static <T> List<String> getIdListFromObjectList(List<T> list) {
@@ -164,5 +164,5 @@ public class Utility {
     }
     return listId;
   }
-  
+
 }

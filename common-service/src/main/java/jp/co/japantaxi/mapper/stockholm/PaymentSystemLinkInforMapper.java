@@ -17,7 +17,7 @@ public interface PaymentSystemLinkInforMapper {
   List<PaymentSystemLinkInfor> getListPaymentSystemLinkInforSync(ParameterRequest request);
 
   Integer countPaymentSystemLinkInfor(ParameterRequest request);
-  
+
   void insertPaymentSystemLinkInfor(PaymentSystemLinkInfor linkInforc);
 
   void updatePaymentSystemLinkInfor(PaymentSystemLinkInfor linkInforc);
@@ -27,5 +27,5 @@ public interface PaymentSystemLinkInforMapper {
   void updatePaymentSystemLinkInforSync(PaymentSystemLinkInfor linkInforc);
 
   void truncatePaymentSystemLinkInfor();
-  
+
 }

@@ -526,41 +526,6 @@
 	
 	<!-- Singapore -->
 	<select id="getListAppCompanys" resultMap="appCompanyList">
-		<!-- 
-		SELECT
-			A.sfid,
-			A.phonenumber,
-			A.jtxcompanyid,
-			A.dispatchtype AS dispatchtype,
-			A.appdisplayname,
-			A.salesprefecture,
-			f.sfid as faretableId,
-			(select sfid from worker wf WHERE bankaccinfo.sfid = wf.sfid and wf.sycapproveflg = 'F') as bankaccinfo,
-			bankmaster.sfid as bankmaster,
-			(select sfid from worker wf WHERE bankaccinfo2.sfid = wf.sfid and wf.sycapproveflg = 'F') as bankaccinfo2,
-			bankmaster2.sfid as bankmaster2,
-			CASE
-				WHEN (w.sycapproveflg = 'T' AND f.sfid is null AND (select sfid from worker wf WHERE bankaccinfo.sfid = wf.sfid and wf.sycapproveflg = 'F') is null AND bankmaster.sfid is null AND bankaccinfo2.sfid is null AND (select sfid from worker wf WHERE bankaccinfo2.sfid = wf.sfid and wf.sycapproveflg = 'F') is null) THEN 0 ELSE 1 END AS isneedapproval
-		FROM
-			appcompany A
-			LEFT JOIN appcompanysync appsync ON appsync.sfid = A.sfid
-			LEFT JOIN worker w ON A.sfid = w.sfid
-			LEFT JOIN faretablesync f ON appsync.faretable = f.sfid AND f.sfid = (select sfid from worker wf where f.sfid = wf.sfid and wf.sycapproveflg = 'F')
-			LEFT JOIN bankaccountinformationsync bankaccinfo ON bankaccinfo.accountcategory = '口座引落' AND appsync.bankaccount = bankaccinfo.sfid
-			LEFT OUTER JOIN bankmastersync bankmaster ON bankaccinfo.accountbank = bankmaster.sfid 
-				AND bankmaster.sfid = (select sfid from worker wf WHERE bankmaster.sfid = wf.sfid and wf.sycapproveflg = 'F')
-			LEFT JOIN bankaccountinformationsync bankaccinfo2 ON bankaccinfo2.accountcategory = 'その他（空転補填・タクエボ等）支払' AND appsync.bankaccount2 = bankaccinfo2.sfid
-			LEFT OUTER JOIN bankmastersync bankmaster2 ON bankaccinfo2.accountbank = bankmaster2.sfid 
-				AND bankmaster2.sfid = (select sfid from worker wf WHERE bankmaster2.sfid = wf.sfid and wf.sycapproveflg = 'F')
-				<if test='sfids != null'>
-				where sfid IN
-				<foreach item="item" index="index" collection="sfids" open="(" separator="," close=")">
-					#{item}
-				</foreach>
-			</if> 
-		ORDER BY
-		jtxCompanyId DESC
-		-->
         select a.sfid, a.phonenumber, a.jtxcompanyid, a.dispatchtype as dispatchtype,
         a.appdisplayname, a.salesprefecture, CASE
             WHEN w.sycapproveflg = 'T' THEN 0
@@ -569,13 +534,11 @@
         AS isneedapproval
         FROM appcompany a
         INNER JOIN worker w on a.sfid = w.sfid
-        <if test='sfids != null'>
-            where sfid IN
-            <foreach item="item" index="index" collection="sfids" open="(" separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-         ORDER BY jtxCompanyId DESC
+        <if test='jtxCompanyId != null and flg == null'> where a.jtxcompanyid &lt; #{jtxCompanyId} </if>
+        <if test='jtxCompanyId == null and flg != null'> where w.sycapproveflg != #{flg} </if>
+        <if test='jtxCompanyId != null and flg != null'> where a.jtxcompanyid &lt; #{jtxCompanyId} AND w.sycapproveflg != #{flg} </if>
+        ORDER BY a.jtxCompanyId DESC
+        <if test='limit != null'> LIMIT ${limit}</if>
 	</select>
 	<resultMap type="jp.co.japantaxi.response.AppCompanyResponse$AppCompanyList" id="appCompanyList" autoMapping="true">
 		<result property="jtxCompanyId" column="jtxcompanyid"/>
@@ -1079,6 +1042,7 @@
 		<result property="dispatchType" column="dispatchtype"/>
 		<result property="driverContract" column="drivercontract"/>
 		<result property="accountMerTermNo" column="mertermno"/>
+		<result property="profile" column="profile" typeHandler="jp.co.japantaxi.utils.EmptyStringIfNull"/>
 		<collection property="faretables" ofType="java.util.HashMap" notNullColumn="fbsfid">
 			<result property="sfid" column="fbsfid"/>
 			<result property="pickupfare" column="pickupfare" typeHandler="jp.co.japantaxi.utils.EmptyIntegerIfNull"/>

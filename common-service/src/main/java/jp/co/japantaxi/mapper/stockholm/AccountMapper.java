@@ -12,36 +12,38 @@ import jp.co.japantaxi.response.MerchantResponse.MerchantDetail;
 
 public interface AccountMapper {
 
-	Account getAccountById(@Param("sfid") String sfid);
+  Account getAccountById(@Param("sfid") String sfid);
 
-	List<String> getListAccountIdFromStockholm(ParameterRequest ids);
+  List<String> getListAccountIdFromStockholm(ParameterRequest ids);
 
-    List<String> getListAccountIds(ParameterRequest request);
-  
-    List<Account> getListAccount(ParameterRequest request);
-  
-    List<Account> getListAccountSync(ParameterRequest request);
-  
-    Integer countAccount(ParameterRequest request);
+  List<String> getListAccountIds(ParameterRequest request);
 
-	void insertAccount(Account account);
+  List<Account> getListAccount(ParameterRequest request);
 
-	void updateAccount(Account account);
+  List<Account> getListAccountSync(ParameterRequest request);
 
-	void insertAccountSync(Account account);
+  Integer countAccount(ParameterRequest request);
 
-	void updateAccountSync(Account account);
+  void insertAccount(Account account);
 
-	void truncateAccount();
+  void updateAccount(Account account);
 
-	// Singapore
-	List<AccountSync> getAccountByAppCompany(@Param("appCompany") String appCompany);
+  void insertAccountSync(Account account);
 
-	MerchantDetail getMerchantInfoBySFID(@Param("sfid") String sfid);
+  void updateAccountSync(Account account);
 
-	List<MerchantResponse.MerchantObjectList> getMerchantInfoList(@Param("appCompanyId") String appCompanyId);
-	
-	@Update("UPDATE accountsync SET mertermno=#{appCompanyId}, keiri_no=#{appCompanyId} WHERE sfid=#{sfid}")
-	void testUpdateAppCompanyId(@Param("appCompanyId") Integer appCompanyId, @Param("sfid") String sfid);
-	// End Singapore
+  void truncateAccount();
+
+  // Singapore
+  List<AccountSync> getAccountByAppCompany(@Param("appCompany") String appCompany);
+
+  MerchantDetail getMerchantInfoBySFID(@Param("sfid") String sfid);
+
+  List<MerchantResponse.MerchantObjectList> getMerchantInfoList(
+      @Param("appCompanyId") String appCompanyId);
+
+  @Update("UPDATE accountsync SET mertermno=#{appCompanyId}, keiri_no=#{appCompanyId} WHERE sfid=#{sfid}")
+  void testUpdateAppCompanyId(@Param("appCompanyId") Integer appCompanyId,
+      @Param("sfid") String sfid);
+  // End Singapore
 }

@@ -17,7 +17,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 public class JsonMapper {
- 
+
   static JSONObject object = new JSONObject();
   static ObjectMapper mapper = new ObjectMapper();
 
@@ -66,17 +66,16 @@ public class JsonMapper {
   }
 
   public static void readDataSync(String context) throws IOException {
-	InputStream is = JsonMapper.class.getResourceAsStream("/datasync.json");
-	BufferedReader buff = new BufferedReader(
-			new InputStreamReader(is, "UTF-8"));
-	String line = null;
-	StringBuilder sb = new StringBuilder();
-	while ((line = buff.readLine()) != null) {
-		sb.append(line);
-	}
-	JSONObject jsonObject = new JSONObject(sb.toString());
-	object = jsonObject.getJSONObject(context.toLowerCase());
-	buff.close();
+    InputStream is = JsonMapper.class.getResourceAsStream("/datasync.json");
+    BufferedReader buff = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+    String line = null;
+    StringBuilder sb = new StringBuilder();
+    while ((line = buff.readLine()) != null) {
+      sb.append(line);
+    }
+    JSONObject jsonObject = new JSONObject(sb.toString());
+    object = jsonObject.getJSONObject(context.toLowerCase());
+    buff.close();
   }
-  
+
 }

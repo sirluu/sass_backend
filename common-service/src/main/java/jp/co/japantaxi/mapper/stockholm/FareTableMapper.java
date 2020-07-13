@@ -17,7 +17,7 @@ public interface FareTableMapper {
   List<FareTable> getListFareTableSync(ParameterRequest request);
 
   Integer countFareTable(ParameterRequest request);
-  
+
   void insertFareTable(FareTable fareTable);
 
   void updateFareTable(FareTable fareTable);
@@ -27,5 +27,5 @@ public interface FareTableMapper {
   void updateFareTableSync(FareTable fareTable);
 
   void truncateFareTable();
-  
+
 }

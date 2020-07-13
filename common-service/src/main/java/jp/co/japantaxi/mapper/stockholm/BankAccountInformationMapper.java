@@ -23,7 +23,7 @@ public interface BankAccountInformationMapper {
   List<BankAccountInformation> getListBankAccountInformationSync(ParameterRequest request);
 
   Integer countBankAccountInformation(ParameterRequest request);
-  
+
   void insertBankAccountInformation(BankAccountInformation bankAccountInformation);
 
   void updateBankAccountInformation(BankAccountInformation bankAccountInformation);
@@ -35,6 +35,7 @@ public interface BankAccountInformationMapper {
   void truncateBankAccountInformation();
 
   List<BankAccountInformation> getListBankAccInfo();
-  
-  List<BankAccountFielsBKMapper> getListBankAccountInfoByAccountId(@Param("accountId") String accountId, @Param("accountCategory") String accountCategory);
+
+  List<BankAccountFielsBKMapper> getListBankAccountInfoByAccountId(
+      @Param("accountId") String accountId, @Param("accountCategory") String accountCategory);
 }

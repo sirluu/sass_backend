@@ -17,7 +17,7 @@ public interface BankMasterMapper {
   List<BankMaster> getListBankMasterSync(ParameterRequest request);
 
   Integer countBankMaster(ParameterRequest request);
-  
+
   void insertBankMaster(BankMaster bankMaster);
 
   void updateBankMaster(BankMaster bankMaster);
@@ -27,5 +27,5 @@ public interface BankMasterMapper {
   void updateBankMasterSync(BankMaster bankMaster);
 
   void truncateBankMaster();
-  
+
 }

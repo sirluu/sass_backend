@@ -9,12 +9,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class Account extends ObjectSync{
+public class Account extends ObjectSync {
   /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-/**
+   * 
+   */
+  private static final long serialVersionUID = 1L;
+  /**
    * 88 fields + sfid
    */
   private String appcompany;

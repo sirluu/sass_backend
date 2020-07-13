@@ -9,7 +9,7 @@ import lombok.Setter;
 @SuppressWarnings("serial")
 @Getter
 @Setter
-public class ObjectSync implements Serializable{
+public class ObjectSync implements Serializable {
   /**
    * some fields usually in common case
    */
