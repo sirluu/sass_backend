@@ -525,7 +525,7 @@ public class ConvertDataUtilTest {
     actual.put("salesPrefecture", "teststring");
     actual.put("salesPrefeEN", "teststring");
     actual.put("salesCity", "teststring");
-    actual.put("replyWatingMinute", "teststring");
+    actual.put("replyWaitingMinute", "teststring");
     actual.put("ratingAverage", "teststring");
     actual.put("profile", "teststring");
     actual.put("pickupFeeDescription", "teststring");
