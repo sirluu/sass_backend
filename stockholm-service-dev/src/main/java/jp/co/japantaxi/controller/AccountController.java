@@ -52,16 +52,16 @@ public class AccountController {
   /**
    * @param parameterRequest
    * @param batchStatus
-   * try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）]
-   * try catch: Sentry 連携しエラー通知を行う
+   * try catch: BACK_REG [繝�繝ｼ繝悶Ν蜷搾ｼ医ョ繝ｼ繧ｿ蜉�蟾･蠕後�ｮDB逋ｻ骭ｲ譎ゅ↓繧ｨ繝ｩ繝ｼ縺ｫ縺ｪ縺｣縺溘ユ繝ｼ繝悶Ν蜷搾ｼ云
+   * try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
    */
   public void getSFAccount(ParameterRequest parameterRequest, BatchStatus batchStatus) {
 	Map<String, Account> hashMap = new HashMap<>();
     try {
-        // ①SalesfoceAPIをコールして上記オブジェクト情報を取得する
+        // 竭�SalesfoceAPI繧偵さ繝ｼ繝ｫ縺励※荳願ｨ倥が繝悶ず繧ｧ繧ｯ繝域ュ蝣ｱ繧貞叙蠕励☆繧�
         List<Account> sfAccountList =
             salesforceResponseController.getListAccountFromSalesforce(batchStatus);
-        // ③API取得に成功した情報をDBに登録、更新する
+        // 竭｢API蜿門ｾ励↓謌仙粥縺励◆諠�蝣ｱ繧奪B縺ｫ逋ｻ骭ｲ縲∵峩譁ｰ縺吶ｋ
         if (!sfAccountList.isEmpty()) {
           List<String> sfAccIds = Utility.getIdListFromObjectList(sfAccountList);
           List<String> stAccIds = getListAccountIdFromStockholm(sfAccIds);
@@ -94,8 +94,8 @@ public class AccountController {
   /**
    * @param parameterRequest
    * @param batchStatus
-   * try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）]
-   * try catch: Sentry 連携しエラー通知を行う
+   * try catch: BACK_REG [繝�繝ｼ繝悶Ν蜷搾ｼ医ョ繝ｼ繧ｿ蜉�蟾･蠕後�ｮDB逋ｻ骭ｲ譎ゅ↓繧ｨ繝ｩ繝ｼ縺ｫ縺ｪ縺｣縺溘ユ繝ｼ繝悶Ν蜷搾ｼ云
+   * try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
    */
   public void coreDateCreatAccount(ParameterRequest parareq, BatchStatus batchStatus) {
 	  List<Account> objectList = new ArrayList<>();
@@ -161,8 +161,8 @@ public class AccountController {
   /**
    * @param parameterRequest
    * @param batchStatus
-   * try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）]
-   * try catch: Sentry 連携しエラー通知を行う
+   * try catch: BACK_REG [繝�繝ｼ繝悶Ν蜷搾ｼ医ョ繝ｼ繧ｿ蜉�蟾･蠕後�ｮDB逋ｻ骭ｲ譎ゅ↓繧ｨ繝ｩ繝ｼ縺ｫ縺ｪ縺｣縺溘ユ繝ｼ繝悶Ν蜷搾ｼ云
+   * try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
    */
   public void getSFFareTable(ParameterRequest parameterRequest, BatchStatus batchStatus) {
 	 Map<String, FareTable> hashMap = new HashMap<>();
@@ -200,8 +200,8 @@ public class AccountController {
   /**
    * @param parameterRequest
    * @param batchStatus
-   * try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）]
-   * try catch: Sentry 連携しエラー通知を行う
+   * try catch: BACK_REG [繝�繝ｼ繝悶Ν蜷搾ｼ医ョ繝ｼ繧ｿ蜉�蟾･蠕後�ｮDB逋ｻ骭ｲ譎ゅ↓繧ｨ繝ｩ繝ｼ縺ｫ縺ｪ縺｣縺溘ユ繝ｼ繝悶Ν蜷搾ｼ云
+   * try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
    */
   public void coreDateCreatFareTable(ParameterRequest parareq, BatchStatus batchStatus) {
       List<FareTable> objectList = new ArrayList<>();
@@ -266,7 +266,7 @@ public class AccountController {
   // Begin FareTable
   /**
    * @param fareTableList
-   * try catch: Sentry 連携しエラー通知を行う
+   * try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
    */
   public void insertFareTable(List<FareTable> fareTableList) {
     for (int i = 0; i < fareTableList.size(); i++) {
@@ -284,7 +284,7 @@ public class AccountController {
 
   /**
    * @param fareTableList
-   * try catch: Sentry 連携しエラー通知を行う
+   * try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
    */
   public void updateFareTable(List<FareTable> fareTableList) {
     for (int i = 0; i < fareTableList.size(); i++) {
@@ -302,7 +302,7 @@ public class AccountController {
 
   /**
    * @param fareTableList
-   * try catch: Sentry 連携しエラー通知を行う
+   * try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
    */
   public void insertFareTableSync(List<FareTable> fareTableList) {
     Worker worker = workerController.setWorker(Constant.APPCOMPANYSYNC);
@@ -310,7 +310,7 @@ public class AccountController {
       try {
         fareTableMapper
             .insertFareTableSync(ConvertDataUtil.convertFareTable2Sync(fareTableList.get(i), true));
-        worker.setSfid(fareTableList.get(i).getAppcompany());
+        worker.setSfid(fareTableList.get(i).getAppcompany().trim());
       } catch (Exception e) {
         LOGGER.error(
             Constant.NORMALCODE.E03
@@ -324,7 +324,7 @@ public class AccountController {
 
   /**
    * @param fareTableList
-   * try catch: Sentry 連携しエラー通知を行う
+   * try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
    */
   public void updateFareTableSync(List<FareTable> fareTableList) {
     Worker worker = workerController.setWorker(Constant.APPCOMPANYSYNC);
@@ -334,7 +334,7 @@ public class AccountController {
             .updateFareTableSync(ConvertDataUtil.convertFareTable2Sync(fareTableList.get(i), true));
         LOGGER.info("FareTableSync updating >>> " + fareTableList.get(i).getSfid());
         worker.setSfid(fareTableList.get(i).getAppcompany());
-        // Syncテープルに更新場合：承認されたものは未承認変更。（Workerの「sycapproveflg」に「TRUE」→「FALSE」）
+        // Sync繝�繝ｼ繝励Ν縺ｫ譖ｴ譁ｰ蝣ｴ蜷茨ｼ壽価隱阪＆繧後◆繧ゅ�ｮ縺ｯ譛ｪ謇ｿ隱榊､画峩縲ゑｼ�Worker縺ｮ縲茎ycapproveflg縲阪↓縲卦RUE縲坂�偵�熊ALSE縲搾ｼ�
         worker.setSycapproveflg(false);
         workerController.updateWorker(worker);
       } catch (Exception e) {
@@ -421,7 +421,7 @@ public class AccountController {
   // Begin Account
   /**
    * @param accountList
-   * try catch: Sentry 連携しエラー通知を行う
+   * try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
    */
   public void insertAccount(List<Account> accountList) {
     for (int i = 0; i < accountList.size(); i++) {
@@ -439,7 +439,7 @@ public class AccountController {
 
   /**
    * @param accountList
-   * try catch: Sentry 連携しエラー通知を行う
+   * try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
    */
   public void updateAccount(List<Account> accountList) {
     for (int i = 0; i < accountList.size(); i++) {
@@ -457,14 +457,14 @@ public class AccountController {
 
   /**
    * @param accountList
-   * try catch: Sentry 連携しエラー通知を行う
+   * try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
    */
   public void insertAccountSync(List<Account> accountList) {
     Worker worker = workerController.setWorker(Constant.APPCOMPANYSYNC);
     for (int i = 0; i < accountList.size(); i++) {
       try {
         accountMapper.insertAccountSync(ConvertDataUtil.convertAccount2Sync(accountList.get(i), true));
-        worker.setSfid(accountList.get(i).getAppcompany());
+        worker.setSfid(accountList.get(i).getAppcompany().trim());
       } catch (Exception e) {
         LOGGER.error(
             Constant.NORMALCODE.E03
@@ -478,7 +478,7 @@ public class AccountController {
 
   /**
    * @param accountList
-   * try catch: Sentry 連携しエラー通知を行う
+   * try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
    */
   public void updateAccountSync(List<Account> accountList) {
     Worker worker = workerController.setWorker(Constant.APPCOMPANYSYNC);
@@ -487,7 +487,7 @@ public class AccountController {
         accountMapper.updateAccountSync(ConvertDataUtil.convertAccount2Sync(accountList.get(i), true));
         LOGGER.info("AccountSync updating >>> " + accountList.get(i).getSfid());
         worker.setSfid(accountList.get(i).getAppcompany());
-        // Syncテープルに更新場合：承認されたものは未承認変更。（Workerの「sycapproveflg」に「TRUE」→「FALSE」）
+        // Sync繝�繝ｼ繝励Ν縺ｫ譖ｴ譁ｰ蝣ｴ蜷茨ｼ壽価隱阪＆繧後◆繧ゅ�ｮ縺ｯ譛ｪ謇ｿ隱榊､画峩縲ゑｼ�Worker縺ｮ縲茎ycapproveflg縲阪↓縲卦RUE縲坂�偵�熊ALSE縲搾ｼ�
         worker.setSycapproveflg(false);
         workerController.updateWorker(worker);
       } catch (Exception e) {

@@ -47,8 +47,8 @@ public class PaymentController {
     /**
      * @param parameterRequest
      * @param batchStatus 
-     * try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）]
-     * try catch: Sentry 連携しエラー通知を行う
+     * try catch: BACK_REG [繝�繝ｼ繝悶Ν蜷搾ｼ医ョ繝ｼ繧ｿ蜉�蟾･蠕後�ｮDB逋ｻ骭ｲ譎ゅ↓繧ｨ繝ｩ繝ｼ縺ｫ縺ｪ縺｣縺溘ユ繝ｼ繝悶Ν蜷搾ｼ云
+     * try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
      */
     public void getSFPaymentSystemLinkInfor(ParameterRequest parameterRequest,
         BatchStatus batchStatus) {
@@ -90,8 +90,8 @@ public class PaymentController {
   /**
    * @param parameterRequest
    * @param batchStatus
-   * try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）] 
-   * try catch: Sentry 連携しエラー通知を行う
+   * try catch: BACK_REG [繝�繝ｼ繝悶Ν蜷搾ｼ医ョ繝ｼ繧ｿ蜉�蟾･蠕後�ｮDB逋ｻ骭ｲ譎ゅ↓繧ｨ繝ｩ繝ｼ縺ｫ縺ｪ縺｣縺溘ユ繝ｼ繝悶Ν蜷搾ｼ云 
+   * try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
    */
     public void coreDateCreatPaymentSystemLinkInfor(ParameterRequest parareq, BatchStatus batchStatus) {
         List<String> objectIds = new ArrayList<>();
@@ -154,7 +154,7 @@ public class PaymentController {
     }
 	// Begin BankAccountInformation
 	/**
-	 * @param linkInfors try catch: Sentry 連携しエラー通知を行う
+	 * @param linkInfors try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
 	 */
 	public void insertPaymentSystemLinkInfor(List<PaymentSystemLinkInfor> linkInfors) {
 		for (int i = 0; i < linkInfors.size(); i++) {
@@ -171,7 +171,7 @@ public class PaymentController {
 	}
 
 	/**
-	 * @param linkInfors try catch: Sentry 連携しエラー通知を行う
+	 * @param linkInfors try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
 	 */
 	public void updatePaymentSystemLinkInfor(List<PaymentSystemLinkInfor> linkInfors) {
 		for (int i = 0; i < linkInfors.size(); i++) {
@@ -188,7 +188,7 @@ public class PaymentController {
 	}
 
 	/**
-	 * @param linkInfors try catch: Sentry 連携しエラー通知を行う
+	 * @param linkInfors try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
 	 */
 	public void insertPaymentSystemLinkInforSync(List<PaymentSystemLinkInfor> linkInfors) {
 		Worker worker = workerController.setWorker(Constant.APPCOMPANYSYNC);
@@ -196,7 +196,7 @@ public class PaymentController {
 			try {
 				linkInforMapper.insertPaymentSystemLinkInforSync(
 						ConvertDataUtil.convertPaymentSystemLinkInfor2Sync(linkInfors.get(i), true));
-				worker.setSfid(linkInfors.get(i).getAppcompany());
+				worker.setSfid(linkInfors.get(i).getAppcompany().trim());
 			} catch (Exception e) {
 				LOGGER.error(
 						Constant.NORMALCODE.E03
@@ -209,7 +209,7 @@ public class PaymentController {
 	}
 
 	/**
-	 * @param linkInfors try catch: Sentry 連携しエラー通知を行う
+	 * @param linkInfors try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
 	 */
 	public void updatePaymentSystemLinkInforSync(List<PaymentSystemLinkInfor> linkInfors) {
 		Worker worker = workerController.setWorker(Constant.APPCOMPANYSYNC);
@@ -219,7 +219,7 @@ public class PaymentController {
 						ConvertDataUtil.convertPaymentSystemLinkInfor2Sync(linkInfors.get(i), true));
 		        LOGGER.info("PaymentSystemLinkInforSync updating >>> " + linkInfors.get(i).getSfid());
 				worker.setSfid(linkInfors.get(i).getAppcompany());
-				// Syncテープルに更新場合：承認されたものは未承認変更。（Workerの「sycapproveflg」に「TRUE」→「FALSE」）
+				// Sync繝�繝ｼ繝励Ν縺ｫ譖ｴ譁ｰ蝣ｴ蜷茨ｼ壽価隱阪＆繧後◆繧ゅ�ｮ縺ｯ譛ｪ謇ｿ隱榊､画峩縲ゑｼ�Worker縺ｮ縲茎ycapproveflg縲阪↓縲卦RUE縲坂�偵�熊ALSE縲搾ｼ�
 				worker.setSycapproveflg(false);
 				workerController.updateWorker(worker);
 			} catch (Exception e) {

@@ -48,8 +48,8 @@ public class AppCompanyController {
   /**
    * @param parameterRequest
    * @param batchStatus
-   * try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）]
-   * try catch: Sentry 連携しエラー通知を行う
+   * try catch: BACK_REG [繝�繝ｼ繝悶Ν蜷搾ｼ医ョ繝ｼ繧ｿ蜉�蟾･蠕後�ｮDB逋ｻ骭ｲ譎ゅ↓繧ｨ繝ｩ繝ｼ縺ｫ縺ｪ縺｣縺溘ユ繝ｼ繝悶Ν蜷搾ｼ云
+   * try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
    */
   public void getSFAppCompany(ParameterRequest parameterRequest, BatchStatus batchStatus) {
 	Map<String, AppCompany> hashMap = new HashMap<>();
@@ -88,8 +88,8 @@ public class AppCompanyController {
   /**
    * @param parameterRequest
    * @param batchStatus
-   * try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）]
-   * try catch: Sentry 連携しエラー通知を行う
+   * try catch: BACK_REG [繝�繝ｼ繝悶Ν蜷搾ｼ医ョ繝ｼ繧ｿ蜉�蟾･蠕後�ｮDB逋ｻ骭ｲ譎ゅ↓繧ｨ繝ｩ繝ｼ縺ｫ縺ｪ縺｣縺溘ユ繝ｼ繝悶Ν蜷搾ｼ云
+   * try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
    */
   public void coreDateCreatAppCompany(ParameterRequest parareq, BatchStatus batchStatus) {
 	  List<AppCompany> objectList = new ArrayList<>();
@@ -156,7 +156,7 @@ public class AppCompanyController {
   // Begin AppCompany
   /**
    * @param appCompanies
-   * try catch: Sentry 連携しエラー通知を行う
+   * try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
    */
   public void insertAppCompany(List<AppCompany> appCompanies) {
     for (int i = 0; i < appCompanies.size(); i++) {
@@ -174,7 +174,7 @@ public class AppCompanyController {
 
   /**
    * @param appCompanies
-   * try catch: Sentry 連携しエラー通知を行う
+   * try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
    */
   public void updateAppCompany(List<AppCompany> appCompanies) {
     for (int i = 0; i < appCompanies.size(); i++) {
@@ -192,7 +192,7 @@ public class AppCompanyController {
 
   /**
    * @param appCompanies
-   * try catch: Sentry 連携しエラー通知を行う
+   * try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
    */
   public void insertAppCompanySync(List<AppCompany> appCompanies) {
     Worker worker = workerController.setWorker(Constant.APPCOMPANYSYNC);
@@ -200,7 +200,7 @@ public class AppCompanyController {
       try {
         appCompanyMapper
             .insertAppCompanySync(ConvertDataUtil.convertAppCompany2Sync(appCompanies.get(i), true));
-        worker.setSfid(appCompanies.get(i).getSfid());
+        worker.setSfid(appCompanies.get(i).getSfid().trim());
       } catch (Exception e) {
         LOGGER.error(
             Constant.NORMALCODE.E03
@@ -214,7 +214,7 @@ public class AppCompanyController {
 
   /**
    * @param appCompanies
-   * try catch: Sentry 連携しエラー通知を行う
+   * try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
    */
   public void updateAppCompanySync(List<AppCompany> appCompanies) {
     if (!appCompanies.isEmpty()) {
@@ -225,7 +225,7 @@ public class AppCompanyController {
               .updateAppCompanySync(ConvertDataUtil.convertAppCompany2Sync(appCompanies.get(i), true));
           LOGGER.info("AppCompanySync updating >>> " + appCompanies.get(i).getSfid());
           worker.setSfid(appCompanies.get(i).getSfid());
-          // Syncテープルに更新場合：承認されたものは未承認変更。（Workerの「sycapproveflg」に「TRUE」→「FALSE」）
+          // Sync繝�繝ｼ繝励Ν縺ｫ譖ｴ譁ｰ蝣ｴ蜷茨ｼ壽価隱阪＆繧後◆繧ゅ�ｮ縺ｯ譛ｪ謇ｿ隱榊､画峩縲ゑｼ�Worker縺ｮ縲茎ycapproveflg縲阪↓縲卦RUE縲坂�偵�熊ALSE縲搾ｼ�
           worker.setSycapproveflg(false);
           workerController.updateWorker(worker);
         } catch (Exception e) {

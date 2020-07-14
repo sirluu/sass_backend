@@ -53,8 +53,8 @@ public class BankMasterController {
   /**
    * @param parameterRequest
    * @param batchStatus
-   * try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）]
-   * try catch: Sentry 連携しエラー通知を行う
+   * try catch: BACK_REG [繝�繝ｼ繝悶Ν蜷搾ｼ医ョ繝ｼ繧ｿ蜉�蟾･蠕後�ｮDB逋ｻ骭ｲ譎ゅ↓繧ｨ繝ｩ繝ｼ縺ｫ縺ｪ縺｣縺溘ユ繝ｼ繝悶Ν蜷搾ｼ云
+   * try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
    */
   public void getSFBankMaster(ParameterRequest parameterRequest, BatchStatus batchStatus) {
 	Map<String, BankMaster> hashMap = new HashMap<>();
@@ -93,8 +93,8 @@ public class BankMasterController {
   /**
    * @param parameterRequest
    * @param batchStatus
-   * try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）]
-   * try catch: Sentry 連携しエラー通知を行う
+   * try catch: BACK_REG [繝�繝ｼ繝悶Ν蜷搾ｼ医ョ繝ｼ繧ｿ蜉�蟾･蠕後�ｮDB逋ｻ骭ｲ譎ゅ↓繧ｨ繝ｩ繝ｼ縺ｫ縺ｪ縺｣縺溘ユ繝ｼ繝悶Ν蜷搾ｼ云
+   * try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
    */
   public void coreDateCreatBankMaster(ParameterRequest parareq, BatchStatus batchStatus) {
 	  List<String> objectIds = new ArrayList<>();
@@ -160,8 +160,8 @@ public class BankMasterController {
   /**
    * @param parameterRequest
    * @param batchStatus
-   * try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）]
-   * try catch: Sentry 連携しエラー通知を行う
+   * try catch: BACK_REG [繝�繝ｼ繝悶Ν蜷搾ｼ医ョ繝ｼ繧ｿ蜉�蟾･蠕後�ｮDB逋ｻ骭ｲ譎ゅ↓繧ｨ繝ｩ繝ｼ縺ｫ縺ｪ縺｣縺溘ユ繝ｼ繝悶Ν蜷搾ｼ云
+   * try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
    */
   public void getSFBankAccountInformation(ParameterRequest parameterRequest,
       BatchStatus batchStatus) {
@@ -203,8 +203,8 @@ public class BankMasterController {
   /**
    * @param parameterRequest
    * @param batchStatus
-   * try catch: BACK_REG [テーブル名（データ加工後のDB登録時にエラーになったテーブル名）]
-   * try catch: Sentry 連携しエラー通知を行う
+   * try catch: BACK_REG [繝�繝ｼ繝悶Ν蜷搾ｼ医ョ繝ｼ繧ｿ蜉�蟾･蠕後�ｮDB逋ｻ骭ｲ譎ゅ↓繧ｨ繝ｩ繝ｼ縺ｫ縺ｪ縺｣縺溘ユ繝ｼ繝悶Ν蜷搾ｼ云
+   * try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
    */
   public void coreDateCreatBankAccountInformation(ParameterRequest parareq, BatchStatus batchStatus) {
 	  List<String> objectIds = new ArrayList<>();
@@ -269,7 +269,7 @@ public class BankMasterController {
   // Begin BankMaster
   /**
    * @param bankMasterList
-   * try catch: Sentry 連携しエラー通知を行う
+   * try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
    */
   public void insertBankMaster(List<BankMaster> bankMasterList) {
     for (int i = 0; i < bankMasterList.size(); i++) {
@@ -287,7 +287,7 @@ public class BankMasterController {
 
   /**
    * @param bankMasterList
-   * try catch: Sentry 連携しエラー通知を行う
+   * try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
    */
   public void updateBankMaster(List<BankMaster> bankMasterList) {
     for (int i = 0; i < bankMasterList.size(); i++) {
@@ -305,7 +305,7 @@ public class BankMasterController {
 
   /**
    * @param bankMasterList
-   * try catch: Sentry 連携しエラー通知を行う
+   * try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
    */
   public void insertBankMasterSync(List<BankMaster> bankMasterList) {
     for (int i = 0; i < bankMasterList.size(); i++) {
@@ -328,14 +328,14 @@ public class BankMasterController {
 	request.setIds(Utility.parseList(ids));
 	accountInformations = bankAccountInforMapper.getBankAccountByBankIds(request);
 	for (int j = 0; j < accountInformations.size(); j++) {
-		worker.setSfid(accountInformations.get(j).getAppcompanyid());
+		worker.setSfid(accountInformations.get(j).getAppcompanyid().trim());
 		workerController.insertWorker(worker);
 	}
   }
   
   /**
    * @param bankMasterList
-   * try catch: Sentry 連携しエラー通知を行う
+   * try catch: Sentry 騾｣謳ｺ縺励お繝ｩ繝ｼ騾夂衍繧定｡後≧
    */
   public void updateBankMasterSync(List<BankMaster> bankMasterList) {
 	for (int i = 0; i < bankMasterList.size(); i++) {
@@ -460,7 +460,7 @@ public class BankMasterController {
     accountInformations = bankAccountInforMapper.getBankAccountByBankIds(request);
 	for (int j = 0; j < accountInformations.size(); j++) {
 		worker.setSfid(accountInformations.get(j).getAppcompanyid());
-		// Syncテープルに更新場合：承認されたものは未承認変更。（Workerの「syncapproveflg 」に「TRUE」→「FALSE」）
+		// Sync繝�繝ｼ繝励Ν縺ｫ譖ｴ譁ｰ蝣ｴ蜷茨ｼ壽価隱阪＆繧後◆繧ゅ�ｮ縺ｯ譛ｪ謇ｿ隱榊､画峩縲ゑｼ�Worker縺ｮ縲茎yncapproveflg 縲阪↓縲卦RUE縲坂�偵�熊ALSE縲搾ｼ�
 		worker.setSycapproveflg(false);
 		workerController.updateWorker(worker);
 	}
@@ -473,7 +473,7 @@ public class BankMasterController {
       try {
         bankAccountInforMapper.insertBankAccountInformationSync(
             ConvertDataUtil.convertBankAccountInformation2Sync(bankAccountInformationList.get(i), true));
-        worker.setSfid(bankAccountInformationList.get(i).getAppcompanyid());
+        worker.setSfid(bankAccountInformationList.get(i).getAppcompanyid().trim());
         workerController.insertWorker(worker);
       } catch (Exception e) {
         LOGGER.error(Constant.NORMALCODE.E03
@@ -493,7 +493,7 @@ public class BankMasterController {
             ConvertDataUtil.convertBankAccountInformation2Sync(bankAccountInformationList.get(i), true));
         LOGGER.info("BankAccountInformationSync updating >>> " + bankAccountInformationList.get(i).getSfid());
         worker.setSfid(bankAccountInformationList.get(i).getAppcompanyid());
-        // Syncテープルに更新場合：承認されたものは未承認変更。（Workerの「syncapproveflg」に「TRUE」→「FALSE」）
+        // Sync繝�繝ｼ繝励Ν縺ｫ譖ｴ譁ｰ蝣ｴ蜷茨ｼ壽価隱阪＆繧後◆繧ゅ�ｮ縺ｯ譛ｪ謇ｿ隱榊､画峩縲ゑｼ�Worker縺ｮ縲茎yncapproveflg縲阪↓縲卦RUE縲坂�偵�熊ALSE縲搾ｼ�
         worker.setSycapproveflg(false);
         workerController.updateWorker(worker);
       } catch (Exception e) {
