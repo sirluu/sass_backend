@@ -45,6 +45,7 @@ public class PaymentSystemLinkInfor extends ObjectSync {
   private Integer paymentmerchantid;
   private String merchantbasicinfoname;
   private String qrgatewaybranchcode;
-
+  private String onepaymerchantcode;
+  
   private Timestamp lastmodifieddate;
 }

@@ -971,6 +971,7 @@ public class ConvertDataUtilTest {
     expected.setPaymentmerchantid(123);
     expected.setMerchantbasicinfoname("teststring");
     expected.setQrgatewaybranchcode("teststring");
+    expected.setOnepaymerchantcode("teststring");
     JSONObject actual = new JSONObject();
     actual.put("serviceId", "teststring");
     actual.put("appCompany", "teststring");
@@ -999,7 +1000,7 @@ public class ConvertDataUtilTest {
     actual.put("paymentMerchantId", 123);
     actual.put("merchantBasicInfoName", "teststring");
     actual.put("qrGatewayBranchCode", "teststring");
-    
+    actual.put("onePayMerchantCode", "teststring");
     Assert.assertNotEquals(expected,
         ConvertDataUtil.convertJsonObjectToPaymentSystemLinkInfor(actual));
     Assert.assertEquals(expected.getServiceid(),
@@ -1048,6 +1049,8 @@ public class ConvertDataUtilTest {
         ConvertDataUtil.convertJsonObjectToPaymentSystemLinkInfor(actual).getMerchantbasicinfoname());
     Assert.assertEquals(expected.getQrgatewaybranchcode(),
         ConvertDataUtil.convertJsonObjectToPaymentSystemLinkInfor(actual).getQrgatewaybranchcode());
+    Assert.assertEquals(expected.getOnepaymerchantcode(),
+        ConvertDataUtil.convertJsonObjectToPaymentSystemLinkInfor(actual).getOnepaymerchantcode());
   }
 
   @Test

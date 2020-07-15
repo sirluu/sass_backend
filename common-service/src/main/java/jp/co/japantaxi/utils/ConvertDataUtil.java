@@ -572,7 +572,7 @@ public class ConvertDataUtil {
     linkInforc.setPaymentmerchantid(Utility.parseInt(jsonObject.get("paymentMerchantId").toString().replace("{}", "").trim()));
     linkInforc.setMerchantbasicinfoname(jsonObject.get("merchantBasicInfoName").toString().replace("{}", "").trim());
     linkInforc.setQrgatewaybranchcode(jsonObject.get("qrGatewayBranchCode").toString().replace("{}", "").trim());
-
+    linkInforc.setOnepaymerchantcode(jsonObject.get("onePayMerchantCode").toString().replace("{}", "").trim());
     return linkInforc;
   }
 
