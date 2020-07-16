@@ -306,7 +306,7 @@ public class ConvertDataUtil {
     appCompany.setRatingaverage(
         Utility.parseFloat(jsonObject.get("ratingAverage").toString().replace("{}", "").trim()));
     appCompany.setReplywatingminute(
-        Utility.parseInt(jsonObject.get("replyWaitingMinute").toString().replace("{}", "").trim()));
+        Utility.parseInt(jsonObject.get("replyWatingMinute").toString().replace("{}", "").trim()));
     appCompany.setSalescity(jsonObject.get("salesCity").toString().replace("{}", "").trim());
     appCompany.setArea(jsonObject.get("areaId").toString().replace("{}", "").trim());
     appCompany.setAreacode(jsonObject.get("areaCode").toString().replace("{}", "").trim());
