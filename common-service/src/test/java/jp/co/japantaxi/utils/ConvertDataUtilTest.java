@@ -968,10 +968,10 @@ public class ConvertDataUtilTest {
     expected.setTofacebasicauthpassword("teststring");
     expected.setNontofacebasicauthpassword("teststring");
     expected.setAupaystoreid("teststring");
-    expected.setPaymentmerchantid(123);
-    expected.setMerchantbasicinfoname("teststring");
-    expected.setQrgatewaybranchcode("teststring");
-    expected.setOnepaymerchantcode("teststring");
+//    expected.setPaymentmerchantid(123);
+//    expected.setMerchantbasicinfoname("teststring");
+//    expected.setQrgatewaybranchcode("teststring");
+//    expected.setOnepaymerchantcode("teststring");
     JSONObject actual = new JSONObject();
     actual.put("serviceId", "teststring");
     actual.put("appCompany", "teststring");
@@ -1043,14 +1043,14 @@ public class ConvertDataUtilTest {
         .convertJsonObjectToPaymentSystemLinkInfor(actual).getNontofacebasicauthpassword());
     Assert.assertEquals(expected.getAupaystoreid(),
         ConvertDataUtil.convertJsonObjectToPaymentSystemLinkInfor(actual).getAupaystoreid());
-    Assert.assertEquals(expected.getPaymentmerchantid(),
-        ConvertDataUtil.convertJsonObjectToPaymentSystemLinkInfor(actual).getPaymentmerchantid());
-    Assert.assertEquals(expected.getMerchantbasicinfoname(),
-        ConvertDataUtil.convertJsonObjectToPaymentSystemLinkInfor(actual).getMerchantbasicinfoname());
-    Assert.assertEquals(expected.getQrgatewaybranchcode(),
-        ConvertDataUtil.convertJsonObjectToPaymentSystemLinkInfor(actual).getQrgatewaybranchcode());
-    Assert.assertEquals(expected.getOnepaymerchantcode(),
-        ConvertDataUtil.convertJsonObjectToPaymentSystemLinkInfor(actual).getOnepaymerchantcode());
+//    Assert.assertEquals(expected.getPaymentmerchantid(),
+//        ConvertDataUtil.convertJsonObjectToPaymentSystemLinkInfor(actual).getPaymentmerchantid());
+//    Assert.assertEquals(expected.getMerchantbasicinfoname(),
+//        ConvertDataUtil.convertJsonObjectToPaymentSystemLinkInfor(actual).getMerchantbasicinfoname());
+//    Assert.assertEquals(expected.getQrgatewaybranchcode(),
+//        ConvertDataUtil.convertJsonObjectToPaymentSystemLinkInfor(actual).getQrgatewaybranchcode());
+//    Assert.assertEquals(expected.getOnepaymerchantcode(),
+//        ConvertDataUtil.convertJsonObjectToPaymentSystemLinkInfor(actual).getOnepaymerchantcode());
   }
 
   @Test

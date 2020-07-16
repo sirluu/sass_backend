@@ -569,10 +569,10 @@ public class ConvertDataUtil {
     linkInforc.setSfid(jsonObject.get("id").toString().replace("{}", "").trim());
     linkInforc.setAppcompany(jsonObject.get("appCompany").toString().replace("{}", "").trim());
 
-    linkInforc.setPaymentmerchantid(Utility.parseInt(jsonObject.get("paymentMerchantId").toString().replace("{}", "").trim()));
-    linkInforc.setMerchantbasicinfoname(jsonObject.get("merchantBasicInfoName").toString().replace("{}", "").trim());
-    linkInforc.setQrgatewaybranchcode(jsonObject.get("qrGatewayBranchCode").toString().replace("{}", "").trim());
-    linkInforc.setOnepaymerchantcode(jsonObject.get("onePayMerchantCode").toString().replace("{}", "").trim());
+//    linkInforc.setPaymentmerchantid(Utility.parseInt(jsonObject.get("paymentMerchantId").toString().replace("{}", "").trim()));
+//    linkInforc.setMerchantbasicinfoname(jsonObject.get("merchantBasicInfoName").toString().replace("{}", "").trim());
+//    linkInforc.setQrgatewaybranchcode(jsonObject.get("qrGatewayBranchCode").toString().replace("{}", "").trim());
+//    linkInforc.setOnepaymerchantcode(jsonObject.get("onePayMerchantCode").toString().replace("{}", "").trim());
     return linkInforc;
   }
 

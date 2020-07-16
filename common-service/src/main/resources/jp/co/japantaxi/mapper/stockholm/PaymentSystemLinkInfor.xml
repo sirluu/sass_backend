@@ -27,8 +27,7 @@
 		p.nontofacebasicauthid,
 		p.tofacebasicauthpassword,
 		p.nontofacebasicauthpassword, p.tofacecardtype, p.nontofacecardtype,
-		p.tofacepaymentrouteid, p.nontofacepaymentrouteid, p.appcompany,
-		p.paymentmerchantid, p.merchantbasicinfoname, p.qrgatewaybranchcode, p.onepaymerchantcode, p.lastmodifieddate
+		p.tofacepaymentrouteid, p.nontofacepaymentrouteid, p.appcompany, p.lastmodifieddate
 		FROM paymentsystemlinkinfor p
 		WHERE(date_trunc('second',p.lastmodifieddate) >=${startTime})
 		ORDER BY
@@ -51,8 +50,7 @@
 		p.nontofaceencryptkey,
 		p.nontofaceencryptiv, p.nontofacebasicauthid,
 		p.nontofacebasicauthpassword, p.nontofacecardtype,
-		p.nontofacepaymentrouteid, p.appcompany,
-		p.paymentmerchantid, p.merchantbasicinfoname, p.qrgatewaybranchcode, p.onepaymerchantcode
+		p.nontofacepaymentrouteid, p.appcompany
 		FROM paymentsystemlinkinforsync p WHERE
 		p.sfid IN (${ids}) ORDER BY p.sfid DESC
 	</select>
@@ -78,8 +76,7 @@
 		p.nontofacebasicauthid,
 		p.tofacebasicauthpassword,
 		p.nontofacebasicauthpassword, p.tofacecardtype, p.nontofacecardtype,
-		p.tofacepaymentrouteid, p.nontofacepaymentrouteid, p.appcompany,
-		p.paymentmerchantid, p.merchantbasicinfoname, p.qrgatewaybranchcode, p.onepaymerchantcode, p.lastmodifieddate
+		p.tofacepaymentrouteid, p.nontofacepaymentrouteid, p.appcompany, p.lastmodifieddate
 		FROM
 		paymentsystemlinkinfor p WHERE
 		p.sfid=#{id}
@@ -114,8 +111,7 @@
 		nontofacebasicauthpassword,
 		tofacecardtype, nontofacecardtype,
 		tofacepaymentrouteid, nontofacepaymentrouteid, appcompany,
-		paymentmerchantid, merchantbasicinfoname, qrgatewaybranchcode,
-		onepaymerchantcode, lastmodifieddate)
+		lastmodifieddate)
 		VALUES(#{sfid}, #{internetpaymerstore}, #{linepaychannelid},
 		#{linepaychannelsecret}, #{aupaystoreid}, #{serviceid},
 		#{tofacemerchantid}, #{nontofacemerchantid},
@@ -129,8 +125,7 @@
 		#{nontofacebasicauthpassword},
 		#{tofacecardtype}, #{nontofacecardtype},
 		#{tofacepaymentrouteid}, #{nontofacepaymentrouteid}, #{appcompany},
-		#{paymentmerchantid}, #{merchantbasicinfoname}, #{qrgatewaybranchcode},
-		#{onepaymerchantcode}, #{lastmodifieddate})
+		#{lastmodifieddate})
 	</insert>
 
 	<update id="updatePaymentSystemLinkInfor"
@@ -157,10 +152,6 @@
 		tofacepaymentrouteid=#{tofacepaymentrouteid},
 		nontofacepaymentrouteid=#{nontofacepaymentrouteid},
 		appcompany=#{appcompany},
-		paymentmerchantid=#{paymentmerchantid},
-		merchantbasicinfoname=#{merchantbasicinfoname},
-		qrgatewaybranchcode=#{qrgatewaybranchcode},
-		onepaymerchantcode=#{onepaymerchantcode},
 		lastmodifieddate=#{lastmodifieddate}
 		WHERE sfid =
 		#{sfid}
@@ -183,8 +174,7 @@
 		nontofacebasicauthpassword,
 		tofacecardtype, nontofacecardtype,
 		tofacepaymentrouteid, nontofacepaymentrouteid, appcompany,
-		paymentmerchantid, merchantbasicinfoname, qrgatewaybranchcode,
-		onepaymerchantcode, syncedtime)
+		syncedtime)
 		VALUES(#{sfid},
 		#{internetpaymerstore}, #{linepaychannelid},
 		#{linepaychannelsecret}, #{aupaystoreid}, #{serviceid},
@@ -199,8 +189,7 @@
 		#{nontofacebasicauthpassword},
 		#{tofacecardtype}, #{nontofacecardtype},
 		#{tofacepaymentrouteid}, #{nontofacepaymentrouteid}, #{appcompany},
-		#{paymentmerchantid}, #{merchantbasicinfoname}, #{qrgatewaybranchcode},
-		#{onepaymerchantcode}, #{syncedtime})
+		#{syncedtime})
 	</insert>
 
 	<update id="updatePaymentSystemLinkInforSync"
@@ -226,11 +215,7 @@
 		nontofacecardtype=#{nontofacecardtype},
 		tofacepaymentrouteid=#{tofacepaymentrouteid},
 		nontofacepaymentrouteid=#{nontofacepaymentrouteid},
-		appcompany=#{appcompany}, 
-		paymentmerchantid=#{paymentmerchantid},
-		merchantbasicinfoname=#{merchantbasicinfoname},
-		qrgatewaybranchcode=#{qrgatewaybranchcode},
-		onepaymerchantcode=#{onepaymerchantcode},
+		appcompany=#{appcompany},
 		syncedtime=#{syncedtime}
 		WHERE sfid =
 		#{sfid}
