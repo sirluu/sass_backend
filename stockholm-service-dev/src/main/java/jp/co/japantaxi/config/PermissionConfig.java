@@ -18,13 +18,13 @@ public class PermissionConfig {
 
   static Logger LOGGER = LoggerFactory.getLogger(PermissionConfig.class);
 
-  @Value("${account.api}")
+  @Value("${shanghai.account.url}")
   private String api;
 
   public JSONArray getPermissionGroups(String sesssion) {
     JSONArray jsonArray = new JSONArray();
     try {
-      URL url = new URL(api);
+      URL url = new URL(api + "/self");
       HttpURLConnection con = (HttpURLConnection) url.openConnection();
       con.setRequestMethod("GET");
       con.setRequestProperty("Cookie", "JTX_SESSION=" + sesssion);
