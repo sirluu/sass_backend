@@ -165,25 +165,29 @@ public class Utility {
     }
     return listId;
   }
-
-  public static Map<String, String> getHeadersInfo(HttpServletRequest request) {
-    Map<String, String> map = new HashMap<String, String>();
+  
+  
+  /**
+   * ‚©‚çƒZƒbƒVƒ‡ƒ“•¶Žš—ñ‚ðŽæ“¾ Header
+   * @param request
+   * @return
+   */
+  public static String extractHeaders(HttpServletRequest request) {
+    Map<String, String> header = new HashMap<>();
     Enumeration<String> headerNames = request.getHeaderNames();
     while (headerNames.hasMoreElements()) {
-      String key = (String) headerNames.nextElement();
+      String key = headerNames.nextElement();
       String value = request.getHeader(key);
-      map.put(key, value);
+      header.put(key, value);
     }
-    return map;
-  }
-  
-  public static String extractCookie(Map<String, String> header) {
     if (header.containsKey("jtx_session")) {
-      return "JTX_SESSION=" + header.get("jtx_session");
-    } else if (header.containsKey("cookie")) {
-      return header.get("cookie");
+      return "JTX_SESSION=" + header.get("JTX_SESSION");
+    } else if (header.containsKey("Cookie")) {
+      return header.get("Cookie");
+    } else if (header.containsKey("Authorization")) {
+      return "JTX_SESSION=" + header.get("Authorization".replace("Bearer ", ""));
+    } else {
+      return null;
     }
-    return null;
   }
-  
 }

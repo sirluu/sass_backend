@@ -5,8 +5,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import jp.co.japantaxi.config.CacheManagerConfig;
-import jp.co.japantaxi.config.PermissionConfig;
+import jp.co.japantaxi.config.SecurityConfig;
 import jp.co.japantaxi.config.SalesforceConfig;
 import jp.co.japantaxi.mapper.stockholm.AccountMapper;
 import jp.co.japantaxi.mapper.stockholm.AppCompanyMapper;
@@ -31,6 +31,7 @@ import jp.co.japantaxi.mapper.stockholm.FareTableMapper;
 import jp.co.japantaxi.mapper.stockholm.PaymentSystemLinkInforMapper;
 import jp.co.japantaxi.mapper.stockholm.WorkerMapper;
 import jp.co.japantaxi.model.BatchStatus;
+import jp.co.japantaxi.model.ManhattanAccount;
 import jp.co.japantaxi.model.ParameterRequest;
 import jp.co.japantaxi.model.Worker;
 import jp.co.japantaxi.utils.Constant;
@@ -89,7 +90,7 @@ public class WorkerController {
   public SalesforceConfig salesforceConfig;
 
   @Autowired
-  public PermissionConfig permissionConfig;
+  public SecurityConfig securityConfig;
   
   public void insertWorker(Worker worker) {
     try {
@@ -239,9 +240,10 @@ public class WorkerController {
       // バッチ状態テーブルの起動モードを更新する
       String startMode = System.getProperty(Constant.START_MODE).toUpperCase();
       if (Constant.STARTMODE.USER.value.equalsIgnoreCase(startMode)) {
-        Map<String, String> map = Utility.getHeadersInfo(request);
-        if (!permissionConfig.checkApprove(permissionConfig.getPermissionGroups(Utility.extractCookie(map)))) {
-          res.add(String.format("USER has not synchronize permission"));
+        JSONArray jsonArray = securityConfig.getPermissionGroups(Utility.extractHeaders(request));
+        List<ManhattanAccount.PermissionGroups> groups = securityConfig.convertPermissionGroups(jsonArray);
+        if (!securityConfig.checkApprove(groups)) {
+          res.add(String.format("このアカウントは権限を許可されていないです。詳細については、システム管理者に問い合わせください"));
           return new ResponseEntity<>(res, HttpStatus.FORBIDDEN);
         }
       }
