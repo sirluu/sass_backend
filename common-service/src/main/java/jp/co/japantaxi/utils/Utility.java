@@ -184,7 +184,7 @@ public class Utility {
     } else if (header.containsKey("Cookie")) {
       return header.get("Cookie");
     } else if (header.containsKey("Authorization")) {
-      return "JTX_SESSION=" + header.get("Authorization".replace("Bearer ", ""));
+      return "JTX_SESSION=" + header.get("Authorization").replace("Bearer ", "");
     } else {
       return null;
     }
