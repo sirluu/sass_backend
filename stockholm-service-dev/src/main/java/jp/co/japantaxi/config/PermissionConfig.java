@@ -24,10 +24,10 @@ public class PermissionConfig {
   public JSONArray getPermissionGroups(String sesssion) {
     JSONArray jsonArray = new JSONArray();
     try {
-      URL url = new URL(api + "/self");
+      URL url = new URL(api+"/self");
       HttpURLConnection con = (HttpURLConnection) url.openConnection();
       con.setRequestMethod("GET");
-      con.setRequestProperty("Cookie", "JTX_SESSION=" + sesssion);
+      con.setRequestProperty("Cookie", sesssion);
       String tmp = null;
       BufferedReader br =
           new BufferedReader(new InputStreamReader(con.getInputStream(), Charset.forName("UTF-8")));
@@ -40,7 +40,7 @@ public class PermissionConfig {
       con.disconnect();
       jsonArray = jsonObject.getJSONArray("permissionGroups");
     } catch (IOException e) {
-      LOGGER.warn("JTX_SESSION is null >>> " + e.getMessage());
+      LOGGER.warn("このアカウントは権限を許可されていないです。詳細については、システム管理者に問い合わせください");
     }
     return jsonArray;
   }

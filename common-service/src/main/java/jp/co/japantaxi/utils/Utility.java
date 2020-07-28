@@ -177,9 +177,11 @@ public class Utility {
     return map;
   }
   
-  public static String extractCookie(Map<String, String> map) {
-    if (map.containsKey("jtx_session")) {
-      return map.get("jtx_session");
+  public static String extractCookie(Map<String, String> header) {
+    if (header.containsKey("jtx_session")) {
+      return "JTX_SESSION=" + header.get("jtx_session");
+    } else if (header.containsKey("cookie")) {
+      return header.get("cookie");
     }
     return null;
   }
