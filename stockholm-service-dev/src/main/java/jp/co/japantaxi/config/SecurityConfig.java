@@ -67,6 +67,8 @@ public class SecurityConfig {
         permisArray = jsonObject.getJSONArray("permissions");
         for (int j = 0; j < permisArray.length(); j++) {
           jsonObject = permisArray.getJSONObject(j);
+          permisList = new ArrayList<>();
+          permission = new ManhattanAccount.Permission();
           permission.setCreate(Boolean.valueOf(jsonObject.get("create").toString().trim()));
           permission.setDelete(Boolean.valueOf(jsonObject.get("delete").toString().trim()));
           permission.setPermissionId(Integer.parseInt(jsonObject.get("permissionId").toString().trim()));
