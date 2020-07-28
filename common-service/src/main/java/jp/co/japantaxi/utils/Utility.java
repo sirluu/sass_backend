@@ -168,7 +168,6 @@ public class Utility {
   
   
   /**
-   * ‚©‚çƒZƒbƒVƒ‡ƒ“•¶š—ñ‚ğæ“¾ Header
    * @param request
    * @return
    */
