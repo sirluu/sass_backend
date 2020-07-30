@@ -239,14 +239,14 @@ public class WorkerController {
       System.setProperty(Constant.START_MODE, parameterRequest.getStartMode().toUpperCase());
       // バッチ状態テーブルの起動モードを更新する
       String startMode = System.getProperty(Constant.START_MODE).toUpperCase();
-      if (Constant.STARTMODE.USER.value.equalsIgnoreCase(startMode)) {
-        JSONArray jsonArray = securityConfig.getPermissionGroups(Utility.extractHeaders(request));
-        List<ManhattanAccount.PermissionGroups> groups = securityConfig.convertPermissionGroups(jsonArray);
-        if (!securityConfig.checkApprove(groups)) {
-          res.add(String.format("このアカウントは権限を許可されていないです。詳細については、システム管理者に問い合わせください"));
-          return new ResponseEntity<>(res, HttpStatus.FORBIDDEN);
-        }
-      }
+//      if (Constant.STARTMODE.USER.value.equalsIgnoreCase(startMode)) {
+//        JSONArray jsonArray = securityConfig.getPermissionGroups(Utility.extractHeaders(request));
+//        List<ManhattanAccount.PermissionGroups> groups = securityConfig.convertPermissionGroups(jsonArray);
+//        if (!securityConfig.checkApprove(groups)) {
+//          res.add(String.format("このアカウントは権限を許可されていないです。詳細については、システム管理者に問い合わせください"));
+//          return new ResponseEntity<>(res, HttpStatus.FORBIDDEN);
+//        }
+//      }
       batchController.updateBatchStatus(batchStatus, true, false, false, false);
 
       Constant.PROCESSMODE processMode = Constant.PROCESSMODE.NULL;
