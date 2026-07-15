@@ -1,7 +1,5 @@
-import json
 import logging
 import uuid
-from datetime import datetime
 
 from models.product import Product
 from services.product_service import ProductService
@@ -10,22 +8,28 @@ logger = logging.getLogger(__name__)
 
 
 class DatabaseSeeder:
-    """Utility class for seeding the database with initial data"""
+    """Utility class for seeding the database with paint product data."""
 
     def __init__(self, db):
         self.db = db
         self.product_service = ProductService()
 
-    def seed_products(self):
-        """Seed the database with sample products"""
+    def seed_products(self, force=False):
+        """Seed the database with sample paint products.
+
+        Args:
+            force: If True, delete existing products and reseed from scratch.
+        """
         try:
-            if Product.query.count() > 0:
+            if Product.query.count() > 0 and not force:
                 logger.info("Products already exist, skipping seeding")
                 return
 
-            products_data = self._get_sample_products()
+            if force and Product.query.count() > 0:
+                self._clear_products()
 
-            logger.info(f"Seeding {len(products_data)} products...")
+            products_data = self._get_sample_products()
+            logger.info(f"Seeding {len(products_data)} paint products...")
 
             for product_data in products_data:
                 try:
@@ -46,314 +50,686 @@ class DatabaseSeeder:
                     self.product_service.vector_service.upsert_product_embedding(
                         product.id, search_text, metadata
                     )
-
                     product.embedding_id = product.id
 
                 except Exception as e:
                     logger.error(
-                        f"Error seeding product {product_data.get('name', 'Unknown')}: {str(e)}"
+                        f"Error seeding product {product_data.get('name', 'Unknown')}: {e}"
                     )
                     continue
 
             self.db.session.commit()
-            logger.info("Products seeded successfully")
+            logger.info("Paint products seeded successfully")
 
         except Exception as e:
-            logger.error(f"Error seeding products: {str(e)}")
+            logger.error(f"Error seeding products: {e}")
             self.db.session.rollback()
             raise
 
+    def _clear_products(self):
+        """Remove all products from DB and Pinecone."""
+        products = Product.query.all()
+        for product in products:
+            try:
+                self.product_service.vector_service.delete_product_embedding(product.id)
+            except Exception as e:
+                logger.warning(f"Could not delete embedding for {product.id}: {e}")
+
+        Product.query.delete()
+        self.db.session.commit()
+        logger.info(f"Cleared {len(products)} existing products")
+
     def _get_sample_products(self):
-        """Get sample product data"""
+        """Sample paint products for interior/exterior retail."""
         return [
+            # ── Sơn nội thất ──────────────────────────────────────────────
             {
                 "id": str(uuid.uuid4()),
-                "name": "iPhone 15 Pro",
-                "description": "Latest iPhone with titanium design, A17 Pro chip, and advanced camera system",
-                "price": 999.0,
-                "original_price": 1099.0,
-                "category": "Electronics",
-                "subcategory": "Smartphones",
-                "brand": "Apple",
+                "name": "Dulux Easy Clean Matt - Trắng Tuyết",
+                "description": (
+                    "Sơn nội thất cao cấp dòng Easy Clean, hoàn thiện mờ (matt), "
+                    "dễ lau chùi vết bẩn trên tường phòng khách và phòng ăn. "
+                    "Không mùi, an toàn cho gia đình có trẻ em. "
+                    "Định mức phủ 10-12 m²/lít/lớp trên bề mặt đã bả."
+                ),
+                "price": 890000,
+                "original_price": 990000,
+                "category": "Sơn nội thất",
+                "subcategory": "Sơn mờ nội thất",
+                "brand": "Dulux",
                 "rating": 4.8,
-                "review_count": 2847,
-                "image_url": "https://images.pexels.com/photos/18525574/pexels-photo-18525574.jpeg",
-                "stock": 45,
+                "review_count": 1240,
+                "image_url": "https://images.pexels.com/photos/1669754/pexels-photo-1669754.jpeg",
+                "stock": 85,
                 "features": [
-                    "A17 Pro Chip",
-                    '6.1" Display',
-                    "48MP Camera",
-                    "Titanium Build",
+                    "Hoàn thiện mờ (Matt)",
+                    "Dễ lau chùi",
+                    "Không mùi",
+                    "Quy cách 5L",
+                    "Phù hợp phòng khách, phòng ăn",
+                    "Định mức 10-12 m²/lít/lớp",
                 ],
                 "is_on_sale": True,
-                "sale_percentage": 9,
+                "sale_percentage": 10,
             },
             {
                 "id": str(uuid.uuid4()),
-                "name": "Samsung Galaxy S24 Ultra",
-                "description": "Premium Android flagship with S Pen, advanced AI features, and 200MP camera",
-                "price": 1199.0,
-                "category": "Electronics",
-                "subcategory": "Smartphones",
-                "brand": "Samsung",
-                "rating": 4.7,
-                "review_count": 1923,
-                "image_url": "https://images.pexels.com/photos/30466741/pexels-photo-30466741.jpeg",
-                "stock": 32,
-                "features": ["200MP Camera", "S Pen", '6.8" Display', "AI Features"],
-            },
-            {
-                "id": str(uuid.uuid4()),
-                "name": "Google Pixel 8 Pro",
-                "description": "AI-powered photography, pure Android experience, and advanced computational features",
-                "price": 899.0,
-                "category": "Electronics",
-                "subcategory": "Smartphones",
-                "brand": "Google",
-                "rating": 4.6,
-                "review_count": 1456,
-                "image_url": "https://images.pexels.com/photos/32218867/pexels-photo-32218867.jpeg",
-                "stock": 28,
+                "name": "Dulux Ambiance Diamond Matt - Xám Bạc",
+                "description": (
+                    "Sơn nội thất cao cấp nhất dòng Ambiance với công nghệ Diamond Matt, "
+                    "bề mặt mịn như lụa, chống bám bụi. Lý tưởng cho phòng ngủ master "
+                    "và không gian sang trọng. Màu xám bạc hiện đại, phong cách Bắc Âu."
+                ),
+                "price": 1450000,
+                "category": "Sơn nội thất",
+                "subcategory": "Sơn mờ cao cấp",
+                "brand": "Dulux",
+                "rating": 4.9,
+                "review_count": 876,
+                "image_url": "https://images.pexels.com/photos/1669754/pexels-photo-1669754.jpeg",
+                "stock": 42,
                 "features": [
-                    "AI Photography",
-                    "Pure Android",
-                    '6.7" Display',
-                    "Titan M2 Chip",
+                    "Công nghệ Diamond Matt",
+                    "Bề mặt mịn như lụa",
+                    "Chống bám bụi",
+                    "Quy cách 5L",
+                    "Phù hợp phòng ngủ cao cấp",
+                    "Màu xám Bắc Âu",
                 ],
             },
             {
                 "id": str(uuid.uuid4()),
-                "name": 'MacBook Pro 16" M3 Max',
-                "description": "Ultimate creative powerhouse with M3 Max chip, stunning Liquid Retina XDR display",
-                "price": 2499.0,
-                "original_price": 2699.0,
-                "category": "Electronics",
-                "subcategory": "Laptops",
-                "brand": "Apple",
-                "rating": 4.9,
-                "review_count": 987,
-                "image_url": "https://images.pexels.com/photos/18105/pexels-photo.jpg",
-                "stock": 15,
+                "name": "Jotun Jotashield Colour - Kem Ấm",
+                "description": (
+                    "Sơn nội thất Jotashield Colour với bảng màu phong phú, "
+                    "độ che phủ cao, bền màu lâu. Phù hợp phòng ngủ, phòng làm việc. "
+                    "Màu kem ấm tạo cảm giác ấm cúng, thư giãn."
+                ),
+                "price": 720000,
+                "category": "Sơn nội thất",
+                "subcategory": "Sơn mờ nội thất",
+                "brand": "Jotun",
+                "rating": 4.7,
+                "review_count": 2103,
+                "image_url": "https://images.pexels.com/photos/1669754/pexels-photo-1669754.jpeg",
+                "stock": 120,
                 "features": [
-                    "M3 Max Chip",
-                    '16" Liquid Retina XDR',
-                    "36GB RAM",
-                    "1TB SSD",
+                    "Độ che phủ cao",
+                    "Bền màu",
+                    "Quy cách 5L",
+                    "Phù hợp phòng ngủ",
+                    "Màu kem ấm",
+                    "Định mức 12-14 m²/lít/lớp",
+                ],
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "name": "Jotun Lady Balance - Xanh Mint Nhẹ",
+                "description": (
+                    "Sơn nội thất Jotun Lady Balance không chứa APEO, an toàn cho phòng em bé "
+                    "và phụ nữ mang thai. Khử mùi, chống nấm mốc trong nhà. "
+                    "Màu xanh mint nhẹ nhàng, tươi mát cho phòng trẻ em."
+                ),
+                "price": 980000,
+                "category": "Sơn nội thất",
+                "subcategory": "Sơn phòng em bé",
+                "brand": "Jotun",
+                "rating": 4.9,
+                "review_count": 654,
+                "image_url": "https://images.pexels.com/photos/1669754/pexels-photo-1669754.jpeg",
+                "stock": 56,
+                "features": [
+                    "Không APEO",
+                    "An toàn phòng em bé",
+                    "Khử mùi",
+                    "Chống nấm mốc trong nhà",
+                    "Quy cách 5L",
+                    "Màu xanh mint",
+                ],
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "name": "Nippon Paint Odour-less AirCare - Trắng Sứ",
+                "description": (
+                    "Sơn nội thất Nippon Odour-less AirCare lọc không khí, "
+                    "giảm formaldehyde, phù hợp phòng ngủ và phòng khách. "
+                    "Không mùi ngay khi sơn, thân thiện môi trường."
+                ),
+                "price": 850000,
+                "original_price": 920000,
+                "category": "Sơn nội thất",
+                "subcategory": "Sơn không mùi",
+                "brand": "Nippon Paint",
+                "rating": 4.6,
+                "review_count": 1890,
+                "image_url": "https://images.pexels.com/photos/1669754/pexels-photo-1669754.jpeg",
+                "stock": 95,
+                "features": [
+                    "Lọc không khí",
+                    "Giảm formaldehyde",
+                    "Không mùi",
+                    "Quy cách 5L",
+                    "Phù hợp phòng ngủ",
+                    "Định mức 11-13 m²/lít/lớp",
+                ],
+                "is_on_sale": True,
+                "sale_percentage": 8,
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "name": "Kova Semi-Gloss - Trắng Nhà Vệ Sinh",
+                "description": (
+                    "Sơn nội thất Kova bán bóng (semi-gloss), chống ẩm mốc, "
+                    "chống thấm nước, dễ lau chùi. Chuyên dụng cho nhà vệ sinh, "
+                    "phòng tắm, bếp và khu vực ẩm ướt."
+                ),
+                "price": 380000,
+                "category": "Sơn nội thất",
+                "subcategory": "Sơn bán bóng chống ẩm",
+                "brand": "Kova",
+                "rating": 4.5,
+                "review_count": 3421,
+                "image_url": "https://images.pexels.com/photos/1669754/pexels-photo-1669754.jpeg",
+                "stock": 200,
+                "features": [
+                    "Hoàn thiện bán bóng",
+                    "Chống ẩm mốc",
+                    "Chống thấm nước",
+                    "Dễ lau chùi",
+                    "Quy cách 5L",
+                    "Phù hợp nhà vệ sinh, phòng tắm",
+                ],
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "name": "MyKolor Charming Matt - Hồng Pastel",
+                "description": (
+                    "Sơn nội thất MyKolor Charming Matt giá tốt, màu pastel dễ thương "
+                    "cho phòng ngủ bé gái và không gian trang trí. "
+                    "Độ che phủ tốt trên tường đã bả mịn."
+                ),
+                "price": 420000,
+                "category": "Sơn nội thất",
+                "subcategory": "Sơn mờ giá rẻ",
+                "brand": "MyKolor",
+                "rating": 4.3,
+                "review_count": 987,
+                "image_url": "https://images.pexels.com/photos/1669754/pexels-photo-1669754.jpeg",
+                "stock": 150,
+                "features": [
+                    "Giá tốt",
+                    "Màu pastel",
+                    "Hoàn thiện mờ",
+                    "Quy cách 5L",
+                    "Phù hợp phòng trẻ em",
+                    "Định mức 10 m²/lít/lớp",
+                ],
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "name": "Dulux Wash & Wear Gloss - Trắng Bóng",
+                "description": (
+                    "Sơn nội thất bóng (gloss) dòng Wash & Wear, bề mặt sáng bóng, "
+                    "dễ vệ sinh, chống lem vết. Phù hợp phòng bếp, hành lang và "
+                    "khu vực cần thường xuyên lau chùi."
+                ),
+                "price": 950000,
+                "category": "Sơn nội thất",
+                "subcategory": "Sơn bóng nội thất",
+                "brand": "Dulux",
+                "rating": 4.6,
+                "review_count": 756,
+                "image_url": "https://images.pexels.com/photos/1669754/pexels-photo-1669754.jpeg",
+                "stock": 68,
+                "features": [
+                    "Hoàn thiện bóng (Gloss)",
+                    "Dễ vệ sinh",
+                    "Chống lem vết",
+                    "Quy cách 5L",
+                    "Phù hợp phòng bếp, hành lang",
+                ],
+            },
+            # ── Sơn ngoại thất ────────────────────────────────────────────
+            {
+                "id": str(uuid.uuid4()),
+                "name": "Dulux Weathershield Powerflexx - Trắng Ngà",
+                "description": (
+                    "Sơn ngoại thất cao cấp Dulux Weathershield Powerflexx chống nứt, "
+                    "chống thấm, chịu thời tiết khắc nghiệt. Công nghệ Powerflexx co giãn "
+                    "theo nhiệt độ, bảo vệ mặt tiền nhà và tường ngoài trời lâu dài."
+                ),
+                "price": 1280000,
+                "original_price": 1380000,
+                "category": "Sơn ngoại thất",
+                "subcategory": "Sơn chống thời tiết",
+                "brand": "Dulux",
+                "rating": 4.9,
+                "review_count": 1567,
+                "image_url": "https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg",
+                "stock": 74,
+                "features": [
+                    "Chống nứt Powerflexx",
+                    "Chống thấm",
+                    "Chịu thời tiết",
+                    "Quy cách 5L",
+                    "Phù hợp mặt tiền, tường ngoài",
+                    "Định mức 8-10 m²/lít/lớp",
                 ],
                 "is_on_sale": True,
                 "sale_percentage": 7,
             },
             {
                 "id": str(uuid.uuid4()),
-                "name": "Dell XPS 13 Plus",
-                "description": "Ultra-premium Windows laptop with stunning OLED display and sleek design",
-                "price": 1399.0,
-                "category": "Electronics",
-                "subcategory": "Laptops",
-                "brand": "Dell",
-                "rating": 4.5,
-                "review_count": 743,
-                "image_url": "https://images.pexels.com/photos/3776438/pexels-photo-3776438.jpeg",
-                "stock": 22,
-                "features": [
-                    '13.4" OLED',
-                    "Intel 12th Gen",
-                    "16GB RAM",
-                    "Premium Build",
-                ],
-            },
-            {
-                "id": str(uuid.uuid4()),
-                "name": "ASUS ROG Zephyrus G16",
-                "description": "High-performance gaming laptop with RTX 4070, AMD Ryzen 9, and 240Hz display",
-                "price": 1899.0,
-                "category": "Electronics",
-                "subcategory": "Gaming Laptops",
-                "brand": "ASUS",
-                "rating": 4.7,
-                "review_count": 634,
-                "image_url": "https://images.pexels.com/photos/12877878/pexels-photo-12877878.jpeg",
-                "stock": 18,
-                "features": ["RTX 4070", "AMD Ryzen 9", "240Hz Display", "ROG Design"],
-            },
-            {
-                "id": str(uuid.uuid4()),
-                "name": "Sony WH-1000XM5",
-                "description": "Industry-leading noise canceling headphones with exceptional sound quality",
-                "price": 349.0,
-                "original_price": 399.0,
-                "category": "Electronics",
-                "subcategory": "Headphones",
-                "brand": "Sony",
+                "name": "Jotun Jotashield Extreme - Xám Đá",
+                "description": (
+                    "Sơn ngoại thất Jotun Jotashield Extreme chống phai màu, "
+                    "chống nấm mốc, chống kiềm. Bảo vệ tường ngoài trời 10+ năm. "
+                    "Màu xám đá sang trọng cho biệt thự và nhà phố hiện đại."
+                ),
+                "price": 1150000,
+                "category": "Sơn ngoại thất",
+                "subcategory": "Sơn chống thời tiết",
+                "brand": "Jotun",
                 "rating": 4.8,
-                "review_count": 3421,
-                "image_url": "https://images.pexels.com/photos/10292805/pexels-photo-10292805.jpeg",
-                "stock": 67,
+                "review_count": 2340,
+                "image_url": "https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg",
+                "stock": 88,
                 "features": [
-                    "Active Noise Canceling",
-                    "30hr Battery",
-                    "Hi-Res Audio",
-                    "Touch Controls",
-                ],
-                "is_on_sale": True,
-                "sale_percentage": 13,
-            },
-            {
-                "id": str(uuid.uuid4()),
-                "name": "Apple AirPods Pro (2nd Gen)",
-                "description": "Advanced active noise cancellation, spatial audio, and seamless Apple integration",
-                "price": 249.0,
-                "category": "Electronics",
-                "subcategory": "Earbuds",
-                "brand": "Apple",
-                "rating": 4.7,
-                "review_count": 2847,
-                "image_url": "https://images.pexels.com/photos/3825517/pexels-photo-3825517.jpeg",
-                "stock": 89,
-                "features": [
-                    "Active Noise Canceling",
-                    "Spatial Audio",
-                    "H2 Chip",
-                    "MagSafe Case",
+                    "Chống phai màu 10+ năm",
+                    "Chống nấm mốc",
+                    "Chống kiềm",
+                    "Quy cách 5L",
+                    "Phù hợp biệt thự, nhà phố",
+                    "Màu xám đá",
                 ],
             },
             {
                 "id": str(uuid.uuid4()),
-                "name": "Bose QuietComfort Ultra",
-                "description": "Premium comfort with world-class noise cancellation and immersive audio",
-                "price": 429.0,
-                "category": "Electronics",
-                "subcategory": "Headphones",
-                "brand": "Bose",
+                "name": "Kova Son Ngoai That - Vàng Kem",
+                "description": (
+                    "Sơn ngoại thất Kova giá hợp lý, chống thấm, chống muối hóa. "
+                    "Phù hợp nhà ở dân dụng, công trình sửa chữa. "
+                    "Màu vàng kem ấm áp cho mặt tiền nhà phố."
+                ),
+                "price": 520000,
+                "category": "Sơn ngoại thất",
+                "subcategory": "Sơn ngoại thất giá rẻ",
+                "brand": "Kova",
+                "rating": 4.4,
+                "review_count": 4567,
+                "image_url": "https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg",
+                "stock": 180,
+                "features": [
+                    "Giá hợp lý",
+                    "Chống thấm",
+                    "Chống muối hóa",
+                    "Quy cách 5L",
+                    "Phù hợp nhà dân dụng",
+                    "Định mức 8 m²/lít/lớp",
+                ],
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "name": "Nippon Paint Weatherbond - Xanh Lá Nhạt",
+                "description": (
+                    "Sơn ngoại thất Nippon Weatherbond chống tia UV, chống phai màu, "
+                    "thoát hơi ẩm tốt. Phù hợp vùng nhiệt đới nóng ẩm như Việt Nam. "
+                    "Màu xanh lá nhạt tươi mát cho sân vườn và ban công."
+                ),
+                "price": 780000,
+                "category": "Sơn ngoại thất",
+                "subcategory": "Sơn chống UV",
+                "brand": "Nippon Paint",
                 "rating": 4.6,
                 "review_count": 1234,
-                "image_url": "https://images.pexels.com/photos/7748203/pexels-photo-7748203.jpeg",
-                "stock": 34,
+                "image_url": "https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg",
+                "stock": 92,
                 "features": [
-                    "QuietComfort Technology",
-                    "Spatial Audio",
-                    "Premium Materials",
-                    "24hr Battery",
+                    "Chống tia UV",
+                    "Chống phai màu",
+                    "Thoát hơi ẩm",
+                    "Quy cách 5L",
+                    "Phù hợp vùng nhiệt đới",
                 ],
             },
             {
                 "id": str(uuid.uuid4()),
-                "name": "PlayStation 5 Slim",
-                "description": "Latest PlayStation console with enhanced performance and sleeker design",
-                "price": 499.0,
-                "category": "Electronics",
-                "subcategory": "Gaming Consoles",
-                "brand": "Sony",
-                "rating": 4.8,
-                "review_count": 4567,
-                "image_url": "https://images.pexels.com/photos/13189272/pexels-photo-13189272.jpeg",
-                "stock": 12,
-                "features": [
-                    "Custom SSD",
-                    "4K Gaming",
-                    "Ray Tracing",
-                    "DualSense Controller",
-                ],
-            },
-            {
-                "id": str(uuid.uuid4()),
-                "name": "Xbox Series X",
-                "description": "Most powerful Xbox ever with 4K gaming, ray tracing, and quick resume",
-                "price": 499.0,
-                "category": "Electronics",
-                "subcategory": "Gaming Consoles",
-                "brand": "Microsoft",
+                "name": "Dulux Weathershield Anti-Mould - Trắng",
+                "description": (
+                    "Sơn ngoại thất chuyên chống nấm mốc Dulux Weathershield Anti-Mould. "
+                    "Ngăn nấm mốc phát triển trên tường ngoài trời, đặc biệt khu vực "
+                    "ẩm ướt, gần sông hồ, tầng hầm ngoài trời."
+                ),
+                "price": 1350000,
+                "category": "Sơn ngoại thất",
+                "subcategory": "Sơn chống nấm mốc",
+                "brand": "Dulux",
                 "rating": 4.7,
-                "review_count": 3456,
-                "image_url": "https://images.pexels.com/photos/5626726/pexels-photo-5626726.jpeg",
-                "stock": 8,
+                "review_count": 890,
+                "image_url": "https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg",
+                "stock": 55,
                 "features": [
-                    "12 TeraFLOPS",
-                    "4K/120fps",
-                    "Quick Resume",
-                    "Smart Delivery",
+                    "Chống nấm mốc chuyên dụng",
+                    "Chống thấm",
+                    "Chịu thời tiết",
+                    "Quy cách 5L",
+                    "Phù hợp khu vực ẩm ướt",
+                ],
+            },
+            # ── Sơn lót ───────────────────────────────────────────────────
+            {
+                "id": str(uuid.uuid4()),
+                "name": "Dulux Sealer Wall Sealer - Sơn Lót Nội Thất",
+                "description": (
+                    "Sơn lót nội thất Dulux Wall Sealer thấm sâu, tăng độ bám dính, "
+                    "giảm lượng sơn phủ. Bắt buộc sử dụng trước khi sơn phủ nội thất "
+                    "trên tường mới hoặc tường đã bả."
+                ),
+                "price": 450000,
+                "category": "Sơn lót",
+                "subcategory": "Sơn lót nội thất",
+                "brand": "Dulux",
+                "rating": 4.7,
+                "review_count": 2100,
+                "image_url": "https://images.pexels.com/photos/1669754/pexels-photo-1669754.jpeg",
+                "stock": 160,
+                "features": [
+                    "Thấm sâu",
+                    "Tăng độ bám dính",
+                    "Giảm lượng sơn phủ",
+                    "Quy cách 5L",
+                    "Dùng trước sơn phủ nội thất",
+                    "Định mức 12-15 m²/lít/lớp",
                 ],
             },
             {
                 "id": str(uuid.uuid4()),
-                "name": "Razer DeathAdder V3 Pro",
-                "description": "Professional esports gaming mouse with 90-hour battery and precision sensors",
-                "price": 149.0,
-                "original_price": 179.0,
-                "category": "Electronics",
-                "subcategory": "Gaming Accessories",
-                "brand": "Razer",
-                "rating": 4.6,
-                "review_count": 892,
-                "image_url": "https://images.pexels.com/photos/8176505/pexels-photo-8176505.jpeg",
-                "stock": 156,
+                "name": "Jotun Jotashield Primer - Sơn Lót Ngoại Thất",
+                "description": (
+                    "Sơn lót ngoại thất Jotun Jotashield Primer chống kiềm, "
+                    "chống muối hóa, tăng độ bám dính sơn phủ ngoại thất. "
+                    "Dùng trên tường gạch, bê tông, tường cũ trước khi sơn phủ."
+                ),
+                "price": 580000,
+                "category": "Sơn lót",
+                "subcategory": "Sơn lót ngoại thất",
+                "brand": "Jotun",
+                "rating": 4.8,
+                "review_count": 1456,
+                "image_url": "https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg",
+                "stock": 110,
                 "features": [
-                    "90hr Battery",
-                    "Focus Pro Sensor",
-                    "Ergonomic Design",
-                    "RGB Lighting",
+                    "Chống kiềm",
+                    "Chống muối hóa",
+                    "Tăng bám dính",
+                    "Quy cách 5L",
+                    "Dùng trước sơn phủ ngoại thất",
                 ],
-                "is_on_sale": True,
-                "sale_percentage": 17,
             },
             {
                 "id": str(uuid.uuid4()),
-                "name": "Amazon Echo Studio",
-                "description": "High-fidelity smart speaker with 3D audio and Dolby Atmos support",
-                "price": 199.0,
-                "category": "Electronics",
-                "subcategory": "Smart Speakers",
-                "brand": "Amazon",
-                "rating": 4.4,
-                "review_count": 2341,
-                "image_url": "https://images.pexels.com/photos/4790268/pexels-photo-4790268.jpeg",
+                "name": "Kova Son Lot Chong Kiem - Sơn Lót Chống Kiềm",
+                "description": (
+                    "Sơn lót chống kiềm Kova ngăn kiềm từ tường gạch, bê tông thấm ra "
+                    "làm bong tróc sơn phủ. Giá tốt, phù hợp công trình dân dụng "
+                    "và sửa chữa nhà cũ."
+                ),
+                "price": 320000,
+                "category": "Sơn lót",
+                "subcategory": "Sơn lót chống kiềm",
+                "brand": "Kova",
+                "rating": 4.5,
+                "review_count": 3210,
+                "image_url": "https://images.pexels.com/photos/1669754/pexels-photo-1669754.jpeg",
+                "stock": 220,
+                "features": [
+                    "Chống kiềm",
+                    "Ngăn bong tróc",
+                    "Giá tốt",
+                    "Quy cách 5L",
+                    "Phù hợp tường gạch, bê tông",
+                ],
+            },
+            # ── Sơn chống thấm ─────────────────────────────────────────────
+            {
+                "id": str(uuid.uuid4()),
+                "name": "Sika SikaTop Seal-107 - Sơn Chống Thấm Mái",
+                "description": (
+                    "Sơn chống thấm gốc xi măng Sika SikaTop Seal-107 cho mái nhà, "
+                    "sân thượng, ban công. Chống thấm 2 chiều, chống nứt, "
+                    "chịu nước đứng và áp lực nước nhẹ."
+                ),
+                "price": 1650000,
+                "category": "Sơn chống thấm",
+                "subcategory": "Chống thấm mái sân thượng",
+                "brand": "Sika",
+                "rating": 4.8,
+                "review_count": 567,
+                "image_url": "https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg",
                 "stock": 45,
                 "features": [
-                    "3D Audio",
-                    "Dolby Atmos",
-                    "Voice Control",
-                    "Smart Home Hub",
+                    "Gốc xi măng",
+                    "Chống thấm 2 chiều",
+                    "Chống nứt",
+                    "Quy cách 20kg",
+                    "Phù hợp mái nhà, sân thượng",
+                    "Định mức 1.5-2 kg/m²/lớp",
                 ],
             },
             {
                 "id": str(uuid.uuid4()),
-                "name": "Nest Thermostat",
-                "description": "Smart thermostat that learns your schedule and saves energy automatically",
-                "price": 249.0,
-                "category": "Electronics",
-                "subcategory": "Smart Home",
-                "brand": "Google",
-                "rating": 4.5,
-                "review_count": 1876,
-                "image_url": "https://images.pexels.com/photos/190048/pexels-photo-190048.jpeg",
+                "name": "Kova Son Chong Tham - Sơn Chống Thấm Tường",
+                "description": (
+                    "Sơn chống thấm Kova cho tường ngoài trời, tường nhà vệ sinh, "
+                    "hầm xe. Chống thấm ngược, chống ẩm mốc. "
+                    "Giá phải chăng cho công trình sửa chữa thấm dột."
+                ),
+                "price": 680000,
+                "category": "Sơn chống thấm",
+                "subcategory": "Chống thấm tường",
+                "brand": "Kova",
+                "rating": 4.4,
+                "review_count": 1890,
+                "image_url": "https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg",
+                "stock": 130,
+                "features": [
+                    "Chống thấm ngược",
+                    "Chống ẩm mốc",
+                    "Giá phải chăng",
+                    "Quy cách 5L",
+                    "Phù hợp tường thấm dột",
+                ],
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "name": "Dulux Aquatech Waterproofing - Chống Thấm Ban Công",
+                "description": (
+                    "Sơn chống thấm Dulux Aquatech chuyên dụng cho ban công, "
+                    "sân hiên, tường ngoài trời tiếp xúc nước mưa. "
+                    "Lớp màng chống thấm linh hoạt, chống nứt co ngót."
+                ),
+                "price": 1180000,
+                "category": "Sơn chống thấm",
+                "subcategory": "Chống thấm ban công",
+                "brand": "Dulux",
+                "rating": 4.7,
+                "review_count": 432,
+                "image_url": "https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg",
+                "stock": 38,
+                "features": [
+                    "Màng chống thấm linh hoạt",
+                    "Chống nứt co ngót",
+                    "Quy cách 5L",
+                    "Phù hợp ban công, sân hiên",
+                ],
+            },
+            # ── Bột trét ──────────────────────────────────────────────────
+            {
+                "id": str(uuid.uuid4()),
+                "name": "Dulux Wall Putty - Bột Trét Nội Thất",
+                "description": (
+                    "Bột trét tường nội thất Dulux Wall Putty tạo bề mặt phẳng mịn "
+                    "trước khi sơn lót và sơn phủ. Dễ thi công, khô nhanh, "
+                    "bám dính tốt trên tường gạch, bê tông, thạch cao."
+                ),
+                "price": 280000,
+                "category": "Bột trét",
+                "subcategory": "Bột trét nội thất",
+                "brand": "Dulux",
+                "rating": 4.6,
+                "review_count": 2780,
+                "image_url": "https://images.pexels.com/photos/1669754/pexels-photo-1669754.jpeg",
+                "stock": 250,
+                "features": [
+                    "Bề mặt phẳng mịn",
+                    "Dễ thi công",
+                    "Khô nhanh",
+                    "Quy cách 25kg",
+                    "Dùng trước sơn lót nội thất",
+                    "Định mức 1-1.5 kg/m²/lớp",
+                ],
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "name": "Jotun Jotun Putty - Bột Trét Ngoại Thất",
+                "description": (
+                    "Bột trét ngoại thất Jotun chống nứt, chống thấm, "
+                    "tạo nền bề mặt trước khi sơn lót và sơn phủ ngoại thất. "
+                    "Phù hợp tường ngoài trời, mặt tiền nhà."
+                ),
+                "price": 350000,
+                "category": "Bột trét",
+                "subcategory": "Bột trét ngoại thất",
+                "brand": "Jotun",
+                "rating": 4.7,
+                "review_count": 1560,
+                "image_url": "https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg",
+                "stock": 180,
+                "features": [
+                    "Chống nứt",
+                    "Chống thấm",
+                    "Quy cách 25kg",
+                    "Dùng trước sơn ngoại thất",
+                ],
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "name": "Kova Bot Tet - Bột Trét Giá Rẻ",
+                "description": (
+                    "Bột trét tường Kova giá rẻ, phù hợp công trình dân dụng, "
+                    "nhà sửa chữa. Tạo bề mặt phẳng trước khi sơn. "
+                    "Dùng được cho cả nội thất và ngoại thất."
+                ),
+                "price": 180000,
+                "category": "Bột trét",
+                "subcategory": "Bột trét đa năng",
+                "brand": "Kova",
+                "rating": 4.2,
+                "review_count": 5430,
+                "image_url": "https://images.pexels.com/photos/1669754/pexels-photo-1669754.jpeg",
+                "stock": 300,
+                "features": [
+                    "Giá rẻ",
+                    "Đa năng nội/ngoại thất",
+                    "Quy cách 25kg",
+                    "Dễ thi công",
+                ],
+            },
+            # ── Sơn trang trí / đặc biệt ───────────────────────────────────
+            {
+                "id": str(uuid.uuid4()),
+                "name": "Dulux Effects Metallic - Vàng Đồng Trang Trí",
+                "description": (
+                    "Sơn trang trí hiệu ứng kim loại Dulux Effects Metallic "
+                    "tạo điểm nhấn sang trọng cho tường feature wall phòng khách, "
+                    "quầy bar, phòng ngủ. Màu vàng đồng ấm áp."
+                ),
+                "price": 1850000,
+                "category": "Sơn trang trí",
+                "subcategory": "Sơn hiệu ứng kim loại",
+                "brand": "Dulux",
+                "rating": 4.8,
+                "review_count": 345,
+                "image_url": "https://images.pexels.com/photos/1669754/pexels-photo-1669754.jpeg",
+                "stock": 25,
+                "features": [
+                    "Hiệu ứng kim loại",
+                    "Feature wall",
+                    "Quy cách 1L",
+                    "Phù hợp phòng khách sang trọng",
+                    "Màu vàng đồng",
+                ],
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "name": "Jotun Fenomastic Wonderwall - Xanh Navy",
+                "description": (
+                    "Sơn trang trí Jotun Fenomastic Wonderwall màu đậm cao cấp, "
+                    "độ che phủ xuất sắc trên tường tối màu. "
+                    "Màu xanh navy sang trọng cho phòng làm việc, phòng ngủ phong cách tối giản."
+                ),
+                "price": 1120000,
+                "category": "Sơn trang trí",
+                "subcategory": "Sơn màu đậm cao cấp",
+                "brand": "Jotun",
+                "rating": 4.7,
+                "review_count": 678,
+                "image_url": "https://images.pexels.com/photos/1669754/pexels-photo-1669754.jpeg",
+                "stock": 40,
+                "features": [
+                    "Màu đậm che phủ tốt",
+                    "Phong cách tối giản",
+                    "Quy cách 5L",
+                    "Phù hợp phòng làm việc",
+                    "Màu xanh navy",
+                ],
+            },
+            {
+                "id": str(uuid.uuid4()),
+                "name": "Nippon Paint Spot-less Matt - Trắng Sáng",
+                "description": (
+                    "Sơn nội thất Nippon Spot-less Matt chống vết bẩn, "
+                    "vết bút bi, vết nước. Lý từng cho phòng trẻ em, "
+                    "phòng học tập và khu vực cần giữ sạch thường xuyên."
+                ),
+                "price": 920000,
+                "category": "Sơn nội thất",
+                "subcategory": "Sơn chống vết bẩn",
+                "brand": "Nippon Paint",
+                "rating": 4.6,
+                "review_count": 1120,
+                "image_url": "https://images.pexels.com/photos/1669754/pexels-photo-1669754.jpeg",
                 "stock": 78,
                 "features": [
-                    "Auto-Schedule",
-                    "Energy Saving",
-                    "Remote Control",
-                    "Voice Commands",
+                    "Chống vết bẩn",
+                    "Chống vết bút bi",
+                    "Hoàn thiện mờ",
+                    "Quy cách 5L",
+                    "Phù hợp phòng trẻ em, phòng học",
                 ],
             },
             {
                 "id": str(uuid.uuid4()),
-                "name": "Ring Video Doorbell Pro 2",
-                "description": "Advanced smart doorbell with 3D motion detection and crystal clear HD video",
-                "price": 279.0,
-                "original_price": 329.0,
-                "category": "Electronics",
-                "subcategory": "Security",
-                "brand": "Ring",
-                "rating": 4.3,
-                "review_count": 3421,
-                "image_url": "https://images.pexels.com/photos/9461215/pexels-photo-9461215.jpeg",
-                "stock": 23,
+                "name": "MyKolor Son Ngoai That Chiu Thoi Tiet - Cam Đất",
+                "description": (
+                    "Sơn ngoại thất MyKolor chịu thời tiết giá rẻ, "
+                    "chống phai màu cơ bản, phù hợp nhà cấp 4, nhà sửa chữa. "
+                    "Màu cam đất ấm áp cho mặt tiền nhà vùng nông thôn."
+                ),
+                "price": 450000,
+                "category": "Sơn ngoại thất",
+                "subcategory": "Sơn ngoại thất giá rẻ",
+                "brand": "MyKolor",
+                "rating": 4.1,
+                "review_count": 2340,
+                "image_url": "https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg",
+                "stock": 165,
                 "features": [
-                    "3D Motion Detection",
-                    "HD Video",
-                    "Two-Way Talk",
-                    "Night Vision",
+                    "Giá rẻ",
+                    "Chịu thời tiết cơ bản",
+                    "Quy cách 5L",
+                    "Phù hợp nhà cấp 4",
+                    "Màu cam đất",
                 ],
-                "is_on_sale": True,
-                "sale_percentage": 15,
             },
         ]

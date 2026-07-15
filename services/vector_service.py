@@ -2,7 +2,7 @@ import logging
 from typing import Any, Dict, List
 
 from flask import current_app
-from pinecone.grpc import PineconeGRPC as Pinecone
+from pinecone import Pinecone
 from sentence_transformers import SentenceTransformer
 
 logger = logging.getLogger(__name__)
@@ -23,6 +23,9 @@ class VectorService:
             index_name = current_app.config["PINECONE_INDEX_NAME"]
 
             self.index = self.pc.Index(index_name)
+            # self.index = self.pc.Index("quickstart")
+
+            # self.index = self.pc.Index(current_app.config["PINECONE_INDEX_NAME"])
 
             self.model = SentenceTransformer(current_app.config["EMBEDDING_MODEL"])
 
@@ -33,12 +36,17 @@ class VectorService:
             logger.error(f"Failed to initialize vector service: {str(e)}")
             raise
 
-    def generate_embedding(self, text: str) -> List[float]:
+    def generate_embedding(self, text: str, *, is_query: bool = False) -> List[float]:
         """Generate embedding for given text"""
         if not self.initialized:
             self.initialize()
 
         try:
+            model_name = current_app.config.get("EMBEDDING_MODEL", "")
+            if "e5" in model_name.lower():
+                prefix = "query: " if is_query else "passage: "
+                text = prefix + text
+
             embedding = self.model.encode(text)
             return embedding.tolist()
         except Exception as e:
@@ -76,7 +84,7 @@ class VectorService:
             self.initialize()
 
         try:
-            query_embedding = self.generate_embedding(query_text)
+            query_embedding = self.generate_embedding(query_text, is_query=True)
 
             search_kwargs = {
                 "vector": query_embedding,

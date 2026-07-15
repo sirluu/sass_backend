@@ -34,9 +34,19 @@ Prerequisites
 Environment Setup
 
 ```bash
-uv venv
-source venv/bin/activate
+py -m venv .venv
+# py -3.12 -m venv .venv
+
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+
+# uv venv
+# source venv/bin/activate
+.venv\Scripts\Activate.ps1
+
+python -m pip install --upgrade pip setuptools wheel
 uv sync
+
+pip install -r requirements.txt
 
 cp .env.example .env
 GOOGLE_API_KEY=your-google-api-key-here
@@ -48,17 +58,21 @@ JWT_SECRET_KEY=your-jwt-secret-key-here
 ### DB & Pinecone Setup
 
 ```bash
-flask db upgrade
+# flask db upgrade
+python -m flask db upgrade
 
 # sample data
 python -m scripts.index_all_products
+
 ```
 
 ### Run the Application
 
 ```bash
-flask run --debug
-flask run
+# flask run --debug
+# flask run
+python -m flask run --debug
+
 ```
 
 ## API Endpoints

@@ -154,7 +154,7 @@ class AuthService:
                 return {"success": False, "message": "User not found"}
 
             user.is_active = False
-            user.updated_at = datetime.utcnow()
+            user.updated_at = datetime.utcnow()  # pyright: ignore[reportDeprecated]
 
             from app import db
 

@@ -1,13 +1,14 @@
 import logging
 from logging.config import fileConfig
-
+import os
 from flask import current_app
 
 from alembic import context
 
+ 
+SCHEMA = os.getenv("DB_SCHEMA", "systems")
 
 config = context.config
-
 
 fileConfig(config.config_file_name)
 logger = logging.getLogger("alembic.env")
@@ -50,8 +51,15 @@ def run_migrations_offline():
 
     """
     url = config.get_main_option("sqlalchemy.url")
-    context.configure(url=url, target_metadata=get_metadata(), literal_binds=True)
-
+    context.configure(
+        url=url,
+        target_metadata=get_metadata(),
+        literal_binds=True,
+        include_schemas=True,
+        version_table_schema=SCHEMA,
+        default_schema_name=SCHEMA,
+        compare_type=True,
+    )
     with context.begin_transaction():
         context.run_migrations()
 

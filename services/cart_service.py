@@ -1,6 +1,6 @@
 import uuid
 
-from app import db
+from xxx import db
 from models import Cart, Product
 
 

@@ -6,7 +6,7 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
-from models import db
+from xxx import db, migrate
 from utils.logger_config import setup_logging
 
 load_dotenv()
@@ -24,6 +24,7 @@ def create_app(config_name=None):
     app.config.from_object(config[config_name])
 
     db.init_app(app)
+ 
     jwt.init_app(app)
 
     migrate.init_app(app, db)
