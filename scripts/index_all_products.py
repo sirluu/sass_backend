@@ -1,5 +1,5 @@
 from app import create_app
-from xxx import db
+from extensions import db
 from models import Product
 from services.vector_service import VectorService
 

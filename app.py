@@ -6,7 +6,7 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
-from xxx import db, migrate
+from extensions import db, migrate
 from utils.logger_config import setup_logging
 
 load_dotenv()

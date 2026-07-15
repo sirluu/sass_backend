@@ -1,6 +1,6 @@
 # from flask_sqlalchemy import SQLAlchemy
 # db = SQLAlchemy()
-from xxx import db, migrate
+from extensions import db, migrate
 
 from .cart import Cart
 from .chat_session import ChatSession

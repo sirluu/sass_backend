@@ -5,7 +5,7 @@ Usage:
 """
 from app import create_app
 from utils.database_seeder import DatabaseSeeder
-from xxx import db
+from extensions import db
 
 
 def main():

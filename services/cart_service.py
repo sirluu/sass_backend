@@ -1,6 +1,6 @@
 import uuid
 
-from xxx import db
+from extensions import db
 from models import Cart, Product
 
 
