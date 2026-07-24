@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
-from flask_migrate import Migrate
 from extensions import db, migrate
 from utils.logger_config import setup_logging
 
@@ -13,7 +12,6 @@ load_dotenv()
 
 
 jwt = JWTManager()
-migrate = Migrate()
 
 
 def create_app(config_name=None):
@@ -24,9 +22,7 @@ def create_app(config_name=None):
     app.config.from_object(config[config_name])
 
     db.init_app(app)
- 
     jwt.init_app(app)
-
     migrate.init_app(app, db)
 
     CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
@@ -35,6 +31,12 @@ def create_app(config_name=None):
     from routes import register_routes
 
     register_routes(app)
+
+    from utils.tenant_context import resolve_tenant
+
+    @app.before_request
+    def set_tenant_context():
+        resolve_tenant()
 
     @app.errorhandler(404)
     def not_found(error):
@@ -73,25 +75,33 @@ def create_app(config_name=None):
             }
         ), 200
 
+    _register_database_initializer(app)
+
+    return app
+
+
+def _register_database_initializer(app):
+    """Initialize database once on startup in development."""
+
     @app.before_request
     def initialize_database():
-        """Initialize database and seed with sample data"""
         app.before_request_funcs[None].remove(initialize_database)
 
+        auto_init = os.environ.get("AUTO_INIT_DB", "true").lower() == "true"
+        if not auto_init:
+            return
+
         try:
-            db.create_all()
+            if app.config.get("DEBUG"):
+                db.create_all()
 
             from utils.database_seeder import DatabaseSeeder
 
             seeder = DatabaseSeeder(db)
-            seeder.seed_products()
-
+            seeder.seed_all()
             app.logger.info("Database initialized successfully")
-
         except Exception as e:
             app.logger.error(f"Error initializing database: {str(e)}")
-
-    return app
 
 
 app = create_app()
@@ -99,10 +109,10 @@ app = create_app()
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     debug = os.environ.get("FLASK_ENV", "development") == "development"
-    
+
     app.run(
         host="0.0.0.0",
         port=port,
         debug=debug,
-        threaded=True
+        threaded=True,
     )

@@ -58,21 +58,21 @@ class Message(db.Model):
         """Set extra data from dict"""
         self.extra_data = json.dumps(extra_data_dict)
 
-    def to_dict(self, include_product_details=False):
+    def to_dict(self, include_product_details=False, tenant_id=None):
         """Convert message to dictionary"""
-        # Get product IDs by default
         products_data = self.get_products()
-        
-        # If include_product_details is True, replace IDs with full product objects
+
         if include_product_details and self.get_products():
             from .product import Product
 
             product_details = []
             for product_id in self.get_products():
-                product = Product.query.get(product_id)
+                query = Product.query.filter_by(id=product_id)
+                if tenant_id:
+                    query = query.filter_by(tenant_id=tenant_id)
+                product = query.first()
                 if product:
                     product_details.append(product.to_dict())
-            # Replace the product IDs with full product objects
             products_data = product_details
 
         data = {

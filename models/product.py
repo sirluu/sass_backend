@@ -8,6 +8,9 @@ class Product(db.Model):
     __tablename__ = "products"
 
     id = db.Column(db.String(36), primary_key=True)
+    tenant_id = db.Column(
+        db.String(36), db.ForeignKey("tenants.id"), nullable=False, index=True
+    )
     name = db.Column(db.String(200), nullable=False, index=True)
     description = db.Column(db.Text, nullable=False)
     price = db.Column(db.Float, nullable=False, index=True)
@@ -22,12 +25,11 @@ class Product(db.Model):
     features = db.Column(db.Text)
     is_on_sale = db.Column(db.Boolean, default=False, index=True)
     sale_percentage = db.Column(db.Integer)
-    created_at = db.Column(db.DateTime, default=datetime.now())
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(
-        db.DateTime, default=datetime.now(), onupdate=datetime.now()
+        db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
     )
     is_active = db.Column(db.Boolean, default=True, index=True)
-
     embedding_id = db.Column(db.String(100))
 
     def __init__(self, **kwargs):
@@ -38,24 +40,20 @@ class Product(db.Model):
                 setattr(self, key, value)
 
     def get_features(self):
-        """Get features as list"""
         try:
             return json.loads(self.features) if self.features else []
         except json.JSONDecodeError:
             return []
 
     def set_features(self, features_list):
-        """Set features from list"""
         self.features = json.dumps(features_list)
         self.updated_at = datetime.utcnow()
 
     def get_search_text(self):
-        """Get combined text for embedding generation"""
         features_text = " ".join(self.get_features())
         return f"{self.name} {self.description} {self.brand} {self.category} {self.subcategory} {features_text}"
 
     def calculate_discount(self):
-        """Calculate discount percentage"""
         if self.original_price and self.original_price > self.price:
             return round(
                 ((self.original_price - self.price) / self.original_price) * 100
@@ -63,13 +61,12 @@ class Product(db.Model):
         return 0
 
     def is_in_stock(self):
-        """Check if product is in stock"""
         return self.stock > 0
 
     def to_dict(self, include_embedding=False):
-        """Convert product to dictionary"""
         data = {
             "id": self.id,
+            "tenantId": self.tenant_id,
             "name": self.name,
             "description": self.description,
             "price": self.price,
@@ -84,19 +81,18 @@ class Product(db.Model):
             "features": self.get_features(),
             "isOnSale": self.is_on_sale,
             "salePercentage": self.sale_percentage or self.calculate_discount(),
-            "createdAt": self.created_at.isoformat(),
-            "updatedAt": self.updated_at.isoformat(),
+            "createdAt": self.created_at.isoformat() if self.created_at else None,
+            "updatedAt": self.updated_at.isoformat() if self.updated_at else None,
             "isActive": self.is_active,
             "inStock": self.is_in_stock(),
         }
-
         if include_embedding:
             data["embeddingId"] = self.embedding_id
-
         return data
 
     @staticmethod
     def search_by_filters(
+        tenant_id=None,
         category=None,
         subcategory=None,
         brand=None,
@@ -107,8 +103,10 @@ class Product(db.Model):
         search_query=None,
         limit=50,
     ):
-        """Search products with filters"""
         query = Product.query.filter(Product.is_active == True)
+
+        if tenant_id:
+            query = query.filter(Product.tenant_id == tenant_id)
 
         if category:
             query = query.filter(Product.category.ilike(f"%{category}%"))

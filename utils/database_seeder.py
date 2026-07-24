@@ -2,64 +2,184 @@ import logging
 import uuid
 
 from models.product import Product
+from models.tenant import Tenant
+from models.user import User
 from services.product_service import ProductService
 
 logger = logging.getLogger(__name__)
 
 
 class DatabaseSeeder:
-    """Utility class for seeding the database with paint product data."""
+    """Utility class for seeding multi-tenant paint store data."""
+
+    DEFAULT_TENANTS = [
+        {
+            "id": "tenant-son-phong-thuy",
+            "name": "Sơn Phong Thủy",
+            "slug": "son-phong-thuy",
+            "domain": None,
+            "description": "Cửa hàng sơn phong thủy - tư vấn màu sắc theo phong thủy",
+        },
+        {
+            "id": "tenant-son-jotun-hanoi",
+            "name": "Sơn Jotun Hà Nội",
+            "slug": "son-jotun-hanoi",
+            "domain": None,
+            "description": "Đại lý chính thức Jotun tại Hà Nội",
+        },
+        {
+            "id": "tenant-son-dulux-danang",
+            "name": "Sơn Dulux Đà Nẵng",
+            "slug": "son-dulux-danang",
+            "domain": None,
+            "description": "Cửa hàng sơn Dulux uy tín tại Đà Nẵng",
+        },
+    ]
 
     def __init__(self, db):
         self.db = db
         self.product_service = ProductService()
 
-    def seed_products(self, force=False):
-        """Seed the database with sample paint products.
+    def seed_all(self, force=False):
+        self.seed_tenants(force=force)
+        self.seed_users(force=force)
+        self.seed_products(force=force)
 
-        Args:
-            force: If True, delete existing products and reseed from scratch.
-        """
+    def seed_tenants(self, force=False):
         try:
+            if Tenant.query.count() > 0 and not force:
+                logger.info("Tenants already exist, skipping tenant seeding")
+                return
+
+            if force:
+                Tenant.query.delete()
+                self.db.session.commit()
+
+            for tenant_data in self.DEFAULT_TENANTS:
+                tenant = Tenant(
+                    id=tenant_data["id"],
+                    name=tenant_data["name"],
+                    slug=tenant_data["slug"],
+                    domain=tenant_data.get("domain"),
+                    description=tenant_data.get("description"),
+                    is_active=True,
+                )
+                tenant.set_settings(
+                    {
+                        "primaryColor": "#2563eb",
+                        "currency": "VND",
+                        "chatbotName": "Tư vấn sơn AI",
+                    }
+                )
+                self.db.session.add(tenant)
+
+            self.db.session.commit()
+            logger.info(f"Seeded {len(self.DEFAULT_TENANTS)} paint stores")
+
+        except Exception as e:
+            logger.error(f"Error seeding tenants: {e}")
+            self.db.session.rollback()
+            raise
+
+    def seed_users(self, force=False):
+        try:
+            if User.query.filter_by(role="super_admin").first() and not force:
+                logger.info("Admin users already exist, skipping user seeding")
+                return
+
+            super_admin = User(
+                id="user-super-admin",
+                email="admin@platform.com",
+                name="Platform Admin",
+                password="admin123",
+                tenant_id=None,
+                role="super_admin",
+            )
+            self.db.session.add(super_admin)
+
+            store_admins = [
+                ("tenant-son-phong-thuy", "admin@sonphongthuy.com", "Admin Phong Thủy"),
+                ("tenant-son-jotun-hanoi", "admin@jotunhanoi.com", "Admin Jotun HN"),
+                ("tenant-son-dulux-danang", "admin@duluxdanang.com", "Admin Dulux DN"),
+            ]
+            for tenant_id, email, name in store_admins:
+                if not User.query.filter_by(email=email, tenant_id=tenant_id).first():
+                    self.db.session.add(
+                        User(
+                            id=str(uuid.uuid4()),
+                            email=email,
+                            name=name,
+                            password="admin123",
+                            tenant_id=tenant_id,
+                            role="store_admin",
+                        )
+                    )
+
+            self.db.session.commit()
+            logger.info("Seeded super admin and store admins (password: admin123)")
+
+        except Exception as e:
+            logger.error(f"Error seeding users: {e}")
+            self.db.session.rollback()
+            raise
+
+    def seed_products(self, force=False):
+        """Seed paint products for each tenant store."""
+        try:
+            tenants = Tenant.query.filter_by(is_active=True).all()
+            if not tenants:
+                logger.warning("No tenants found, skipping product seeding")
+                return
+
             if Product.query.count() > 0 and not force:
-                logger.info("Products already exist, skipping seeding")
+                logger.info("Products already exist, skipping product seeding")
                 return
 
             if force and Product.query.count() > 0:
                 self._clear_products()
 
             products_data = self._get_sample_products()
-            logger.info(f"Seeding {len(products_data)} paint products...")
+            logger.info(
+                f"Seeding {len(products_data)} products per store for {len(tenants)} stores..."
+            )
 
-            for product_data in products_data:
-                try:
-                    product = Product(**product_data)
-                    self.db.session.add(product)
-                    self.db.session.flush()
+            for tenant in tenants:
+                namespace = tenant.slug
+                for product_data in products_data:
+                    try:
+                        item = dict(product_data)
+                        item["id"] = str(uuid.uuid4())
+                        item["tenant_id"] = tenant.id
+                        product = Product(**item)
+                        self.db.session.add(product)
+                        self.db.session.flush()
 
-                    search_text = product.get_search_text()
-                    metadata = {
-                        "category": product.category,
-                        "subcategory": product.subcategory,
-                        "brand": product.brand,
-                        "price": product.price,
-                        "rating": product.rating,
-                        "in_stock": product.is_in_stock(),
-                    }
+                        metadata = {
+                            "tenant_id": tenant.id,
+                            "category": product.category,
+                            "subcategory": product.subcategory,
+                            "brand": product.brand,
+                            "price": product.price,
+                            "rating": product.rating,
+                            "in_stock": product.is_in_stock(),
+                        }
 
-                    self.product_service.vector_service.upsert_product_embedding(
-                        product.id, search_text, metadata
-                    )
-                    product.embedding_id = product.id
+                        self.product_service.vector_service.upsert_product_embedding(
+                            product.id,
+                            product.get_search_text(),
+                            metadata,
+                            namespace=namespace,
+                        )
+                        product.embedding_id = product.id
 
-                except Exception as e:
-                    logger.error(
-                        f"Error seeding product {product_data.get('name', 'Unknown')}: {e}"
-                    )
-                    continue
+                    except Exception as e:
+                        logger.error(
+                            f"Error seeding product for {tenant.slug}: {e}"
+                        )
+                        continue
 
             self.db.session.commit()
-            logger.info("Paint products seeded successfully")
+            logger.info("Multi-tenant paint products seeded successfully")
 
         except Exception as e:
             logger.error(f"Error seeding products: {e}")
@@ -71,7 +191,10 @@ class DatabaseSeeder:
         products = Product.query.all()
         for product in products:
             try:
-                self.product_service.vector_service.delete_product_embedding(product.id)
+                namespace = product.tenant.slug if product.tenant else ""
+                self.product_service.vector_service.delete_product_embedding(
+                    product.id, namespace=namespace
+                )
             except Exception as e:
                 logger.warning(f"Could not delete embedding for {product.id}: {e}")
 

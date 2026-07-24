@@ -9,6 +9,7 @@ from langchain.memory import ConversationBufferWindowMemory
 from langchain.schema import AIMessage, HumanMessage, SystemMessage
 from langchain.tools import Tool
 from langchain_google_genai import ChatGoogleGenerativeAI
+from extensions import db
 from models.chat_session import ChatSession
 from models.message import Message
 from models.product import Product
@@ -30,6 +31,8 @@ class ChatService:
         self.cart_service = CartService()
         self.memory_sessions = {}
         self.initialized = False
+        self._tenant_id = None
+        self._namespace = ""
 
     def initialize(self):
         """Initialize LangChain components"""
@@ -96,7 +99,7 @@ class ChatService:
         """Tool function for semantic product search"""
         try:
             similar_products = self.vector_service.search_similar_products(
-                query, top_k=6
+                query, top_k=6, namespace=self._namespace
             )
 
             if not similar_products:
@@ -108,7 +111,10 @@ class ChatService:
                 )
 
             product_ids = [p["id"] for p in similar_products]
-            products = Product.query.filter(Product.id.in_(product_ids)).all()
+            products = Product.query.filter(
+                Product.id.in_(product_ids),
+                Product.tenant_id == self._tenant_id,
+            ).all()
 
             result = "Found the following products:\n"
             for product in products:
@@ -130,6 +136,7 @@ class ChatService:
         """Tool function for filtering products"""
         try:
             filters = json.loads(filter_json)
+            filters["tenant_id"] = self._tenant_id
             products = Product.search_by_filters(**filters)
 
             if not products:
@@ -159,7 +166,9 @@ class ChatService:
     def _get_product_details_tool(self, product_id: str) -> str:
         """Tool function for getting product details"""
         try:
-            product = Product.query.get(product_id.strip())
+            product = Product.query.filter_by(
+                id=product_id.strip(), tenant_id=self._tenant_id
+            ).first()
             if not product:
                 return "Product not found."
 
@@ -181,25 +190,29 @@ class ChatService:
     def _get_recommendations_tool(self, input_text: str) -> str:
         """Tool function for getting product recommendations"""
         try:
-            product = Product.query.get(input_text.strip())
+            product = Product.query.filter_by(
+                id=input_text.strip(), tenant_id=self._tenant_id
+            ).first()
 
             if product:
                 similar_products = self.vector_service.search_similar_products(
-                    product.get_search_text(), top_k=4
+                    product.get_search_text(), top_k=4, namespace=self._namespace
                 )
                 similar_ids = [
                     p["id"] for p in similar_products if p["id"] != product.id
                 ]
                 recommendations = Product.query.filter(
-                    Product.id.in_(similar_ids)
+                    Product.id.in_(similar_ids),
+                    Product.tenant_id == self._tenant_id,
                 ).all()
             else:
                 similar_products = self.vector_service.search_similar_products(
-                    input_text, top_k=4
+                    input_text, top_k=4, namespace=self._namespace
                 )
                 similar_ids = [p["id"] for p in similar_products]
                 recommendations = Product.query.filter(
-                    Product.id.in_(similar_ids)
+                    Product.id.in_(similar_ids),
+                    Product.tenant_id == self._tenant_id,
                 ).all()
 
             if not recommendations:
@@ -238,7 +251,8 @@ class ChatService:
                 logger.info(f"Searching for product by name: {product_id}")
                 # Search for product by name (case-insensitive)
                 product = Product.query.filter(
-                    Product.name.ilike(f"%{product_id}%")
+                    Product.name.ilike(f"%{product_id}%"),
+                    Product.tenant_id == self._tenant_id,
                 ).first()
                 
                 if product:
@@ -255,7 +269,9 @@ class ChatService:
 
             # Add to cart using the cart service
             logger.info(f"Adding to cart: user_id={user_id}, product_id={product_id}, quantity={quantity}")
-            result = self.cart_service.add_to_cart(user_id, product_id, quantity)
+            result = self.cart_service.add_to_cart(
+                user_id, product_id, quantity, tenant_id=self._tenant_id
+            )
             logger.info(f"Cart service result: {result}")
             
             # Check if the cart service returned an error
@@ -301,24 +317,32 @@ class ChatService:
     def _extract_product_names_from_text(self, text: str) -> list:
         """Extract product names from the message text by matching against all product names in the database."""
         product_names = []
-        all_products = Product.query.all()
+        all_products = Product.query.filter_by(tenant_id=self._tenant_id).all()
         for product in all_products:
             if product.name in text:
                 product_names.append(product.name)
         return product_names
 
     def process_message(
-        self, session_id: str, user_message: str, user_id: str = None
+        self, session_id: str, user_message: str, user_id: str = None, tenant_id: str = None
     ) -> Dict[str, Any]:
         """Process user message and generate AI response"""
         if not self.initialized:
             self.initialize()
 
         try:
+            from models.tenant import Tenant
+
+            self._tenant_id = tenant_id
+            tenant = Tenant.query.get(tenant_id) if tenant_id else None
+            self._namespace = tenant.slug if tenant else ""
+
             chat_session = ChatSession.query.get(session_id)
             if not chat_session:
-                chat_session = ChatSession(id=session_id, user_id=user_id)
-                from app import db
+                chat_session = ChatSession(
+                    id=session_id, tenant_id=tenant_id, user_id=user_id
+                )
+from extensions import db
 
                 db.session.add(chat_session)
                 db.session.commit()
@@ -329,8 +353,6 @@ class ChatService:
                 content=user_message,
                 is_bot=False,
             )
-            from app import db
-
             db.session.add(user_msg)
 
             memory = self.get_or_create_memory(session_id)
@@ -507,7 +529,8 @@ class ChatService:
                     product_ids = [
                         p.id
                         for p in Product.query.filter(
-                            Product.name.in_(product_names)
+                            Product.name.in_(product_names),
+                            Product.tenant_id == self._tenant_id,
                         ).all()
                     ]
 
@@ -547,8 +570,6 @@ class ChatService:
                 content="I'm sorry, I encountered an error. Please try again.",
                 is_bot=True,
             )
-            from app import db
-
             db.session.add(error_msg)
             db.session.commit()
             return {
@@ -568,10 +589,13 @@ class ChatService:
         return product_ids
 
     def get_chat_history(
-        self, session_id: str, limit: int = 50
+        self, session_id: str, limit: int = 50, tenant_id: str = None
     ) -> List[Dict[str, Any]]:
         """Get chat history for a session"""
         try:
+            session = ChatSession.query.get(session_id)
+            resolved_tenant_id = tenant_id or (session.tenant_id if session else None)
+
             messages = (
                 Message.query.filter_by(chat_session_id=session_id)
                 .order_by(Message.created_at.asc())
@@ -579,7 +603,12 @@ class ChatService:
                 .all()
             )
 
-            return [msg.to_dict(include_product_details=True) for msg in messages]
+            return [
+                msg.to_dict(
+                    include_product_details=True, tenant_id=resolved_tenant_id
+                )
+                for msg in messages
+            ]
 
         except Exception as e:
             logger.error(f"Error getting chat history: {str(e)}")

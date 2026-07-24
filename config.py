@@ -26,6 +26,7 @@ class Config:
     PINECONE_INDEX_NAME = os.environ.get("PINECONE_INDEX_NAME", "ecommerce-products")
 
     FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:5173")
+    DEFAULT_TENANT_SLUG = os.environ.get("DEFAULT_TENANT_SLUG", "son-phong-thuy")
 
     EMBEDDING_MODEL = os.environ.get(
         "EMBEDDING_MODEL", "intfloat/multilingual-e5-large"

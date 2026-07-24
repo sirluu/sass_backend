@@ -6,12 +6,16 @@ import uuid
 from services.chat_service import ChatService
 from models.chat_session import ChatSession
 
+from utils.decorators import tenant_required
+from utils.tenant_context import get_current_tenant_id
+
 logger = logging.getLogger(__name__)
 chat_bp = Blueprint("chat", __name__)
 chat_service = ChatService()
 
 
 @chat_bp.route("/message", methods=["POST"])
+@tenant_required
 def send_message():
     """Send a message to the chatbot"""
     try:
@@ -32,7 +36,9 @@ def send_message():
         except:
             pass
 
-        response = chat_service.process_message(session_id, user_message, user_id)
+        response = chat_service.process_message(
+            session_id, user_message, user_id, tenant_id=get_current_tenant_id()
+        )
 
         return jsonify(
             {"success": True, "response": response, "session_id": session_id}
@@ -44,6 +50,7 @@ def send_message():
 
 
 @chat_bp.route("/history/<session_id>", methods=["GET"])
+@tenant_required
 def get_chat_history(session_id):
     """Get chat history for a session"""
     try:
@@ -60,10 +67,15 @@ def get_chat_history(session_id):
         if not chat_session:
             return jsonify({"success": False, "message": "Chat session not found"}), 404
 
+        if chat_session.tenant_id != get_current_tenant_id():
+            return jsonify({"success": False, "message": "Access denied"}), 403
+
         if chat_session.user_id and chat_session.user_id != user_id:
             return jsonify({"success": False, "message": "Access denied"}), 403
 
-        history = chat_service.get_chat_history(session_id, limit)
+        history = chat_service.get_chat_history(
+            session_id, limit, tenant_id=get_current_tenant_id()
+        )
 
         return jsonify(
             {"success": True, "history": history, "session": chat_session.to_dict()}
@@ -76,13 +88,15 @@ def get_chat_history(session_id):
 
 @chat_bp.route("/sessions", methods=["GET"])
 @jwt_required()
+@tenant_required
 def get_user_sessions():
     """Get all chat sessions for the authenticated user"""
     try:
         current_user_id = get_jwt_identity()
+        tenant_id = get_current_tenant_id()
 
         sessions = (
-            ChatSession.query.filter_by(user_id=current_user_id)
+            ChatSession.query.filter_by(user_id=current_user_id, tenant_id=tenant_id)
             .order_by(ChatSession.updated_at.desc())
             .all()
         )
@@ -99,6 +113,7 @@ def get_user_sessions():
 
 
 @chat_bp.route("/sessions/<session_id>", methods=["DELETE"])
+@tenant_required
 def delete_session(session_id):
     """Delete a chat session"""
     try:
@@ -113,12 +128,15 @@ def delete_session(session_id):
         if not chat_session:
             return jsonify({"success": False, "message": "Chat session not found"}), 404
 
+        if chat_session.tenant_id != get_current_tenant_id():
+            return jsonify({"success": False, "message": "Access denied"}), 403
+
         if chat_session.user_id and chat_session.user_id != user_id:
             return jsonify({"success": False, "message": "Access denied"}), 403
 
         chat_service.clear_session_memory(session_id)
 
-        from app import db
+        from extensions import db
 
         db.session.delete(chat_session)
         db.session.commit()
@@ -133,6 +151,7 @@ def delete_session(session_id):
 
 
 @chat_bp.route("/sessions/<session_id>/clear", methods=["POST"])
+@tenant_required
 def clear_session(session_id):
     """Clear chat history for a session"""
     try:
@@ -147,11 +166,14 @@ def clear_session(session_id):
         if not chat_session:
             return jsonify({"success": False, "message": "Chat session not found"}), 404
 
+        if chat_session.tenant_id != get_current_tenant_id():
+            return jsonify({"success": False, "message": "Access denied"}), 403
+
         if chat_session.user_id and chat_session.user_id != user_id:
             return jsonify({"success": False, "message": "Access denied"}), 403
 
         from models.message import Message
-        from app import db
+        from extensions import db
 
         Message.query.filter_by(chat_session_id=session_id).delete()
         chat_service.clear_session_memory(session_id)

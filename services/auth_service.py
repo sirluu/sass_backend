@@ -1,66 +1,101 @@
 import logging
-from typing import Optional, Dict, Any
-from datetime import datetime, timedelta
-from flask_jwt_extended import (
-    create_access_token,
-    create_refresh_token,
-    get_jwt_identity,
-)
-from werkzeug.security import check_password_hash
 import uuid
+from datetime import datetime
+from typing import Any, Dict, Optional
 
+from flask_jwt_extended import create_access_token, create_refresh_token
+from werkzeug.security import generate_password_hash
+
+from extensions import db
+from models.tenant import Tenant
 from models.user import User
+from utils.tenant_context import get_current_tenant_id
 
 logger = logging.getLogger(__name__)
 
 
 class AuthService:
-    """Service for authentication and user management"""
+    """Service for authentication and user management."""
 
     @staticmethod
-    def register_user(name: str, email: str, password: str) -> Dict[str, Any]:
-        """Register a new user"""
+    def _create_tokens(user: User) -> Dict[str, str]:
+        additional_claims = {
+            "role": user.role,
+            "tenant_id": user.tenant_id,
+        }
+        access_token = create_access_token(
+            identity=user.id, additional_claims=additional_claims
+        )
+        refresh_token = create_refresh_token(
+            identity=user.id, additional_claims=additional_claims
+        )
+        return {"access_token": access_token, "refresh_token": refresh_token}
+
+    @staticmethod
+    def register_user(
+        name: str, email: str, password: str, tenant_id: str = None
+    ) -> Dict[str, Any]:
         try:
-            existing_user = User.query.filter_by(email=email).first()
+            resolved_tenant_id = tenant_id or get_current_tenant_id()
+            if not resolved_tenant_id:
+                return {
+                    "success": False,
+                    "message": "Tenant context is required for registration",
+                }
+
+            tenant = Tenant.query.get(resolved_tenant_id)
+            if not tenant or not tenant.is_active:
+                return {"success": False, "message": "Invalid or inactive store"}
+
+            existing_user = User.query.filter_by(
+                email=email, tenant_id=resolved_tenant_id
+            ).first()
             if existing_user:
                 return {
                     "success": False,
-                    "message": "User with this email already exists",
+                    "message": "User with this email already exists in this store",
                 }
 
             user_id = str(uuid.uuid4())
-            user = User(id=user_id, email=email, name=name, password=password)
-
-            from app import db
+            user = User(
+                id=user_id,
+                email=email,
+                name=name,
+                password=password,
+                tenant_id=resolved_tenant_id,
+                role="customer",
+            )
 
             db.session.add(user)
             db.session.commit()
 
-            access_token = create_access_token(identity=user_id)
-            refresh_token = create_refresh_token(identity=user_id)
-
-            logger.info(f"User registered successfully: {email}")
+            tokens = AuthService._create_tokens(user)
+            logger.info(f"User registered: {email} (tenant: {resolved_tenant_id})")
 
             return {
                 "success": True,
                 "message": "User registered successfully",
                 "user": user.to_dict(),
-                "access_token": access_token,
-                "refresh_token": refresh_token,
+                **tokens,
             }
 
         except Exception as e:
             logger.error(f"Error registering user: {str(e)}")
-            from app import db
-
             db.session.rollback()
             return {"success": False, "message": "Registration failed"}
 
     @staticmethod
-    def login_user(email: str, password: str) -> Dict[str, Any]:
-        """Authenticate user and return tokens"""
+    def login_user(
+        email: str, password: str, tenant_id: str = None
+    ) -> Dict[str, Any]:
         try:
-            user = User.query.filter_by(email=email).first()
+            resolved_tenant_id = tenant_id or get_current_tenant_id()
+
+            query = User.query.filter_by(email=email)
+            if resolved_tenant_id:
+                query = query.filter_by(tenant_id=resolved_tenant_id)
+
+            user = query.first()
 
             if not user or not user.check_password(password):
                 return {"success": False, "message": "Invalid email or password"}
@@ -68,22 +103,25 @@ class AuthService:
             if not user.is_active:
                 return {"success": False, "message": "Account is deactivated"}
 
-            access_token = create_access_token(identity=user.id)
-            refresh_token = create_refresh_token(identity=user.id)
+            if user.role != "super_admin" and resolved_tenant_id:
+                if user.tenant_id != resolved_tenant_id:
+                    return {
+                        "success": False,
+                        "message": "User does not belong to this store",
+                    }
 
+            tokens = AuthService._create_tokens(user)
             user.updated_at = datetime.utcnow()
-            from app import db
 
             db.session.commit()
 
-            logger.info(f"User logged in successfully: {email}")
+            logger.info(f"User logged in: {email}")
 
             return {
                 "success": True,
                 "message": "Login successful",
                 "user": user.to_dict(),
-                "access_token": access_token,
-                "refresh_token": refresh_token,
+                **tokens,
             }
 
         except Exception as e:
@@ -92,7 +130,6 @@ class AuthService:
 
     @staticmethod
     def get_user_by_id(user_id: str) -> Optional[User]:
-        """Get user by ID"""
         try:
             return User.query.get(user_id)
         except Exception as e:
@@ -103,18 +140,13 @@ class AuthService:
     def update_user_preferences(
         user_id: str, preferences: Dict[str, Any]
     ) -> Dict[str, Any]:
-        """Update user preferences"""
         try:
             user = User.query.get(user_id)
             if not user:
                 return {"success": False, "message": "User not found"}
 
             user.set_preferences(preferences)
-            from app import db
-
             db.session.commit()
-
-            logger.info(f"Updated preferences for user: {user.email}")
 
             return {
                 "success": True,
@@ -124,20 +156,23 @@ class AuthService:
 
         except Exception as e:
             logger.error(f"Error updating user preferences: {str(e)}")
-            from app import db
-
             db.session.rollback()
             return {"success": False, "message": "Failed to update preferences"}
 
     @staticmethod
     def refresh_token(current_user_id: str) -> Dict[str, Any]:
-        """Generate new access token"""
         try:
             user = User.query.get(current_user_id)
             if not user or not user.is_active:
                 return {"success": False, "message": "Invalid user"}
 
-            access_token = create_access_token(identity=current_user_id)
+            additional_claims = {
+                "role": user.role,
+                "tenant_id": user.tenant_id,
+            }
+            access_token = create_access_token(
+                identity=current_user_id, additional_claims=additional_claims
+            )
 
             return {"success": True, "access_token": access_token}
 
@@ -147,26 +182,55 @@ class AuthService:
 
     @staticmethod
     def deactivate_user(user_id: str) -> Dict[str, Any]:
-        """Deactivate user account"""
         try:
             user = User.query.get(user_id)
             if not user:
                 return {"success": False, "message": "User not found"}
 
             user.is_active = False
-            user.updated_at = datetime.utcnow()  # pyright: ignore[reportDeprecated]
-
-            from app import db
+            user.updated_at = datetime.utcnow()
 
             db.session.commit()
-
-            logger.info(f"User deactivated: {user.email}")
 
             return {"success": True, "message": "User account deactivated"}
 
         except Exception as e:
             logger.error(f"Error deactivating user: {str(e)}")
-            from app import db
-
             db.session.rollback()
             return {"success": False, "message": "Failed to deactivate user"}
+
+    @staticmethod
+    def create_store_admin(
+        tenant_id: str, name: str, email: str, password: str
+    ) -> Dict[str, Any]:
+        try:
+            tenant = Tenant.query.get(tenant_id)
+            if not tenant:
+                return {"success": False, "message": "Store not found"}
+
+            existing = User.query.filter_by(email=email, tenant_id=tenant_id).first()
+            if existing:
+                return {"success": False, "message": "Admin already exists for this store"}
+
+            user = User(
+                id=str(uuid.uuid4()),
+                email=email,
+                name=name,
+                password=password,
+                tenant_id=tenant_id,
+                role="store_admin",
+            )
+
+            db.session.add(user)
+            db.session.commit()
+
+            return {
+                "success": True,
+                "message": "Store admin created",
+                "user": user.to_dict(),
+            }
+
+        except Exception as e:
+            logger.error(f"Error creating store admin: {str(e)}")
+            db.session.rollback()
+            return {"success": False, "message": "Failed to create store admin"}

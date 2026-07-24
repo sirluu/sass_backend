@@ -4,8 +4,9 @@ import os
 from flask import current_app
 
 from alembic import context
+from sqlalchemy import text
 
- 
+
 SCHEMA = os.getenv("DB_SCHEMA", "systems")
 
 config = context.config
@@ -28,6 +29,10 @@ def get_engine_url():
         return str(get_engine().url).replace("%", "%%")
 
 
+def is_postgresql():
+    return get_engine().dialect.name == "postgresql"
+
+
 config.set_main_option("sqlalchemy.url", get_engine_url())
 target_db = current_app.extensions["migrate"].db
 
@@ -38,40 +43,50 @@ def get_metadata():
     return target_db.metadata
 
 
+def configure_context(connection, **extra):
+    configure_kwargs = {
+        "connection": connection,
+        "target_metadata": get_metadata(),
+        "compare_type": True,
+        **extra,
+    }
+
+    if is_postgresql():
+        configure_kwargs.update(
+            {
+                "include_schemas": True,
+                "version_table_schema": SCHEMA,
+                "default_schema_name": SCHEMA,
+            }
+        )
+
+    context.configure(**configure_kwargs)
+
+
 def run_migrations_offline():
-    """Run migrations in 'offline' mode.
-
-    This configures the context with just a URL
-    and not an Engine, though an Engine is acceptable
-    here as well.  By skipping the Engine creation
-    we don't even need a DBAPI to be available.
-
-    Calls to context.execute() here emit the given string to the
-    script output.
-
-    """
     url = config.get_main_option("sqlalchemy.url")
-    context.configure(
-        url=url,
-        target_metadata=get_metadata(),
-        literal_binds=True,
-        include_schemas=True,
-        version_table_schema=SCHEMA,
-        default_schema_name=SCHEMA,
-        compare_type=True,
-    )
+    offline_kwargs = {
+        "url": url,
+        "target_metadata": get_metadata(),
+        "literal_binds": True,
+        "compare_type": True,
+    }
+
+    if url.startswith("postgresql"):
+        offline_kwargs.update(
+            {
+                "include_schemas": True,
+                "version_table_schema": SCHEMA,
+                "default_schema_name": SCHEMA,
+            }
+        )
+
+    context.configure(**offline_kwargs)
     with context.begin_transaction():
         context.run_migrations()
 
 
 def run_migrations_online():
-    """Run migrations in 'online' mode.
-
-    In this scenario we need to create an Engine
-    and associate a connection with the context.
-
-    """
-
     def process_revision_directives(context, revision, directives):
         if getattr(config.cmd_opts, "autogenerate", False):
             script = directives[0]
@@ -86,9 +101,14 @@ def run_migrations_online():
     connectable = get_engine()
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection, target_metadata=get_metadata(), **conf_args
-        )
+        if is_postgresql():
+            connection.execute(text(f'CREATE SCHEMA IF NOT EXISTS "{SCHEMA}"'))
+            connection.execute(text(f'SET search_path TO "{SCHEMA}", public'))
+            connection.dialect.default_schema_name = SCHEMA
+            conf_args["include_schemas"] = True
+            conf_args["version_table_schema"] = SCHEMA
+
+        configure_context(connection, **conf_args)
 
         with context.begin_transaction():
             context.run_migrations()

@@ -1,10 +1,13 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required, get_jwt_identity, jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity, verify_jwt_in_request
 import logging
+from sqlalchemy import distinct, func
 
 from models.product import Product
 from services.product_service import ProductService
 from services.auth_service import AuthService
+from utils.decorators import store_admin_required, tenant_required
+from utils.tenant_context import get_current_tenant_id
 
 logger = logging.getLogger(__name__)
 product_bp = Blueprint("products", __name__)
@@ -12,9 +15,10 @@ product_service = ProductService()
 
 
 @product_bp.route("/", methods=["GET"])
+@tenant_required
 def get_products():
-    """Get products with optional filtering"""
     try:
+        tenant_id = get_current_tenant_id()
         category = request.args.get("category")
         subcategory = request.args.get("subcategory")
         brand = request.args.get("brand")
@@ -27,6 +31,7 @@ def get_products():
 
         if not search_query:
             products = Product.search_by_filters(
+                tenant_id=tenant_id,
                 category=category,
                 subcategory=subcategory,
                 brand=brand,
@@ -53,7 +58,9 @@ def get_products():
             if in_stock_only:
                 filters["in_stock_only"] = in_stock_only
 
-            products = product_service.search_products(search_query, filters, limit)
+            products = product_service.search_products(
+                search_query, filters, limit, tenant_id=tenant_id
+            )
 
         return jsonify(
             {
@@ -69,10 +76,13 @@ def get_products():
 
 
 @product_bp.route("/<product_id>", methods=["GET"])
+@tenant_required
 def get_product(product_id):
-    """Get a specific product by ID"""
     try:
-        product = Product.query.get(product_id)
+        tenant_id = get_current_tenant_id()
+        product = Product.query.filter_by(
+            id=product_id, tenant_id=tenant_id
+        ).first()
 
         if not product:
             return jsonify({"success": False, "message": "Product not found"}), 404
@@ -85,9 +95,10 @@ def get_product(product_id):
 
 
 @product_bp.route("/search", methods=["POST"])
+@tenant_required
 def search_products():
-    """Advanced product search with semantic similarity"""
     try:
+        tenant_id = get_current_tenant_id()
         data = request.get_json()
 
         if not data or not data.get("query"):
@@ -95,18 +106,19 @@ def search_products():
                 {"success": False, "message": "Search query is required"}
             ), 400
 
-        query = data["query"]
-        filters = data.get("filters", {})
-        limit = data.get("limit", 20)
-
-        products = product_service.search_products(query, filters, limit)
+        products = product_service.search_products(
+            data["query"],
+            data.get("filters", {}),
+            data.get("limit", 20),
+            tenant_id=tenant_id,
+        )
 
         return jsonify(
             {
                 "success": True,
                 "products": [product.to_dict() for product in products],
                 "count": len(products),
-                "query": query,
+                "query": data["query"],
             }
         ), 200
 
@@ -116,27 +128,29 @@ def search_products():
 
 
 @product_bp.route("/recommendations", methods=["GET"])
+@tenant_required
 def get_recommendations():
-    """Get product recommendations"""
     try:
+        tenant_id = get_current_tenant_id()
         product_id = request.args.get("product_id")
         limit = request.args.get("limit", 6, type=int)
 
         user_preferences = None
         try:
-            from flask_jwt_extended import verify_jwt_in_request, get_jwt_identity
-
             verify_jwt_in_request(optional=True)
             current_user_id = get_jwt_identity()
             if current_user_id:
                 user = AuthService.get_user_by_id(current_user_id)
                 if user:
                     user_preferences = user.get_preferences()
-        except:
+        except Exception:
             pass
 
         recommendations = product_service.get_recommendations(
-            product_id=product_id, user_preferences=user_preferences, limit=limit
+            product_id=product_id,
+            user_preferences=user_preferences,
+            limit=limit,
+            tenant_id=tenant_id,
         )
 
         return jsonify(
@@ -155,14 +169,13 @@ def get_recommendations():
 
 
 @product_bp.route("/categories", methods=["GET"])
+@tenant_required
 def get_categories():
-    """Get all product categories and subcategories"""
     try:
-        from sqlalchemy import distinct
-
+        tenant_id = get_current_tenant_id()
         categories = (
             Product.query.with_entities(distinct(Product.category), Product.subcategory)
-            .filter(Product.is_active == True)
+            .filter(Product.is_active == True, Product.tenant_id == tenant_id)
             .all()
         )
 
@@ -172,9 +185,10 @@ def get_categories():
                 category_map[category] = set()
             category_map[category].add(subcategory)
 
-        result = []
-        for category, subcategories in category_map.items():
-            result.append({"category": category, "subcategories": list(subcategories)})
+        result = [
+            {"category": category, "subcategories": list(subcategories)}
+            for category, subcategories in category_map.items()
+        ]
 
         return jsonify({"success": True, "categories": result}), 200
 
@@ -184,21 +198,18 @@ def get_categories():
 
 
 @product_bp.route("/brands", methods=["GET"])
+@tenant_required
 def get_brands():
-    """Get all product brands"""
     try:
-        from sqlalchemy import distinct
-
+        tenant_id = get_current_tenant_id()
         brands = (
             Product.query.with_entities(distinct(Product.brand))
-            .filter(Product.is_active == True)
+            .filter(Product.is_active == True, Product.tenant_id == tenant_id)
             .order_by(Product.brand)
             .all()
         )
 
-        brand_list = [brand[0] for brand in brands]
-
-        return jsonify({"success": True, "brands": brand_list}), 200
+        return jsonify({"success": True, "brands": [brand[0] for brand in brands]}), 200
 
     except Exception as e:
         logger.error(f"Error in get_brands endpoint: {str(e)}")
@@ -206,31 +217,44 @@ def get_brands():
 
 
 @product_bp.route("/stats", methods=["GET"])
+@tenant_required
 def get_product_stats():
-    """Get product statistics"""
     try:
-        from sqlalchemy import func
+        tenant_id = get_current_tenant_id()
+        base_query = Product.query.filter(
+            Product.is_active == True, Product.tenant_id == tenant_id
+        )
 
         stats = {
-            "total_products": Product.query.filter(Product.is_active == True).count(),
+            "total_products": base_query.count(),
             "total_categories": Product.query.with_entities(
                 func.count(func.distinct(Product.category))
-            ).scalar(),
+            )
+            .filter(Product.is_active == True, Product.tenant_id == tenant_id)
+            .scalar(),
             "total_brands": Product.query.with_entities(
                 func.count(func.distinct(Product.brand))
-            ).scalar(),
+            )
+            .filter(Product.is_active == True, Product.tenant_id == tenant_id)
+            .scalar(),
             "price_range": {
-                "min": Product.query.with_entities(func.min(Product.price)).scalar()
+                "min": Product.query.with_entities(func.min(Product.price))
+                .filter(Product.tenant_id == tenant_id)
+                .scalar()
                 or 0,
-                "max": Product.query.with_entities(func.max(Product.price)).scalar()
+                "max": Product.query.with_entities(func.max(Product.price))
+                .filter(Product.tenant_id == tenant_id)
+                .scalar()
                 or 0,
             },
             "average_rating": round(
-                Product.query.with_entities(func.avg(Product.rating)).scalar() or 0, 2
+                Product.query.with_entities(func.avg(Product.rating))
+                .filter(Product.tenant_id == tenant_id)
+                .scalar()
+                or 0,
+                2,
             ),
-            "in_stock_count": Product.query.filter(
-                Product.stock > 0, Product.is_active == True
-            ).count(),
+            "in_stock_count": base_query.filter(Product.stock > 0).count(),
         }
 
         return jsonify({"success": True, "stats": stats}), 200
@@ -243,12 +267,10 @@ def get_product_stats():
 
 
 @product_bp.route("/", methods=["POST"])
-@jwt_required()
+@store_admin_required
 def create_product():
-    """Create a new product (admin only)"""
     try:
         data = request.get_json()
-
         required_fields = [
             "name",
             "description",
@@ -263,7 +285,6 @@ def create_product():
             ), 400
 
         product = product_service.create_product(data)
-
         return jsonify(
             {
                 "success": True,
@@ -278,19 +299,16 @@ def create_product():
 
 
 @product_bp.route("/<product_id>", methods=["PUT"])
-@jwt_required()
+@store_admin_required
 def update_product(product_id):
-    """Update a product (admin only)"""
     try:
         data = request.get_json()
-
         if not data:
             return jsonify(
                 {"success": False, "message": "Update data is required"}
             ), 400
 
         product = product_service.update_product(product_id, data)
-
         if not product:
             return jsonify({"success": False, "message": "Product not found"}), 404
 
@@ -308,12 +326,10 @@ def update_product(product_id):
 
 
 @product_bp.route("/<product_id>", methods=["DELETE"])
-@jwt_required()
+@store_admin_required
 def delete_product(product_id):
-    """Delete a product (admin only)"""
     try:
         success = product_service.delete_product(product_id)
-
         if not success:
             return jsonify({"success": False, "message": "Product not found"}), 404
 
