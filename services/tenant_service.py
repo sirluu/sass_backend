@@ -2,6 +2,7 @@ import logging
 import uuid
 from typing import Any, Dict, List, Optional
 
+from extensions import db
 from models.tenant import Tenant
 from models.user import User
 from services.auth_service import AuthService
@@ -55,8 +56,6 @@ class TenantService:
             if data.get("settings"):
                 tenant.set_settings(data["settings"])
 
-            from app import db
-
             db.session.add(tenant)
             db.session.commit()
 
@@ -78,8 +77,6 @@ class TenantService:
 
         except Exception as e:
             logger.error(f"Error creating tenant: {e}")
-            from app import db
-
             db.session.rollback()
             return {"success": False, "message": "Failed to create store"}
 
@@ -108,8 +105,6 @@ class TenantService:
             if "settings" in data:
                 tenant.set_settings(data["settings"])
 
-            from app import db
-
             db.session.commit()
 
             return {
@@ -120,8 +115,6 @@ class TenantService:
 
         except Exception as e:
             logger.error(f"Error updating tenant: {e}")
-            from app import db
-
             db.session.rollback()
             return {"success": False, "message": "Failed to update store"}
 

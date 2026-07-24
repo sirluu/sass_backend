@@ -91,11 +91,7 @@ class AuthService:
         try:
             resolved_tenant_id = tenant_id or get_current_tenant_id()
 
-            query = User.query.filter_by(email=email)
-            if resolved_tenant_id:
-                query = query.filter_by(tenant_id=resolved_tenant_id)
-
-            user = query.first()
+            user = User.query.filter_by(email=email).first()
 
             if not user or not user.check_password(password):
                 return {"success": False, "message": "Invalid email or password"}
@@ -103,12 +99,19 @@ class AuthService:
             if not user.is_active:
                 return {"success": False, "message": "Account is deactivated"}
 
-            if user.role != "super_admin" and resolved_tenant_id:
+            if user.role == "super_admin":
+                pass
+            elif resolved_tenant_id:
                 if user.tenant_id != resolved_tenant_id:
                     return {
                         "success": False,
                         "message": "User does not belong to this store",
                     }
+            else:
+                return {
+                    "success": False,
+                    "message": "Tenant context is required for store login",
+                }
 
             tokens = AuthService._create_tokens(user)
             user.updated_at = datetime.utcnow()

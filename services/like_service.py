@@ -89,7 +89,10 @@ class LikeService:
 
         result = []
         for product_id, likes_count in popular_products:
-            product = Product.query.get(product_id)
+            query = Product.query.filter_by(id=product_id)
+            if resolved_tenant_id:
+                query = query.filter_by(tenant_id=resolved_tenant_id)
+            product = query.first()
             if product:
                 product_dict = product.to_dict()
                 product_dict["likes_count"] = likes_count

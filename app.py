@@ -21,6 +21,13 @@ def create_app(config_name=None):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
 
+    db_uri = app.config.get("SQLALCHEMY_DATABASE_URI", "")
+    if db_uri.startswith("postgresql"):
+        schema = app.config.get("DB_SCHEMA", "systems")
+        app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
+            "connect_args": {"options": f"-csearch_path={schema},public"}
+        }
+
     db.init_app(app)
     jwt.init_app(app)
     migrate.init_app(app, db)
@@ -76,8 +83,24 @@ def create_app(config_name=None):
         ), 200
 
     _register_database_initializer(app)
+    _register_cli_commands(app)
 
     return app
+
+
+def _register_cli_commands(app):
+    """Register Flask CLI commands for database seeding."""
+    import click
+
+    @app.cli.command("seed-db")
+    @click.option("--force", is_flag=True, help="Force reseed even if data exists")
+    def seed_db_command(force):
+        """Seed multi-tenant test data (tenants, users, products, cart, likes)."""
+        from utils.database_seeder import DatabaseSeeder
+
+        seeder = DatabaseSeeder(db)
+        seeder.seed_all(force=force)
+        click.echo("Database seeded successfully.")
 
 
 def _register_database_initializer(app):

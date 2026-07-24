@@ -100,7 +100,7 @@ def run_migrations_online():
 
     connectable = get_engine()
 
-    with connectable.connect() as connection:
+    with connectable.begin() as connection:
         if is_postgresql():
             connection.execute(text(f'CREATE SCHEMA IF NOT EXISTS "{SCHEMA}"'))
             connection.execute(text(f'SET search_path TO "{SCHEMA}", public'))

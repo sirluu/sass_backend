@@ -1,319 +1,214 @@
-# E-commerce + AI Chatbot Backend API
+# Multi-Tenant Paint Store SaaS — Backend API
 
-AI chatbot with vector search capabilities, LangChain integration, and Google Gemini support. Provides advanced product search, recommendations, and order management, cart management.
+Backend Flask cho **nhiều cửa hàng bán sơn** trên cùng một nền tảng. Mỗi cửa hàng có catalog, khách hàng, giỏ hàng và chatbot AI riêng biệt.
 
-## Features
+Tích hợp **Google Gemini**, **LangChain**, **Pinecone** (vector search theo namespace) và **JWT authentication** với phân quyền multi-tenant.
 
-### **Assistant for Order Management and Advanced Search**
+## Tính năng chính
 
-- Advanced product searches, comparisons, cart operations, and recommendations based on user intent
-- Powered by Google Gemini Flash 2.0 for deep, contextual conversations
-- Maintains conversation history and user preferences across multiple interactions
+- **Multi-tenant**: Shared database, cách ly dữ liệu theo `tenant_id` và Pinecone namespace
+- **AI Chatbot**: Tư vấn sơn nội/ngoại thất, so sánh sản phẩm, thêm giỏ hàng
+- **Vector Search**: Tìm kiếm ngữ nghĩa sản phẩm theo từng cửa hàng
+- **E-commerce**: Sản phẩm, giỏ hàng, likes, đăng ký/đăng nhập theo cửa hàng
+- **RBAC**: `super_admin`, `store_admin`, `customer`
 
-### **Advanced Vector Search**
+## Kiến trúc Multi-Tenant
 
-- Pinecone-powered vector database for understanding product relationships and user intent
-- Sentence Transformer models convert product descriptions into meaningful vector representations
-- AI analyzes user behavior patterns and preferences for personalized suggestions
-- Finds products similar to user preferences even without exact keyword matches
+```
+Request → X-Tenant-Slug / Host / ?tenant_slug=
+       → resolve_tenant() → g.current_tenant_id
+       → Services filter theo tenant_id
+       → Pinecone query namespace = tenant.slug
+```
 
-### **E-commerce Engine**
+| Role | Quyền |
+|------|-------|
+| `super_admin` | Quản lý toàn bộ cửa hàng (`/api/tenants`) |
+| `store_admin` | CRUD sản phẩm, cập nhật thông tin cửa hàng |
+| `customer` | Mua sắm, chat, giỏ hàng trong một cửa hàng |
 
-- Multi-dimensional search by price, brand, specifications, ratings, and availability
-- Persistent shopping carts with automatic price updates
-- User-friendly product comparisons and recommendations
+## Cài đặt nhanh
 
-## Setup
-
-Prerequisites
+### Yêu cầu
 
 - Python 3.12+
-- Pinecone account and API key
+- Pinecone account (index 1024 dimensions)
 - Google AI Studio API key
 
-Environment Setup
+### Bước 1: Environment
 
 ```bash
 py -m venv .venv
-# py -3.12 -m venv .venv
-
-Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-
-# uv venv
-# source venv/bin/activate
-.venv\Scripts\Activate.ps1
-
-python -m pip install --upgrade pip setuptools wheel
-uv sync
+.venv\Scripts\Activate.ps1          # Windows
+# source .venv/bin/activate         # Linux/macOS
 
 pip install -r requirements.txt
-
 cp .env.example .env
-GOOGLE_API_KEY=your-google-api-key-here
-PINECONE_API_KEY=your-pinecone-api-key-here
-PINECONE_INDEX_NAME=ecommerce-products
-JWT_SECRET_KEY=your-jwt-secret-key-here
+# Chỉnh sửa GOOGLE_API_KEY, PINECONE_API_KEY, JWT_SECRET_KEY
 ```
 
-### DB & Pinecone Setup
+### Bước 2: Database & Seed
 
 ```bash
-# flask db upgrade
+set FLASK_APP=app.py                # Windows
 python -m flask db upgrade
-
-# sample data
-python -m scripts.index_all_products
-
+python -m scripts.seed_database
 ```
 
-### Run the Application
+### Bước 3: Chạy
 
 ```bash
-# flask run --debug
-# flask run
 python -m flask run --debug
-
+# hoặc production:
+# ./start.sh
 ```
+
+### Kiểm tra
+
+```bash
+curl http://localhost:5000/api/health
+curl "http://localhost:5000/api/tenants/resolve?slug=son-phong-thuy"
+curl -H "X-Tenant-Slug: son-jotun-hanoi" http://localhost:5000/api/products/
+```
+
+## Tenant Headers
+
+Gửi kèm mọi request (trừ `/api/health`, `/api/tenants/*`):
+
+```http
+X-Tenant-Slug: son-jotun-hanoi
+```
+
+Hoặc dùng domain (`X-Tenant-Domain`, `Host`) hoặc `?tenant_slug=...`. Fallback: `DEFAULT_TENANT_SLUG` trong `.env`.
+
+## Tài khoản test (sau seed)
+
+| Role | Email | Password | Cửa hàng |
+|------|-------|----------|----------|
+| Super Admin | `admin@platform.com` | `admin123` | — |
+| Store Admin | `admin@sonphongthuy.com` | `admin123` | son-phong-thuy |
+| Store Admin | `admin@jotunhanoi.com` | `admin123` | son-jotun-hanoi |
+| Store Admin | `admin@duluxdanang.com` | `admin123` | son-dulux-danang |
+| Customer | `nguyen.van.a@gmail.com` | `customer123` | son-phong-thuy |
+
+3 cửa hàng mẫu, mỗi cửa hàng ~27 sản phẩm sơn (Dulux, Jotun, Nippon, Kova...).
 
 ## API Endpoints
 
+### Stores (Tenants)
+
+- `GET /api/tenants/resolve?slug=&domain=` — Tra cứu cửa hàng (public)
+- `GET /api/tenants/current` — Cửa hàng từ request context
+- `GET /api/tenants/` — Danh sách cửa hàng (super_admin)
+- `POST /api/tenants/` — Tạo cửa hàng mới (super_admin)
+- `GET /api/tenants/<id>` — Chi tiết + stats (admin)
+- `PUT /api/tenants/<id>` — Cập nhật cửa hàng (store_admin)
+- `GET /api/tenants/<id>/stats` — Thống kê cửa hàng
+
 ### Authentication
 
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/login` - User login
-- `POST /api/auth/refresh` - Refresh access token
-- `GET /api/auth/me` - Get current user info
-- `PUT /api/auth/preferences` - Update user preferences
-- `POST /api/auth/deactivate` - Deactivate user account
+- `POST /api/auth/register` — Đăng ký (cần tenant context)
+- `POST /api/auth/login` — Đăng nhập
+- `POST /api/auth/refresh` — Refresh token
+- `GET /api/auth/me` — Thông tin user hiện tại
+- `PUT /api/auth/preferences` — Cập nhật preferences
+- `POST /api/auth/deactivate` — Vô hiệu hóa tài khoản
 
-### Products
+### Products *(cần `X-Tenant-Slug`)*
 
-- `GET /api/products/` - Get products with filtering
-- `GET /api/products/<id>` - Get specific product
-- `POST /api/products/search` - Advanced semantic search
-- `GET /api/products/recommendations` - Get recommendations
-- `GET /api/products/categories` - Get all categories
-- `GET /api/products/brands` - Get all brands
-- `GET /api/products/stats` - Get product statistics
-- `POST /api/products/` - Create new product (Admin)
-- `PUT /api/products/<id>` - Update product (Admin)
-- `DELETE /api/products/<id>` - Delete product (Admin)
+- `GET /api/products/` — Danh sách + filter
+- `GET /api/products/<id>` — Chi tiết sản phẩm
+- `POST /api/products/search` — Semantic search
+- `GET /api/products/recommendations` — Gợi ý sản phẩm
+- `GET /api/products/categories` — Danh mục
+- `GET /api/products/brands` — Thương hiệu
+- `GET /api/products/stats` — Thống kê
+- `POST /api/products/` — Tạo sản phẩm (store_admin)
+- `PUT /api/products/<id>` — Cập nhật (store_admin)
+- `DELETE /api/products/<id>` — Xóa (store_admin)
 
-### Cart Management
+### Cart & Likes *(cần tenant + JWT)*
 
-- `GET /api/cart/<user_id>` - Get user's cart
-- `POST /api/cart/add` - Add item to cart
-- `DELETE /api/cart/remove` - Remove item from cart
-- `PUT /api/cart/update` - Update cart item quantity
-- `DELETE /api/cart/clear` - Clear entire cart
+- `GET /api/cart/<user_id>` — Giỏ hàng
+- `POST /api/cart/add` — Thêm vào giỏ
+- `DELETE /api/cart/remove` — Xóa khỏi giỏ
+- `PUT /api/cart/update` — Cập nhật số lượng
+- `DELETE /api/cart/clear` — Xóa toàn bộ giỏ
+- `POST /api/likes/toggle` — Like/unlike
+- `GET /api/likes/user/<user_id>` — Sản phẩm đã like
+- `GET /api/likes/popular` — Sản phẩm phổ biến
 
-### User Likes & Favorites
+### Chat *(cần `X-Tenant-Slug`)*
 
-- `POST /api/likes/toggle` - Toggle like/unlike product
-- `GET /api/likes/user/<user_id>` - Get user's liked products
-- `GET /api/likes/product/<product_id>` - Get product like count
-- `POST /api/likes/check` - Check if user likes specific product
-- `GET /api/likes/popular` - Get most popular/liked products
-
-### Chat
-
-- `POST /api/chat/message` - Send message to chatbot
-- `GET /api/chat/history/<session_id>` - Get chat history
-- `GET /api/chat/sessions` - Get user's chat sessions
-- `DELETE /api/chat/sessions/<id>` - Delete chat session
-- `POST /api/chat/sessions/<id>/clear` - Clear chat history
-- `GET /api/chat/health` - Check chat service health
+- `POST /api/chat/message` — Gửi tin nhắn chatbot
+- `GET /api/chat/history/<session_id>` — Lịch sử chat
+- `GET /api/chat/sessions` — Danh sách session
+- `DELETE /api/chat/sessions/<id>` — Xóa session
+- `GET /api/chat/health` — Health check chat service
 
 ### System
 
-- `GET /api/health` - API health check
+- `GET /api/health` — Health check API
 
 ## Database Models
 
-### User
+| Model | Mô tả |
+|-------|--------|
+| **Tenant** | Cửa hàng: name, slug, domain, settings (JSON) |
+| **User** | User theo tenant; unique `(tenant_id, email)` |
+| **Product** | Sản phẩm sơn theo tenant |
+| **Cart** | Giỏ hàng theo tenant + user |
+| **UserLike** | Yêu thích theo tenant |
+| **ChatSession / Message** | Lịch sử chat theo tenant |
 
-- **Authentication & Security**: Email/password authentication with bcrypt hashing
-- **User Preferences**: JSON-stored preferences (favorite categories, price ranges, brands)
-- **Profile Management**: Name, email, account status, timestamps
-- **Relationships**: One-to-many with chat sessions, cart items, and user likes
-- **JWT Integration**: Secure token-based authentication support
-
-### Product
-
-- **Core Information**: Name, description, pricing (current/original), category hierarchy
-- **Inventory Management**: Stock levels, availability status, sale indicators
-- **Brand & Rating**: Brand information, user ratings, review counts
-- **Rich Media**: Image URLs, feature lists (JSON-stored)
-- **Search Optimization**: Full-text search indexes on key fields
-- **Vector Integration**: Embedding IDs for semantic search capabilities
-
-### Cart
-
-- **Shopping Cart**: User-specific cart items with quantity management
-- **Relationships**: Links users to products with quantity tracking
-- **Timestamps**: Creation and update tracking for cart persistence
-- **Unique Constraints**: User-product relationship management
-
-### UserLike (Favorites)
-
-- **User Preferences**: Track user likes/favorites for products
-- **Relationship Management**: Many-to-many user-product relationships
-- **Unique Constraints**: Prevents duplicate likes per user-product pair
-- **Analytics Ready**: Supports popularity tracking and recommendations
-
-### ChatSession
-
-- **Conversation Management**: User-specific chat session tracking
-- **Session Metadata**: Creation timestamps, session identification
-- **User Association**: Links to user accounts for personalized experiences
-- **Message Relationships**: One-to-many with individual messages
-
-### Message
-
-- **Chat History**: Individual chat messages with content and metadata
-- **Product Integration**: Links messages to relevant products
-- **Message Types**: Support for different message types and formats
-- **Session Tracking**: Associates messages with specific chat sessions
-
-## Services Architecture
-
-### VectorService
-
-- **Pinecone Integration**: Cloud-based vector database management
-- **Embedding Generation**: Sentence Transformer model integration for product vectorization
-- **Semantic Search**: Advanced similarity matching and product discovery
-- **Batch Operations**: Efficient bulk indexing and search operations
-- **Vector Management**: Embedding storage, retrieval, and similarity calculations
-
-### ChatService
-
-- **LangChain Orchestration**: Advanced conversation flow management with memory
-- **Google Gemini Integration**: State-of-the-art AI model with 1M token context
-- **Intelligent Tool Calling**: Dynamic product search, filtering, and recommendations
-- **Session Management**: Persistent conversation history and context preservation
-- **Multi-Modal Support**: Text processing with context-aware responses
-
-### ProductService
-
-- **CRUD Operations**: Complete product lifecycle management
-- **Advanced Search**: Multi-dimensional filtering (price, brand, category, rating)
-- **Recommendation Engine**: AI-powered product suggestions based on user behavior
-- **Inventory Management**: Stock tracking, availability checks, pricing updates
-- **Embedding Integration**: Automatic vector generation for semantic search
-
-### AuthService
-
-- **JWT Authentication**: Secure token-based authentication with refresh tokens
-- **User Management**: Registration, login, profile updates, account deactivation
-- **Preference Handling**: User-specific settings and behavioral preferences
-- **Security Validation**: Password hashing, token verification, session management
-- **Authorization**: Role-based access control and permission management
-
-### CartService
-
-- **Shopping Cart Management**: Add, remove, update cart items with quantity control
-- **Cart Persistence**: User-specific cart storage with automatic updates
-- **Product Integration**: Real-time product data synchronization
-- **Quantity Validation**: Stock availability checks and quantity limits
-- **Cart Operations**: Bulk operations, cart clearing, and item management
-
-### LikeService
-
-- **User Preferences**: Like/unlike functionality for products
-- **Favorites Management**: User-specific product favorites tracking
-- **Social Features**: Popular products identification and trending analysis
-- **Recommendation Support**: Like-based product suggestions
-- **Analytics Integration**: User behavior tracking for personalization
-
-## Development
-
-### Adding New Products
-
-```python
-from services.product_service import ProductService
-
-product_service = ProductService()
-product_data = {
-    'name': 'New Product',
-    'description': 'Product description',
-    'price': 299.99,
-    'category': 'Electronics',
-    'subcategory': 'Smartphones',
-    'brand': 'Brand Name',
-    'features': ['Feature 1', 'Feature 2']
-}
-
-product = product_service.create_product(product_data)
-```
-
-following this, you can index the product in Pinecone:
+## Scripts hữu ích
 
 ```bash
+# Seed dữ liệu test (tenants, users, products, cart, likes)
+python -m scripts.seed_database
+python -m scripts.seed_database --force
+
+# Re-index Pinecone cho tất cả cửa hàng
 python -m scripts.index_all_products
+
+# Flask CLI
+flask seed-db
+flask seed-db --force
 ```
 
-### Vector Search
+## Deploy Production
 
-```python
-from services.vector_service import VectorService
+Xem hướng dẫn chi tiết tại **[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)**:
 
-vector_service = VectorService()
-vector_service.initialize()
+- PostgreSQL + schema `systems`
+- Gunicorn via `start.sh`
+- Pinecone namespace per store
+- Onboarding cửa hàng mới qua Super Admin API
+- Checklist bảo mật production
 
-# Search for similar products
-results = vector_service.search_similar_products(
-    "gaming laptop with RTX graphics",
-    top_k=10
-)
+## Cấu trúc thư mục
+
 ```
-
-### Log Files
-
-- `logs/ecommerce_chatbot.log` - Application logs
-- Rotating file handler (10MB max, 10 backups)
-- Console and file output
-
-### Health Checks
-
-- `/api/health` - Basic API health
-- `/api/chat/health` - Chat service health
-- Vector database statistics
-- Service initialization status
+├── app.py                 # App factory, tenant middleware
+├── config.py              # Config + DEFAULT_TENANT_SLUG
+├── models/                # Tenant, User, Product, Cart, Chat...
+├── routes/                # Blueprints (auth, tenants, products, chat...)
+├── services/              # Business logic + AI/vector
+├── utils/                 # tenant_context, decorators, seeder
+├── migrations/            # Alembic migrations
+├── scripts/               # seed_database, index_all_products
+└── docs/                  # DEPLOYMENT.md, HLD.md, LLD.md
+```
 
 ## Troubleshooting
 
-### Common Issues
-
-1. **Pinecone Connection Error**
-
-   - Verify API key and environment
-   - Check network connectivity
-   - Ensure index exists
-
-2. **Google AI API Error**
-
-   - Verify API key
-   - Check quota limits
-   - Ensure proper model access
-
-3. **Database Migration Issues**
-
-   - Delete migration files and reinitialize
-   - Check database permissions
-   - Verify SQLAlchemy models
-
-4. **Memory Issues**
-   - Monitor conversation memory usage
-   - Clear old sessions periodically
-   - Optimize embedding storage
-
-## Contributing
-
-1. Fork the repository
-2. Create a branch
-3. Make your changes
-4. Submit a pull request
+| Vấn đề | Giải pháp |
+|--------|-----------|
+| Pinecone lỗi kết nối | Kiểm tra API key, index 1024 dims |
+| Search không có kết quả | Chạy `python -m scripts.index_all_products` |
+| Login sai cửa hàng | Gửi đúng `X-Tenant-Slug` hoặc dùng super_admin |
+| Migration lỗi PostgreSQL | Kiểm tra `DB_SCHEMA=systems`, quyền DB |
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+MIT License

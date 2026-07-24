@@ -44,6 +44,9 @@ def setup_logging(app):
         "routes.auth_routes",
         "routes.product_routes",
         "routes.chat_routes",
+        "routes.tenant_routes",
+        "services.tenant_service",
+        "utils.database_seeder",
     ]
 
     for logger_name in loggers:

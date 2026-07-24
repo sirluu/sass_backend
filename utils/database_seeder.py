@@ -44,18 +44,19 @@ class DatabaseSeeder:
         self.seed_tenants(force=force)
         self.seed_users(force=force)
         self.seed_products(force=force)
+        self.seed_sample_interactions(force=force)
 
     def seed_tenants(self, force=False):
         try:
-            if Tenant.query.count() > 0 and not force:
-                logger.info("Tenants already exist, skipping tenant seeding")
-                return
-
             if force:
                 Tenant.query.delete()
                 self.db.session.commit()
 
+            created = 0
             for tenant_data in self.DEFAULT_TENANTS:
+                if not force and self.db.session.get(Tenant, tenant_data["id"]):
+                    continue
+
                 tenant = Tenant(
                     id=tenant_data["id"],
                     name=tenant_data["name"],
@@ -72,9 +73,13 @@ class DatabaseSeeder:
                     }
                 )
                 self.db.session.add(tenant)
+                created += 1
 
-            self.db.session.commit()
-            logger.info(f"Seeded {len(self.DEFAULT_TENANTS)} paint stores")
+            if created:
+                self.db.session.commit()
+                logger.info(f"Seeded {created} paint stores")
+            else:
+                logger.info("All default tenants already exist, skipping tenant seeding")
 
         except Exception as e:
             logger.error(f"Error seeding tenants: {e}")
@@ -83,19 +88,23 @@ class DatabaseSeeder:
 
     def seed_users(self, force=False):
         try:
-            if User.query.filter_by(role="super_admin").first() and not force:
-                logger.info("Admin users already exist, skipping user seeding")
-                return
+            if force:
+                User.query.filter(User.role != "super_admin").delete(
+                    synchronize_session=False
+                )
+                self.db.session.commit()
 
-            super_admin = User(
-                id="user-super-admin",
-                email="admin@platform.com",
-                name="Platform Admin",
-                password="admin123",
-                tenant_id=None,
-                role="super_admin",
-            )
-            self.db.session.add(super_admin)
+            if not User.query.filter_by(role="super_admin").first():
+                self.db.session.add(
+                    User(
+                        id="user-super-admin",
+                        email="admin@platform.com",
+                        name="Platform Admin",
+                        password="admin123",
+                        tenant_id=None,
+                        role="super_admin",
+                    )
+                )
 
             store_admins = [
                 ("tenant-son-phong-thuy", "admin@sonphongthuy.com", "Admin Phong Thủy"),
@@ -115,13 +124,39 @@ class DatabaseSeeder:
                         )
                     )
 
+            for tenant_id, email, name in self._get_sample_customers():
+                if not User.query.filter_by(email=email, tenant_id=tenant_id).first():
+                    self.db.session.add(
+                        User(
+                            id=str(uuid.uuid4()),
+                            email=email,
+                            name=name,
+                            password="customer123",
+                            tenant_id=tenant_id,
+                            role="customer",
+                        )
+                    )
+
             self.db.session.commit()
-            logger.info("Seeded super admin and store admins (password: admin123)")
+            logger.info(
+                "Seeded super admin, store admins and sample customers "
+                "(password: admin123 / customer123)"
+            )
 
         except Exception as e:
             logger.error(f"Error seeding users: {e}")
             self.db.session.rollback()
             raise
+
+    def _get_sample_customers(self):
+        return [
+            ("tenant-son-phong-thuy", "nguyen.van.a@gmail.com", "Nguyễn Văn A"),
+            ("tenant-son-phong-thuy", "tran.thi.b@gmail.com", "Trần Thị B"),
+            ("tenant-son-jotun-hanoi", "le.van.c@gmail.com", "Lê Văn C"),
+            ("tenant-son-jotun-hanoi", "pham.thi.d@gmail.com", "Phạm Thị D"),
+            ("tenant-son-dulux-danang", "hoang.van.e@gmail.com", "Hoàng Văn E"),
+            ("tenant-son-dulux-danang", "vo.thi.f@gmail.com", "Võ Thị F"),
+        ]
 
     def seed_products(self, force=False):
         """Seed paint products for each tenant store."""
@@ -201,6 +236,66 @@ class DatabaseSeeder:
         Product.query.delete()
         self.db.session.commit()
         logger.info(f"Cleared {len(products)} existing products")
+
+    def seed_sample_interactions(self, force=False):
+        """Seed sample cart items and likes for test customers."""
+        from models.cart import Cart
+        from models.user_like import UserLike
+
+        try:
+            if Cart.query.count() > 0 and not force:
+                logger.info("Sample interactions already exist, skipping")
+                return
+
+            if force:
+                UserLike.query.delete()
+                Cart.query.delete()
+                self.db.session.commit()
+
+            customers = User.query.filter_by(role="customer").all()
+            if not customers:
+                logger.warning("No customers found, skipping sample interactions")
+                return
+
+            for customer in customers:
+                products = (
+                    Product.query.filter_by(
+                        tenant_id=customer.tenant_id, is_active=True
+                    )
+                    .order_by(Product.rating.desc())
+                    .limit(3)
+                    .all()
+                )
+                if not products:
+                    continue
+
+                for idx, product in enumerate(products[:2]):
+                    self.db.session.add(
+                        Cart(
+                            id=str(uuid.uuid4()),
+                            tenant_id=customer.tenant_id,
+                            user_id=customer.id,
+                            product_id=product.id,
+                            quantity=idx + 1,
+                        )
+                    )
+
+                self.db.session.add(
+                    UserLike(
+                        id=str(uuid.uuid4()),
+                        tenant_id=customer.tenant_id,
+                        user_id=customer.id,
+                        product_id=products[0].id,
+                    )
+                )
+
+            self.db.session.commit()
+            logger.info("Seeded sample cart items and likes for test customers")
+
+        except Exception as e:
+            logger.error(f"Error seeding sample interactions: {e}")
+            self.db.session.rollback()
+            raise
 
     def _get_sample_products(self):
         """Sample paint products for interior/exterior retail."""

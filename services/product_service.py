@@ -2,6 +2,7 @@ import logging
 import uuid
 from typing import Any, Dict, List, Optional
 
+from extensions import db
 from models.product import Product
 from models.tenant import Tenant
 from utils.tenant_context import get_current_tenant_id
@@ -46,8 +47,6 @@ class ProductService:
 
             product = Product(**product_data)
 
-            from app import db
-
             db.session.add(product)
             db.session.flush()
 
@@ -67,8 +66,6 @@ class ProductService:
 
         except Exception as e:
             logger.error(f"Error creating product: {str(e)}")
-            from app import db
-
             db.session.rollback()
             raise
 
@@ -108,15 +105,11 @@ class ProductService:
                     namespace=namespace,
                 )
 
-            from app import db
-
             db.session.commit()
             return product
 
         except Exception as e:
             logger.error(f"Error updating product: {str(e)}")
-            from app import db
-
             db.session.rollback()
             raise
 
@@ -133,16 +126,12 @@ class ProductService:
             namespace = self._get_namespace(product.tenant_id)
             self.vector_service.delete_product_embedding(product.id, namespace=namespace)
 
-            from app import db
-
             db.session.delete(product)
             db.session.commit()
             return True
 
         except Exception as e:
             logger.error(f"Error deleting product: {str(e)}")
-            from app import db
-
             db.session.rollback()
             raise
 
@@ -315,8 +304,6 @@ class ProductService:
 
             for product in products:
                 product.embedding_id = product.id
-
-            from app import db
 
             db.session.commit()
             return len(products)

@@ -33,6 +33,7 @@ class ChatService:
         self.initialized = False
         self._tenant_id = None
         self._namespace = ""
+        self._current_user_id = None
 
     def initialize(self):
         """Initialize LangChain components"""
@@ -63,6 +64,10 @@ class ChatService:
                 memory_key="chat_history",
             )
         return self.memory_sessions[session_id]
+
+    @staticmethod
+    def _format_price(price) -> str:
+        return f"{float(price):,.0f}đ".replace(",", ".")
 
     def create_tools(self) -> List[Tool]:
         """Create tools for the LangChain agent"""
@@ -118,7 +123,7 @@ class ChatService:
 
             result = "Found the following products:\n"
             for product in products:
-                result += f"- {product.name} by {product.brand} - ${product.price}\n"
+                result += f"- {product.name} ({product.brand}) - {self._format_price(product.price)}\n"
                 result += f"  {product.description[:100]}...\n"
 
             return json.dumps({"message": result, "product_ids": product_ids})
@@ -149,7 +154,7 @@ class ChatService:
 
             result = f"Found {len(products)} products matching your criteria:\n"
             for product in products[:5]:
-                result += f"- {product.name} by {product.brand} - ${product.price}\n"
+                result += f"- {product.name} ({product.brand}) - {self._format_price(product.price)}\n"
 
             product_ids = [product.id for product in products[:5]]
             return json.dumps({"message": result, "product_ids": product_ids})
@@ -175,7 +180,7 @@ class ChatService:
             result = "Product Details:\n"
             result += f"Name: {product.name}\n"
             result += f"Brand: {product.brand}\n"
-            result += f"Price: ${product.price}\n"
+            result += f"Price: {self._format_price(product.price)}\n"
             result += f"Rating: {product.rating}/5 ({product.review_count} reviews)\n"
             result += f"Description: {product.description}\n"
             result += f"Features: {', '.join(product.get_features())}\n"
@@ -220,7 +225,7 @@ class ChatService:
 
             result = "Here are some recommendations:\n"
             for rec in recommendations:
-                result += f"- {rec.name} by {rec.brand} - ${rec.price}\n"
+                result += f"- {rec.name} ({rec.brand}) - {self._format_price(rec.price)}\n"
 
             return result
 
@@ -237,9 +242,17 @@ class ChatService:
             data = json.loads(input_json)
             product_id = data.get("product_id")
             quantity = data.get("quantity", 1)
-            user_id = data.get("user_id", "guest_user")
+            user_id = data.get("user_id") or self._current_user_id
 
             logger.info(f"Parsed data: product_id={product_id}, quantity={quantity}, user_id={user_id}")
+
+            if not user_id:
+                return json.dumps(
+                    {
+                        "message": "Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng.",
+                        "success": False,
+                    }
+                )
 
             if not product_id:
                 return json.dumps(
@@ -278,8 +291,9 @@ class ChatService:
             if not result.get("success", True):
                 return json.dumps(result)
             
-            # Get product details for response
-            product = Product.query.get(product_id)
+            product = Product.query.filter_by(
+                id=product_id, tenant_id=self._tenant_id
+            ).first()
             if not product:
                 return json.dumps(
                     {
@@ -334,6 +348,7 @@ class ChatService:
             from models.tenant import Tenant
 
             self._tenant_id = tenant_id
+            self._current_user_id = user_id
             tenant = Tenant.query.get(tenant_id) if tenant_id else None
             self._namespace = tenant.slug if tenant else ""
 
@@ -342,8 +357,6 @@ class ChatService:
                 chat_session = ChatSession(
                     id=session_id, tenant_id=tenant_id, user_id=user_id
                 )
-from extensions import db
-
                 db.session.add(chat_session)
                 db.session.commit()
 
@@ -547,11 +560,11 @@ from extensions import db
 
             products = []
             if product_ids:
-                products = [
-                    Product.query.get(pid).to_dict()
-                    for pid in product_ids
-                    if Product.query.get(pid)
-                ]
+                tenant_products = Product.query.filter(
+                    Product.id.in_(product_ids),
+                    Product.tenant_id == self._tenant_id,
+                ).all()
+                products = [p.to_dict() for p in tenant_products]
 
             return {
                 "id": ai_msg.id,
